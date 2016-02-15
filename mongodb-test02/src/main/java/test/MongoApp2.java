@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
 import com.mongodb.MongoClient;
 
@@ -13,7 +12,7 @@ public class MongoApp2 {
 
 	public static void main(String[] args) throws Exception {
 
-		MongoOperations mongoOps = new MongoTemplate(new SimpleMongoDbFactory(new MongoClient(), "db-test"));
+		MongoOperations mongoOps = new MongoTemplate(new MongoClient(), "db-test");
 
 		List<Person> list = Arrays.asList(new Person("Thor", 30, new Address("A Street", Arrays.asList(123, 456))),
 				new Person("Spider-man", 18, new Address("C Street", Arrays.asList(125, 1245, 102))),
