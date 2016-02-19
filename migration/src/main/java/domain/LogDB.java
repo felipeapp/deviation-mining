@@ -2,34 +2,19 @@ package domain;
 
 import java.util.Date;
 
+import util.MigrationUtil;
+
 public class LogDB {
 
 	private String operacao;
 	private String tabela;
-	private int id_elemento;
-	private int usuario;
+	private int idElemento;
+	private int idUsuario;
 	private Date horario;
-	private int codigo_movimento;
+	private int codigoMovimento;
 	private String alteracoes;
 	private Sistema sistema;
-	private int id_log_db;
-
-	public LogDB() {
-
-	}
-
-	public LogDB(String operacao, String tabela, int id_elemento, int usuario, Date horario, int codigo_movimento,
-			String alteracoes, Sistema sistema, int id_log_db) {
-		this.operacao = operacao;
-		this.tabela = tabela;
-		this.id_elemento = id_elemento;
-		this.usuario = usuario;
-		this.horario = horario;
-		this.codigo_movimento = codigo_movimento;
-		this.alteracoes = alteracoes;
-		this.sistema = sistema;
-		this.id_log_db = id_log_db;
-	}
+	private int idLogDB;
 
 	public String getOperacao() {
 		return operacao;
@@ -47,20 +32,20 @@ public class LogDB {
 		this.tabela = tabela;
 	}
 
-	public int getId_elemento() {
-		return id_elemento;
+	public int getIdElemento() {
+		return idElemento;
 	}
 
-	public void setId_elemento(int id_elemento) {
-		this.id_elemento = id_elemento;
+	public void setIdElemento(int idElemento) {
+		this.idElemento = idElemento;
 	}
 
-	public int getUsuario() {
-		return usuario;
+	public int getIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setUsuario(int usuario) {
-		this.usuario = usuario;
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 	public Date getHorario() {
@@ -71,12 +56,12 @@ public class LogDB {
 		this.horario = horario;
 	}
 
-	public int getCodigo_movimento() {
-		return codigo_movimento;
+	public int getCodigoMovimento() {
+		return codigoMovimento;
 	}
 
-	public void setCodigo_movimento(int codigo_movimento) {
-		this.codigo_movimento = codigo_movimento;
+	public void setCodigoMovimento(int codigoMovimento) {
+		this.codigoMovimento = codigoMovimento;
 	}
 
 	public String getAlteracoes() {
@@ -95,19 +80,20 @@ public class LogDB {
 		this.sistema = sistema;
 	}
 
-	public int getId_log_db() {
-		return id_log_db;
+	public int getIdLogDB() {
+		return idLogDB;
 	}
 
-	public void setId_log_db(int id_log_db) {
-		this.id_log_db = id_log_db;
+	public void setIdLogDB(int idLogDB) {
+		this.idLogDB = idLogDB;
 	}
 
 	@Override
 	public String toString() {
-		return "LogDB [operacao=" + operacao + ", tabela=" + tabela + ", id_elemento=" + id_elemento + ", usuario="
-				+ usuario + ", horario=" + horario + ", codigo_movimento=" + codigo_movimento + ", alteracoes="
-				+ alteracoes + ", sistema=" + sistema + ", id_log_db=" + id_log_db + "]";
+		return "LogDB [operacao=" + operacao + ", tabela=" + tabela + ", idElemento=" + idElemento + ", idUsuario="
+				+ idUsuario + ", horario=" + MigrationUtil.formatDateWithMs(horario) + ", codigoMovimento="
+				+ codigoMovimento + ", alteracoes=" + alteracoes + ", sistema=" + sistema + ", idLogDB=" + idLogDB
+				+ "]";
 	}
 
 }

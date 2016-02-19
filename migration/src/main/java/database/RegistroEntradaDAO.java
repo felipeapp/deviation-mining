@@ -40,11 +40,15 @@ public class RegistroEntradaDAO extends AbstractDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
+				LogDBDAO log_db_dao = new LogDBDAO();
+
 				re = new RegistroEntrada(rs.getInt("id_entrada"), rs.getInt("id_usuario"), rs.getDate("data"),
 						rs.getDate("data_saida"), rs.getString("ip"), rs.getString("ip_interno_nat"),
 						rs.getString("host"), rs.getString("user_agent"), rs.getString("resolucao"),
 						rs.getInt("passaporte"), rs.getString("canal"), Sistema.fromValue(rs.getInt("id_sistema")),
-						null, null, null, null, null);
+						log_db_dao.findByIdEntrada(id), null, null, null, null);
+
+				log_db_dao.close();
 			}
 
 			rs.close();
