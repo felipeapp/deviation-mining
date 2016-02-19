@@ -1,12 +1,12 @@
 package domain;
 
 import java.util.Date;
+import java.util.List;
 
 public class RegistroEntrada {
 
 	private int id_entrada;
 	private int id_usuario;
-	private Sistema sistema;
 	private Date data_entrada;
 	private Date data_saida;
 	private String ip;
@@ -16,18 +16,23 @@ public class RegistroEntrada {
 	private String resolucao;
 	private int passaporte;
 	private String canal;
+	private Sistema sistema;
+	private List<LogDB> log_db;
+	private List<LogDBLeitura> log_db_leitura;
+	private List<LogJDBCUpdate> log_jdbc_leitura;
+	private List<LogMovimento> log_movimento;
+	private List<LogOperacao> log_operacao;
 
 	public RegistroEntrada() {
 
 	}
 
-	public RegistroEntrada(int id_entrada, int id_usuario, Sistema sistema, Date data_entrada, Date data_saida,
-			String ip, String ip_interno_nat, String host, String user_agent, String resolucao, int passaporte,
-			String canal) {
-		super();
+	public RegistroEntrada(int id_entrada, int id_usuario, Date data_entrada, Date data_saida, String ip,
+			String ip_interno_nat, String host, String user_agent, String resolucao, int passaporte, String canal,
+			Sistema sistema, List<LogDB> log_db, List<LogDBLeitura> log_db_leitura,
+			List<LogJDBCUpdate> log_jdbc_leitura, List<LogMovimento> log_movimento, List<LogOperacao> log_operacao) {
 		this.id_entrada = id_entrada;
 		this.id_usuario = id_usuario;
-		this.sistema = sistema;
 		this.data_entrada = data_entrada;
 		this.data_saida = data_saida;
 		this.ip = ip;
@@ -37,6 +42,12 @@ public class RegistroEntrada {
 		this.resolucao = resolucao;
 		this.passaporte = passaporte;
 		this.canal = canal;
+		this.sistema = sistema;
+		this.log_db = log_db;
+		this.log_db_leitura = log_db_leitura;
+		this.log_jdbc_leitura = log_jdbc_leitura;
+		this.log_movimento = log_movimento;
+		this.log_operacao = log_operacao;
 	}
 
 	public int getId_entrada() {
@@ -53,14 +64,6 @@ public class RegistroEntrada {
 
 	public void setId_usuario(int id_usuario) {
 		this.id_usuario = id_usuario;
-	}
-
-	public Sistema getSistema() {
-		return sistema;
-	}
-
-	public void setSistema(Sistema sistema) {
-		this.sistema = sistema;
 	}
 
 	public Date getData_entrada() {
@@ -135,12 +138,62 @@ public class RegistroEntrada {
 		this.canal = canal;
 	}
 
+	public Sistema getSistema() {
+		return sistema;
+	}
+
+	public void setSistema(Sistema sistema) {
+		this.sistema = sistema;
+	}
+
+	public List<LogDB> getLog_db() {
+		return log_db;
+	}
+
+	public void setLog_db(List<LogDB> log_db) {
+		this.log_db = log_db;
+	}
+
+	public List<LogDBLeitura> getLog_db_leitura() {
+		return log_db_leitura;
+	}
+
+	public void setLog_db_leitura(List<LogDBLeitura> log_db_leitura) {
+		this.log_db_leitura = log_db_leitura;
+	}
+
+	public List<LogJDBCUpdate> getLog_jdbc_leitura() {
+		return log_jdbc_leitura;
+	}
+
+	public void setLog_jdbc_leitura(List<LogJDBCUpdate> log_jdbc_leitura) {
+		this.log_jdbc_leitura = log_jdbc_leitura;
+	}
+
+	public List<LogMovimento> getLog_movimento() {
+		return log_movimento;
+	}
+
+	public void setLog_movimento(List<LogMovimento> log_movimento) {
+		this.log_movimento = log_movimento;
+	}
+
+	public List<LogOperacao> getLog_operacao() {
+		return log_operacao;
+	}
+
+	public void setLog_operacao(List<LogOperacao> log_operacao) {
+		this.log_operacao = log_operacao;
+	}
+
 	@Override
 	public String toString() {
-		return "RegistroEntrada [id_entrada=" + id_entrada + ", id_usuario=" + id_usuario + ", sistema=" + sistema
-				+ ", data_entrada=" + data_entrada + ", data_saida=" + data_saida + ", ip=" + ip + ", ip_interno_nat="
-				+ ip_interno_nat + ", host=" + host + ", user_agent=" + user_agent + ", resolucao=" + resolucao
-				+ ", passaporte=" + passaporte + ", canal=" + canal + "]";
+		return "RegistroEntrada [id_entrada=" + id_entrada + ", id_usuario=" + id_usuario + ", data_entrada="
+				+ data_entrada + ", data_saida=" + data_saida + ", ip=" + ip + ", ip_interno_nat=" + ip_interno_nat
+				+ ", host=" + host + ", user_agent=" + user_agent + ", resolucao=" + resolucao + ", passaporte="
+				+ passaporte + ", canal=" + canal + ", sistema=" + sistema + ", log_db=" + log_db + ", log_db_leitura="
+				+ log_db_leitura + ", log_jdbc_leitura=" + log_jdbc_leitura + ", log_movimento=" + log_movimento
+				+ ", log_operacao=" + log_operacao + "]";
 	}
 
 }

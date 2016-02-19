@@ -8,21 +8,17 @@ public class LogMovimento {
 	private int id_log_movimento;
 	private int codigo_movimento;
 	private Date horario;
-	private RegistroEntrada registro_entrada;
 	private Sistema sistema;
 
 	public LogMovimento() {
 
 	}
 
-	public LogMovimento(int id_movimento, int id_log_movimento, int codigo_movimento, Date horario,
-			RegistroEntrada registro_entrada, Sistema sistema) {
-		super();
+	public LogMovimento(int id_movimento, int id_log_movimento, int codigo_movimento, Date horario, Sistema sistema) {
 		this.id_movimento = id_movimento;
 		this.id_log_movimento = id_log_movimento;
 		this.codigo_movimento = codigo_movimento;
 		this.horario = horario;
-		this.registro_entrada = registro_entrada;
 		this.sistema = sistema;
 	}
 
@@ -58,14 +54,6 @@ public class LogMovimento {
 		this.horario = horario;
 	}
 
-	public RegistroEntrada getRegistro_entrada() {
-		return registro_entrada;
-	}
-
-	public void setRegistro_entrada(RegistroEntrada registro_entrada) {
-		this.registro_entrada = registro_entrada;
-	}
-
 	public Sistema getSistema() {
 		return sistema;
 	}
@@ -77,8 +65,7 @@ public class LogMovimento {
 	@Override
 	public String toString() {
 		return "LogMovimento [id_movimento=" + id_movimento + ", id_log_movimento=" + id_log_movimento
-				+ ", codigo_movimento=" + codigo_movimento + ", horario=" + horario + ", registro_entrada="
-				+ registro_entrada + ", sistema=" + sistema + "]";
+				+ ", codigo_movimento=" + codigo_movimento + ", horario=" + horario + ", sistema=" + sistema + "]";
 	}
 
 }

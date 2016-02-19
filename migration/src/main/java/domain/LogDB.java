@@ -10,7 +10,6 @@ public class LogDB {
 	private int usuario;
 	private Date horario;
 	private int codigo_movimento;
-	private RegistroEntrada registro_entrada;
 	private String alteracoes;
 	private Sistema sistema;
 	private int id_log_db;
@@ -20,15 +19,13 @@ public class LogDB {
 	}
 
 	public LogDB(String operacao, String tabela, int id_elemento, int usuario, Date horario, int codigo_movimento,
-			RegistroEntrada registro_entrada, String alteracoes, Sistema sistema, int id_log_db) {
-		super();
+			String alteracoes, Sistema sistema, int id_log_db) {
 		this.operacao = operacao;
 		this.tabela = tabela;
 		this.id_elemento = id_elemento;
 		this.usuario = usuario;
 		this.horario = horario;
 		this.codigo_movimento = codigo_movimento;
-		this.registro_entrada = registro_entrada;
 		this.alteracoes = alteracoes;
 		this.sistema = sistema;
 		this.id_log_db = id_log_db;
@@ -82,14 +79,6 @@ public class LogDB {
 		this.codigo_movimento = codigo_movimento;
 	}
 
-	public RegistroEntrada getRegistro_entrada() {
-		return registro_entrada;
-	}
-
-	public void setRegistro_entrada(RegistroEntrada registro_entrada) {
-		this.registro_entrada = registro_entrada;
-	}
-
 	public String getAlteracoes() {
 		return alteracoes;
 	}
@@ -117,9 +106,8 @@ public class LogDB {
 	@Override
 	public String toString() {
 		return "LogDB [operacao=" + operacao + ", tabela=" + tabela + ", id_elemento=" + id_elemento + ", usuario="
-				+ usuario + ", horario=" + horario + ", codigo_movimento=" + codigo_movimento + ", registro_entrada="
-				+ registro_entrada + ", alteracoes=" + alteracoes + ", sistema=" + sistema + ", id_log_db=" + id_log_db
-				+ "]";
+				+ usuario + ", horario=" + horario + ", codigo_movimento=" + codigo_movimento + ", alteracoes="
+				+ alteracoes + ", sistema=" + sistema + ", id_log_db=" + id_log_db + "]";
 	}
 
 }

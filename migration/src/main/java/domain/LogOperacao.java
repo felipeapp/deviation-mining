@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class LogOperacao {
 
-	private RegistroEntrada registro_entrada;
 	private String action;
 	private Date horario;
 	private String parametros;
@@ -20,10 +19,8 @@ public class LogOperacao {
 
 	}
 
-	public LogOperacao(RegistroEntrada registro_entrada, String action, Date horario, String parametros, int tempo,
-			boolean erro, String trace, int id_operacao, int id_acesso_publico, String mensagens, Sistema sistema) {
-		super();
-		this.registro_entrada = registro_entrada;
+	public LogOperacao(String action, Date horario, String parametros, int tempo, boolean erro, String trace,
+			int id_operacao, int id_acesso_publico, String mensagens, Sistema sistema) {
 		this.action = action;
 		this.horario = horario;
 		this.parametros = parametros;
@@ -34,14 +31,6 @@ public class LogOperacao {
 		this.id_acesso_publico = id_acesso_publico;
 		this.mensagens = mensagens;
 		this.sistema = sistema;
-	}
-
-	public RegistroEntrada getRegistro_entrada() {
-		return registro_entrada;
-	}
-
-	public void setRegistro_entrada(RegistroEntrada registro_entrada) {
-		this.registro_entrada = registro_entrada;
 	}
 
 	public String getAction() {
@@ -126,10 +115,10 @@ public class LogOperacao {
 
 	@Override
 	public String toString() {
-		return "LogOperacao [registro_entrada=" + registro_entrada + ", action=" + action + ", horario=" + horario
-				+ ", parametros=" + parametros + ", tempo=" + tempo + ", erro=" + erro + ", trace=" + trace
-				+ ", id_operacao=" + id_operacao + ", id_acesso_publico=" + id_acesso_publico + ", mensagens="
-				+ mensagens + ", sistema=" + sistema + "]";
+		return "LogOperacao [action=" + action + ", horario=" + horario + ", parametros=" + parametros + ", tempo="
+				+ tempo + ", erro=" + erro + ", trace=" + trace + ", id_operacao=" + id_operacao
+				+ ", id_acesso_publico=" + id_acesso_publico + ", mensagens=" + mensagens + ", sistema=" + sistema
+				+ "]";
 	}
 
 }

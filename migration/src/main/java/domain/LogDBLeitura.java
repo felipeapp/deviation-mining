@@ -11,7 +11,6 @@ public class LogDBLeitura {
 	private int codigo_movimento;
 	private int id_turma_virtual;
 	private int id_log_db_leitura;
-	private RegistroEntrada registro_entrada;
 	private Sistema sistema;
 
 	public LogDBLeitura() {
@@ -19,8 +18,7 @@ public class LogDBLeitura {
 	}
 
 	public LogDBLeitura(String tabela, int id_elemento, int id_usuario, Date horario, int codigo_movimento,
-			int id_turma_virtual, int id_log_db_leitura, RegistroEntrada registro_entrada, Sistema sistema) {
-		super();
+			int id_turma_virtual, int id_log_db_leitura, Sistema sistema) {
 		this.tabela = tabela;
 		this.id_elemento = id_elemento;
 		this.id_usuario = id_usuario;
@@ -28,7 +26,6 @@ public class LogDBLeitura {
 		this.codigo_movimento = codigo_movimento;
 		this.id_turma_virtual = id_turma_virtual;
 		this.id_log_db_leitura = id_log_db_leitura;
-		this.registro_entrada = registro_entrada;
 		this.sistema = sistema;
 	}
 
@@ -88,14 +85,6 @@ public class LogDBLeitura {
 		this.id_log_db_leitura = id_log_db_leitura;
 	}
 
-	public RegistroEntrada getRegistro_entrada() {
-		return registro_entrada;
-	}
-
-	public void setRegistro_entrada(RegistroEntrada registro_entrada) {
-		this.registro_entrada = registro_entrada;
-	}
-
 	public Sistema getSistema() {
 		return sistema;
 	}
@@ -108,8 +97,7 @@ public class LogDBLeitura {
 	public String toString() {
 		return "LogDBLeitura [tabela=" + tabela + ", id_elemento=" + id_elemento + ", id_usuario=" + id_usuario
 				+ ", horario=" + horario + ", codigo_movimento=" + codigo_movimento + ", id_turma_virtual="
-				+ id_turma_virtual + ", id_log_db_leitura=" + id_log_db_leitura + ", registro_entrada="
-				+ registro_entrada + ", sistema=" + sistema + "]";
+				+ id_turma_virtual + ", id_log_db_leitura=" + id_log_db_leitura + ", sistema=" + sistema + "]";
 	}
 
 }

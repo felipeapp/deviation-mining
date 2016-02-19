@@ -7,7 +7,6 @@ public class LogJDBCUpdate {
 	private int id_log_jdbc_update;
 	private String sql;
 	private int id_usuario;
-	private RegistroEntrada registro_entrada;
 	private Date horario;
 	private int codigo_movimento;
 	private Sistema sistema;
@@ -17,13 +16,11 @@ public class LogJDBCUpdate {
 
 	}
 
-	public LogJDBCUpdate(int id_log_jdbc_update, String sql, int id_usuario, RegistroEntrada registro_entrada,
-			Date horario, int codigo_movimento, Sistema sistema, String parametros) {
-		super();
+	public LogJDBCUpdate(int id_log_jdbc_update, String sql, int id_usuario, Date horario, int codigo_movimento,
+			Sistema sistema, String parametros) {
 		this.id_log_jdbc_update = id_log_jdbc_update;
 		this.sql = sql;
 		this.id_usuario = id_usuario;
-		this.registro_entrada = registro_entrada;
 		this.horario = horario;
 		this.codigo_movimento = codigo_movimento;
 		this.sistema = sistema;
@@ -52,14 +49,6 @@ public class LogJDBCUpdate {
 
 	public void setId_usuario(int id_usuario) {
 		this.id_usuario = id_usuario;
-	}
-
-	public RegistroEntrada getRegistro_entrada() {
-		return registro_entrada;
-	}
-
-	public void setRegistro_entrada(RegistroEntrada registro_entrada) {
-		this.registro_entrada = registro_entrada;
 	}
 
 	public Date getHorario() {
@@ -97,8 +86,8 @@ public class LogJDBCUpdate {
 	@Override
 	public String toString() {
 		return "LogJDBCUpdate [id_log_jdbc_update=" + id_log_jdbc_update + ", sql=" + sql + ", id_usuario=" + id_usuario
-				+ ", registro_entrada=" + registro_entrada + ", horario=" + horario + ", codigo_movimento="
-				+ codigo_movimento + ", sistema=" + sistema + ", parametros=" + parametros + "]";
+				+ ", horario=" + horario + ", codigo_movimento=" + codigo_movimento + ", sistema=" + sistema
+				+ ", parametros=" + parametros + "]";
 	}
 
 }
