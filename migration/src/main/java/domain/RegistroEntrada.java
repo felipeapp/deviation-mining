@@ -3,83 +3,58 @@ package domain;
 import java.util.Date;
 import java.util.List;
 
+import util.MigrationUtil;
+
 public class RegistroEntrada {
 
-	private int id_entrada;
-	private int id_usuario;
-	private Date data_entrada;
-	private Date data_saida;
+	private int idEntrada;
+	private int idUsuario;
+	private Date dataEntrada;
+	private Date dataSaida;
 	private String ip;
-	private String ip_interno_nat;
+	private String ipInternoNat;
 	private String host;
-	private String user_agent;
+	private String userAgent;
 	private String resolucao;
 	private int passaporte;
 	private String canal;
 	private Sistema sistema;
-	private List<LogDB> log_db;
-	private List<LogDBLeitura> log_db_leitura;
-	private List<LogJDBCUpdate> log_jdbc_leitura;
-	private List<LogMovimento> log_movimento;
-	private List<LogOperacao> log_operacao;
+	private List<LogDB> logDB;
+	private List<LogDBLeitura> logDBLeitura;
+	private List<LogJDBCUpdate> logJDBCUpdate;
+	private List<LogMovimento> logMovimento;
+	private List<LogOperacao> logOperacao;
 
-	public RegistroEntrada() {
-
+	public int getIdEntrada() {
+		return idEntrada;
 	}
 
-	public RegistroEntrada(int id_entrada, int id_usuario, Date data_entrada, Date data_saida, String ip,
-			String ip_interno_nat, String host, String user_agent, String resolucao, int passaporte, String canal,
-			Sistema sistema, List<LogDB> log_db, List<LogDBLeitura> log_db_leitura,
-			List<LogJDBCUpdate> log_jdbc_leitura, List<LogMovimento> log_movimento, List<LogOperacao> log_operacao) {
-		this.id_entrada = id_entrada;
-		this.id_usuario = id_usuario;
-		this.data_entrada = data_entrada;
-		this.data_saida = data_saida;
-		this.ip = ip;
-		this.ip_interno_nat = ip_interno_nat;
-		this.host = host;
-		this.user_agent = user_agent;
-		this.resolucao = resolucao;
-		this.passaporte = passaporte;
-		this.canal = canal;
-		this.sistema = sistema;
-		this.log_db = log_db;
-		this.log_db_leitura = log_db_leitura;
-		this.log_jdbc_leitura = log_jdbc_leitura;
-		this.log_movimento = log_movimento;
-		this.log_operacao = log_operacao;
+	public void setIdEntrada(int idEntrada) {
+		this.idEntrada = idEntrada;
 	}
 
-	public int getId_entrada() {
-		return id_entrada;
+	public int getIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setId_entrada(int id_entrada) {
-		this.id_entrada = id_entrada;
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
-	public int getId_usuario() {
-		return id_usuario;
+	public Date getDataEntrada() {
+		return dataEntrada;
 	}
 
-	public void setId_usuario(int id_usuario) {
-		this.id_usuario = id_usuario;
+	public void setDataEntrada(Date dataEntrada) {
+		this.dataEntrada = dataEntrada;
 	}
 
-	public Date getData_entrada() {
-		return data_entrada;
+	public Date getDataSaida() {
+		return dataSaida;
 	}
 
-	public void setData_entrada(Date data_entrada) {
-		this.data_entrada = data_entrada;
-	}
-
-	public Date getData_saida() {
-		return data_saida;
-	}
-
-	public void setData_saida(Date data_saida) {
-		this.data_saida = data_saida;
+	public void setDataSaida(Date dataSaida) {
+		this.dataSaida = dataSaida;
 	}
 
 	public String getIp() {
@@ -90,12 +65,12 @@ public class RegistroEntrada {
 		this.ip = ip;
 	}
 
-	public String getIp_interno_nat() {
-		return ip_interno_nat;
+	public String getIpInternoNat() {
+		return ipInternoNat;
 	}
 
-	public void setIp_interno_nat(String ip_interno_nat) {
-		this.ip_interno_nat = ip_interno_nat;
+	public void setIpInternoNat(String ipInternoNat) {
+		this.ipInternoNat = ipInternoNat;
 	}
 
 	public String getHost() {
@@ -106,12 +81,12 @@ public class RegistroEntrada {
 		this.host = host;
 	}
 
-	public String getUser_agent() {
-		return user_agent;
+	public String getUserAgent() {
+		return userAgent;
 	}
 
-	public void setUser_agent(String user_agent) {
-		this.user_agent = user_agent;
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
 	}
 
 	public String getResolucao() {
@@ -146,54 +121,55 @@ public class RegistroEntrada {
 		this.sistema = sistema;
 	}
 
-	public List<LogDB> getLog_db() {
-		return log_db;
+	public List<LogDB> getLogDB() {
+		return logDB;
 	}
 
-	public void setLog_db(List<LogDB> log_db) {
-		this.log_db = log_db;
+	public void setLogDB(List<LogDB> logDB) {
+		this.logDB = logDB;
 	}
 
-	public List<LogDBLeitura> getLog_db_leitura() {
-		return log_db_leitura;
+	public List<LogDBLeitura> getLogDBLeitura() {
+		return logDBLeitura;
 	}
 
-	public void setLog_db_leitura(List<LogDBLeitura> log_db_leitura) {
-		this.log_db_leitura = log_db_leitura;
+	public void setLogDBLeitura(List<LogDBLeitura> logDBLeitura) {
+		this.logDBLeitura = logDBLeitura;
 	}
 
-	public List<LogJDBCUpdate> getLog_jdbc_leitura() {
-		return log_jdbc_leitura;
+	public List<LogJDBCUpdate> getLogJDBCUpdate() {
+		return logJDBCUpdate;
 	}
 
-	public void setLog_jdbc_leitura(List<LogJDBCUpdate> log_jdbc_leitura) {
-		this.log_jdbc_leitura = log_jdbc_leitura;
+	public void setLogJDBCUpdate(List<LogJDBCUpdate> logJDBCUpdate) {
+		this.logJDBCUpdate = logJDBCUpdate;
 	}
 
-	public List<LogMovimento> getLog_movimento() {
-		return log_movimento;
+	public List<LogMovimento> getLogMovimento() {
+		return logMovimento;
 	}
 
-	public void setLog_movimento(List<LogMovimento> log_movimento) {
-		this.log_movimento = log_movimento;
+	public void setLogMovimento(List<LogMovimento> logMovimento) {
+		this.logMovimento = logMovimento;
 	}
 
-	public List<LogOperacao> getLog_operacao() {
-		return log_operacao;
+	public List<LogOperacao> getLogOperacao() {
+		return logOperacao;
 	}
 
-	public void setLog_operacao(List<LogOperacao> log_operacao) {
-		this.log_operacao = log_operacao;
+	public void setLogOperacao(List<LogOperacao> logOperacao) {
+		this.logOperacao = logOperacao;
 	}
 
 	@Override
 	public String toString() {
-		return "RegistroEntrada [id_entrada=" + id_entrada + ", id_usuario=" + id_usuario + ", data_entrada="
-				+ data_entrada + ", data_saida=" + data_saida + ", ip=" + ip + ", ip_interno_nat=" + ip_interno_nat
-				+ ", host=" + host + ", user_agent=" + user_agent + ", resolucao=" + resolucao + ", passaporte="
-				+ passaporte + ", canal=" + canal + ", sistema=" + sistema + ", log_db=" + log_db + ", log_db_leitura="
-				+ log_db_leitura + ", log_jdbc_leitura=" + log_jdbc_leitura + ", log_movimento=" + log_movimento
-				+ ", log_operacao=" + log_operacao + "]";
+		return "RegistroEntrada [idEntrada=" + idEntrada + ", idUsuario=" + idUsuario + ", dataEntrada="
+				+ MigrationUtil.formatDateWithMs(dataEntrada) + ", dataSaida="
+				+ MigrationUtil.formatDateWithMs(dataSaida) + ", ip=" + ip + ", ipInternoNat=" + ipInternoNat
+				+ ", host=" + host + ", userAgent=" + userAgent + ", resolucao=" + resolucao + ", passaporte="
+				+ passaporte + ", canal=" + canal + ", sistema=" + sistema + ", logDB=" + logDB + ", logDBLeitura="
+				+ logDBLeitura + ", logJDBCUpdate=" + logJDBCUpdate + ", logMovimento=" + logMovimento
+				+ ", logOperacao=" + logOperacao + "]";
 	}
 
 }

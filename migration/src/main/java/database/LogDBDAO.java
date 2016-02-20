@@ -4,11 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import domain.LogDB;
 import domain.Sistema;
+import util.MigrationUtil;
 
 public class LogDBDAO extends AbstractDAO {
 
@@ -21,7 +21,7 @@ public class LogDBDAO extends AbstractDAO {
 
 		log.setAlteracoes(rs.getString("alteracoes"));
 		log.setCodigoMovimento(rs.getInt("cod_movimento"));
-		log.setHorario(new Date(rs.getTimestamp("data").getTime()));
+		log.setHorario(MigrationUtil.getDateFromDBTimestamp(rs.getTimestamp("data")));
 		log.setIdElemento(rs.getInt("id_elemento"));
 		log.setIdLogDB(rs.getInt("id_log_db"));
 		log.setIdUsuario(rs.getInt("id_usuario"));

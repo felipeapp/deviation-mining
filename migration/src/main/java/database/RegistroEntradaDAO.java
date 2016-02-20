@@ -8,11 +8,31 @@ import java.util.List;
 
 import domain.RegistroEntrada;
 import domain.Sistema;
+import util.MigrationUtil;
 
 public class RegistroEntradaDAO extends AbstractDAO {
 
 	public RegistroEntradaDAO() {
 		super();
+	}
+
+	private RegistroEntrada getAttributesFromRS(ResultSet rs) throws SQLException {
+		RegistroEntrada entrada = new RegistroEntrada();
+
+		entrada.setCanal(rs.getString("canal"));
+		entrada.setDataEntrada(MigrationUtil.getDateFromDBTimestamp(rs.getTimestamp("data")));
+		entrada.setDataSaida(MigrationUtil.getDateFromDBTimestamp(rs.getTimestamp("data_saida")));
+		entrada.setHost(rs.getString("host"));
+		entrada.setIdEntrada(rs.getInt("id_entrada"));
+		entrada.setIdUsuario(rs.getInt("id_usuario"));
+		entrada.setIp(rs.getString("ip"));
+		entrada.setIpInternoNat(rs.getString("ip_interno_nat"));
+		entrada.setPassaporte(rs.getInt("passaporte"));
+		entrada.setResolucao(rs.getString("resolucao"));
+		entrada.setSistema(Sistema.fromValue(rs.getInt("id_sistema")));
+		entrada.setUserAgent(rs.getString("user_agent"));
+
+		return entrada;
 	}
 
 	public List<Integer> getIDList() {
@@ -30,7 +50,7 @@ public class RegistroEntradaDAO extends AbstractDAO {
 	}
 
 	public RegistroEntrada findByID(int id) {
-		RegistroEntrada re = null;
+		RegistroEntrada entrada = null;
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement("select * from registro_entrada where id_entrada = ?");
@@ -40,13 +60,15 @@ public class RegistroEntradaDAO extends AbstractDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
+				entrada = getAttributesFromRS(rs);
+
 				LogDBDAO log_db_dao = new LogDBDAO();
 
-				re = new RegistroEntrada(rs.getInt("id_entrada"), rs.getInt("id_usuario"), rs.getDate("data"),
-						rs.getDate("data_saida"), rs.getString("ip"), rs.getString("ip_interno_nat"),
-						rs.getString("host"), rs.getString("user_agent"), rs.getString("resolucao"),
-						rs.getInt("passaporte"), rs.getString("canal"), Sistema.fromValue(rs.getInt("id_sistema")),
-						log_db_dao.findByIdEntrada(id), null, null, null, null);
+				entrada.setLogDB(log_db_dao.findByIdEntrada(id));
+				entrada.setLogDBLeitura(null);
+				entrada.setLogJDBCUpdate(null);
+				entrada.setLogMovimento(null);
+				entrada.setLogOperacao(null);
 
 				log_db_dao.close();
 			}
@@ -57,7 +79,28 @@ public class RegistroEntradaDAO extends AbstractDAO {
 			e.printStackTrace();
 		}
 
-		return re;
+		return entrada;
+	}
+
+	public static void main(String[] args) {
+
+		RegistroEntradaDAO dao = new RegistroEntradaDAO();
+
+		long start = System.currentTimeMillis();
+
+		List<Integer> ids = dao.getIDList();
+
+		System.out.println("Total de entradas: " + ids.size());
+
+		for (int i = 0; i < ids.size(); i++) {
+			System.out.println(i + 1 + " / " + ids.size());
+			System.out.println(dao.findByID(ids.get(i)));
+		}
+
+		System.out.println((System.currentTimeMillis() - start) / 1000.0);
+
+		dao.close();
+
 	}
 
 }
