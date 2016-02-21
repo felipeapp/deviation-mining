@@ -1,22 +1,21 @@
 package database;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import domain.LogDB;
 import domain.Sistema;
 import util.MigrationUtil;
 
-public class LogDBDAO extends AbstractDAO {
+public class LogDBDAO extends AbstractDAO<LogDB> {
 
-	public LogDBDAO() {
+	protected LogDBDAO() {
 		super();
 	}
 
-	private LogDB getLogDBFromRS(ResultSet rs) throws SQLException {
+	@Override
+	protected LogDB getAttributesFromRS(ResultSet rs) throws SQLException {
 		LogDB log = new LogDB();
 
 		log.setAlteracoes(rs.getString("alteracoes"));
@@ -32,26 +31,14 @@ public class LogDBDAO extends AbstractDAO {
 		return log;
 	}
 
-	public List<LogDB> findByIdEntrada(int id_entrada) {
-		List<LogDB> logs = new ArrayList<LogDB>();
+	@Override
+	protected String getTableName() {
+		return "log_db";
+	}
 
-		try {
-			PreparedStatement stmt = connection.prepareStatement("select * from log_db where id_registro_entrada = ?");
-
-			stmt.setInt(1, id_entrada);
-
-			ResultSet rs = stmt.executeQuery();
-
-			while (rs.next())
-				logs.add(getLogDBFromRS(rs));
-
-			rs.close();
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return logs;
+	@Override
+	protected String getPKFieldName() {
+		return "id_log_db";
 	}
 
 	public static void main(String[] args) {

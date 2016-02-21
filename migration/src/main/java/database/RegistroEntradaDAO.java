@@ -10,13 +10,14 @@ import domain.RegistroEntrada;
 import domain.Sistema;
 import util.MigrationUtil;
 
-public class RegistroEntradaDAO extends AbstractDAO {
+public class RegistroEntradaDAO extends AbstractDAO<RegistroEntrada> {
 
 	public RegistroEntradaDAO() {
 		super();
 	}
 
-	private RegistroEntrada getAttributesFromRS(ResultSet rs) throws SQLException {
+	@Override
+	protected RegistroEntrada getAttributesFromRS(ResultSet rs) throws SQLException {
 		RegistroEntrada entrada = new RegistroEntrada();
 
 		entrada.setCanal(rs.getString("canal"));
@@ -35,13 +36,37 @@ public class RegistroEntradaDAO extends AbstractDAO {
 		return entrada;
 	}
 
-	public List<Integer> getIDList() {
+	@Override
+	protected String getTableName() {
+		return "registro_entrada";
+	}
+
+	@Override
+	protected String getPKFieldName() {
+		return "id_entrada";
+	}
+
+	@Override
+	protected List<RegistroEntrada> findByIdEntrada(int id_entrada) {
+		return null;
+	}
+
+	public List<Integer> getIDListGT(int id_entrada) {
 		List<Integer> list = new ArrayList<Integer>();
 
-		try (PreparedStatement stmt = connection.prepareStatement("select id_entrada from registro_entrada");
-				ResultSet rs = stmt.executeQuery()) {
+		try {
+			PreparedStatement stmt = connection
+					.prepareStatement("select id_entrada from registro_entrada where id_entrada > ?");
+
+			stmt.setInt(1, id_entrada);
+
+			ResultSet rs = stmt.executeQuery();
+
 			while (rs.next())
 				list.add(rs.getInt("id_entrada"));
+
+			rs.close();
+			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -49,13 +74,13 @@ public class RegistroEntradaDAO extends AbstractDAO {
 		return list;
 	}
 
-	public RegistroEntrada findByID(int id) {
+	public RegistroEntrada findByID(int id_entrada) {
 		RegistroEntrada entrada = null;
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement("select * from registro_entrada where id_entrada = ?");
 
-			stmt.setInt(1, id);
+			stmt.setInt(1, id_entrada);
 
 			ResultSet rs = stmt.executeQuery();
 
@@ -63,14 +88,22 @@ public class RegistroEntradaDAO extends AbstractDAO {
 				entrada = getAttributesFromRS(rs);
 
 				LogDBDAO log_db_dao = new LogDBDAO();
+				LogDBLeituraDAO log_db_leitura_dao = new LogDBLeituraDAO();
+				LogJDBCUpdateDAO log_jdbc_update_dao = new LogJDBCUpdateDAO();
+				LogMovimentoDAO log_movimento_dao = new LogMovimentoDAO();
+				LogOperacaoDAO log_operacao_dao = new LogOperacaoDAO();
 
-				entrada.setLogDB(log_db_dao.findByIdEntrada(id));
-				entrada.setLogDBLeitura(null);
-				entrada.setLogJDBCUpdate(null);
-				entrada.setLogMovimento(null);
-				entrada.setLogOperacao(null);
+				entrada.setLogDB(log_db_dao.findByIdEntrada(id_entrada));
+				entrada.setLogDBLeitura(log_db_leitura_dao.findByIdEntrada(id_entrada));
+				entrada.setLogJDBCUpdate(log_jdbc_update_dao.findByIdEntrada(id_entrada));
+				entrada.setLogMovimento(log_movimento_dao.findByIdEntrada(id_entrada));
+				entrada.setLogOperacao(log_operacao_dao.findByIdEntrada(id_entrada));
 
 				log_db_dao.close();
+				log_db_leitura_dao.close();
+				log_jdbc_update_dao.close();
+				log_movimento_dao.close();
+				log_operacao_dao.close();
 			}
 
 			rs.close();
@@ -88,7 +121,7 @@ public class RegistroEntradaDAO extends AbstractDAO {
 
 		long start = System.currentTimeMillis();
 
-		List<Integer> ids = dao.getIDList();
+		List<Integer> ids = dao.getIDListGT(0);
 
 		System.out.println("Total de entradas: " + ids.size());
 

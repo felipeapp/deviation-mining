@@ -14,4 +14,8 @@ public abstract class MigrationUtil {
 		return t == null ? null : new Date(t.getTime());
 	}
 
+	public static String getFirstLine(String text) {
+		return text == null ? null : text.substring(0, text.indexOf('\n'));
+	}
+
 }

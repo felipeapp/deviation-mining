@@ -2,37 +2,24 @@ package domain;
 
 import java.util.Date;
 
+import util.MigrationUtil;
+
 public class LogJDBCUpdate {
 
-	private int id_log_jdbc_update;
+	private int idLogJdbcUpdate;
 	private String sql;
-	private int id_usuario;
+	private int idUusuario;
 	private Date horario;
-	private int codigo_movimento;
+	private int codigoMovimento;
 	private Sistema sistema;
 	private String parametros;
 
-	public LogJDBCUpdate() {
-
+	public int getIdLogJdbcUpdate() {
+		return idLogJdbcUpdate;
 	}
 
-	public LogJDBCUpdate(int id_log_jdbc_update, String sql, int id_usuario, Date horario, int codigo_movimento,
-			Sistema sistema, String parametros) {
-		this.id_log_jdbc_update = id_log_jdbc_update;
-		this.sql = sql;
-		this.id_usuario = id_usuario;
-		this.horario = horario;
-		this.codigo_movimento = codigo_movimento;
-		this.sistema = sistema;
-		this.parametros = parametros;
-	}
-
-	public int getId_log_jdbc_update() {
-		return id_log_jdbc_update;
-	}
-
-	public void setId_log_jdbc_update(int id_log_jdbc_update) {
-		this.id_log_jdbc_update = id_log_jdbc_update;
+	public void setIdLogJdbcUpdate(int idLogJdbcUpdate) {
+		this.idLogJdbcUpdate = idLogJdbcUpdate;
 	}
 
 	public String getSql() {
@@ -43,12 +30,12 @@ public class LogJDBCUpdate {
 		this.sql = sql;
 	}
 
-	public int getId_usuario() {
-		return id_usuario;
+	public int getIdUusuario() {
+		return idUusuario;
 	}
 
-	public void setId_usuario(int id_usuario) {
-		this.id_usuario = id_usuario;
+	public void setIdUusuario(int idUusuario) {
+		this.idUusuario = idUusuario;
 	}
 
 	public Date getHorario() {
@@ -59,12 +46,12 @@ public class LogJDBCUpdate {
 		this.horario = horario;
 	}
 
-	public int getCodigo_movimento() {
-		return codigo_movimento;
+	public int getCodigoMovimento() {
+		return codigoMovimento;
 	}
 
-	public void setCodigo_movimento(int codigo_movimento) {
-		this.codigo_movimento = codigo_movimento;
+	public void setCodigoMovimento(int codigoMovimento) {
+		this.codigoMovimento = codigoMovimento;
 	}
 
 	public Sistema getSistema() {
@@ -85,9 +72,9 @@ public class LogJDBCUpdate {
 
 	@Override
 	public String toString() {
-		return "LogJDBCUpdate [id_log_jdbc_update=" + id_log_jdbc_update + ", sql=" + sql + ", id_usuario=" + id_usuario
-				+ ", horario=" + horario + ", codigo_movimento=" + codigo_movimento + ", sistema=" + sistema
-				+ ", parametros=" + parametros + "]";
+		return "LogJDBCUpdate [idLogJdbcUpdate=" + idLogJdbcUpdate + ", sql=" + sql + ", idUusuario=" + idUusuario
+				+ ", horario=" + MigrationUtil.formatDateWithMs(horario) + ", codigoMovimento=" + codigoMovimento
+				+ ", sistema=" + sistema + ", parametros=" + parametros + "]";
 	}
 
 }

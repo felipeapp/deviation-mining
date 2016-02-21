@@ -1,0 +1,3 @@
+- Existe uma tabela registro_entrada dentro de sistemas_comum!
+- O que é id_movimento dentro da tabela log_movimento?
+- Como definir a precisão do Date? Algumas tabelas usa Date.SSS e outras com mais de três dígitos (log_operção).
