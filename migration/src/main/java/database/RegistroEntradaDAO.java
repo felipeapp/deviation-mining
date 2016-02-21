@@ -55,8 +55,8 @@ public class RegistroEntradaDAO extends AbstractDAO<RegistroEntrada> {
 		List<Integer> list = new ArrayList<Integer>();
 
 		try {
-			PreparedStatement stmt = connection
-					.prepareStatement("select id_entrada from registro_entrada where id_entrada > ?");
+			PreparedStatement stmt = connection.prepareStatement(
+					"select id_entrada from registro_entrada where id_entrada > ? order by id_entrada");
 
 			stmt.setInt(1, id_entrada);
 

@@ -8,9 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import util.MigrationUtil;
+
 public abstract class AbstractDAO<T> {
 
-	protected Connection connection;
+	protected static Connection connection;
 
 	protected abstract T getAttributesFromRS(ResultSet rs) throws SQLException;
 
@@ -18,21 +20,29 @@ public abstract class AbstractDAO<T> {
 
 	protected abstract String getPKFieldName();
 
-	protected AbstractDAO() {
+	public AbstractDAO() {
 		try {
-			connection = DriverManager.getConnection("jdbc:postgresql://localhost/sistemas_log", "sistemas_log",
-					"sistemas_log");
+			if (connection == null) {
+				String db = MigrationUtil.getProperty("sql_db");
+				String host = MigrationUtil.getProperty("sql_host");
+				String port = MigrationUtil.getProperty("sql_port");
+				String user = MigrationUtil.getProperty("sql_user");
+				String pwd = MigrationUtil.getProperty("sql_password");
+
+				connection = DriverManager.getConnection("jdbc:postgresql://" + host + ":" + port + "/" + db, user,
+						pwd);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected void close() {
-		try {
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void close() {
+		// try {
+		// connection.close();
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	protected List<T> findByIdEntrada(int id_entrada) {

@@ -7,6 +7,7 @@ import util.MigrationUtil;
 
 public class RegistroEntrada {
 
+	private String id;
 	private int idEntrada;
 	private int idUsuario;
 	private Date dataEntrada;
@@ -24,6 +25,14 @@ public class RegistroEntrada {
 	private List<LogJDBCUpdate> logJDBCUpdate;
 	private List<LogMovimento> logMovimento;
 	private List<LogOperacao> logOperacao;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public int getIdEntrada() {
 		return idEntrada;
@@ -163,7 +172,7 @@ public class RegistroEntrada {
 
 	@Override
 	public String toString() {
-		return "RegistroEntrada [idEntrada=" + idEntrada + ", idUsuario=" + idUsuario + ", dataEntrada="
+		return "RegistroEntrada [id=" + id + ", idEntrada=" + idEntrada + ", idUsuario=" + idUsuario + ", dataEntrada="
 				+ MigrationUtil.formatDateWithMs(dataEntrada) + ", dataSaida="
 				+ MigrationUtil.formatDateWithMs(dataSaida) + ", ip=" + ip + ", ipInternoNat=" + ipInternoNat
 				+ ", host=" + host + ", userAgent=" + userAgent + ", resolucao=" + resolucao + ", passaporte="

@@ -1,3 +1,5 @@
 - Existe uma tabela registro_entrada dentro de sistemas_comum!
 - O que é id_movimento dentro da tabela log_movimento?
 - Como definir a precisão do Date? Algumas tabelas usa Date.SSS e outras com mais de três dígitos (log_operção).
+- Desempenho é satisfatório? 6min para migrar 1.000 de 185.393 registros de entrada!
+- Algumas entradas resultam em documentos maiores que 16Mb!

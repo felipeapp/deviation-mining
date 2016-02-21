@@ -92,8 +92,8 @@ public class LogDB {
 	public String toString() {
 		return "LogDB [operacao=" + operacao + ", tabela=" + tabela + ", idElemento=" + idElemento + ", idUsuario="
 				+ idUsuario + ", horario=" + MigrationUtil.formatDateWithMs(horario) + ", codigoMovimento="
-				+ codigoMovimento + ", alteracoes=" + alteracoes + ", sistema=" + sistema + ", idLogDB=" + idLogDB
-				+ "]";
+				+ codigoMovimento + ", alteracoes=" + MigrationUtil.getFirstLine(alteracoes) + ", sistema=" + sistema
+				+ ", idLogDB=" + idLogDB + "]";
 	}
 
 }
