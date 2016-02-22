@@ -26,10 +26,10 @@ public class MigrationRun {
 			mongo.save(entrada);
 
 			if ((i + 1) % 10 == 0)
-				System.out.println("Tempo parcial: " + (System.currentTimeMillis() - start) / 1000.0);
+				System.out.println("Tempo parcial: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 		}
 
-		System.out.println("Tempo total: " + (System.currentTimeMillis() - start) / 1000.0);
+		System.out.println("Tempo total: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 
 		dao.close();
 

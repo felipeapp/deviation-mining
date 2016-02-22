@@ -39,7 +39,7 @@ public class MongoDatabase {
 
 	public void save(RegistroEntrada entrada) {
 		try {
-			mongo_ops.save(entrada);
+			mongo_ops.insert(entrada);
 		} catch (InvalidDataAccessResourceUsageException e) {
 			System.out.println("Entrada " + entrada.getIdEntrada() + " não salva: " + e.getMessage());
 		}
