@@ -53,8 +53,6 @@ public class LogDBLeituraDAO extends AbstractDAO<LogDBLeitura> {
 			System.out.println("------------------------");
 		}
 
-		dao.close();
-
 	}
 
 }

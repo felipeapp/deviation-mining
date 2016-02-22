@@ -51,8 +51,6 @@ public class LogOperacaoDAO extends AbstractDAO<LogOperacao> {
 			System.out.println("------------------------");
 		}
 
-		dao.close();
-
 	}
 
 }

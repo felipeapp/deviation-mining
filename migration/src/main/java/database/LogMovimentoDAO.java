@@ -46,8 +46,6 @@ public class LogMovimentoDAO extends AbstractDAO<LogMovimento> {
 			System.out.println("------------------------");
 		}
 
-		dao.close();
-
 	}
 
 }

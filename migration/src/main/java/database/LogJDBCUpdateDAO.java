@@ -52,8 +52,6 @@ public class LogJDBCUpdateDAO extends AbstractDAO<LogJDBCUpdate> {
 			System.out.println("------------------------");
 		}
 
-		dao.close();
-
 	}
 
 }

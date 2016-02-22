@@ -54,8 +54,6 @@ public class LogDBDAO extends AbstractDAO<LogDB> {
 			System.out.println("------------------------");
 		}
 
-		dao.close();
-
 	}
 
 }

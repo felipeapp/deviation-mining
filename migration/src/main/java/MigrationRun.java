@@ -31,8 +31,6 @@ public class MigrationRun {
 
 		System.out.println("Tempo total: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 
-		dao.close();
-
 	}
 
 }

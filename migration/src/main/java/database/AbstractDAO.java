@@ -37,14 +37,6 @@ public abstract class AbstractDAO<T> {
 		}
 	}
 
-	public void close() {
-		// try {
-		// connection.close();
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		// }
-	}
-
 	protected List<T> findByIdEntrada(int id_entrada) {
 		List<T> logs = new ArrayList<T>();
 

@@ -98,12 +98,6 @@ public class RegistroEntradaDAO extends AbstractDAO<RegistroEntrada> {
 				entrada.setLogJDBCUpdate(log_jdbc_update_dao.findByIdEntrada(id_entrada));
 				entrada.setLogMovimento(log_movimento_dao.findByIdEntrada(id_entrada));
 				entrada.setLogOperacao(log_operacao_dao.findByIdEntrada(id_entrada));
-
-				log_db_dao.close();
-				log_db_leitura_dao.close();
-				log_jdbc_update_dao.close();
-				log_movimento_dao.close();
-				log_operacao_dao.close();
 			}
 
 			rs.close();
@@ -131,8 +125,6 @@ public class RegistroEntradaDAO extends AbstractDAO<RegistroEntrada> {
 		}
 
 		System.out.println((System.currentTimeMillis() - start) / 1000.0);
-
-		dao.close();
 
 	}
 
