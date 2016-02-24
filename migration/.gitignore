@@ -1,6 +1,7 @@
 # all output directories
 /bin/
 /build/
+/target/
 # all config directories
 /.gradle/
 /.settings/
