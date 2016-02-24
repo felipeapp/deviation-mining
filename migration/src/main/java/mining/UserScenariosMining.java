@@ -14,7 +14,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 
-import database.MongoDatabase;
 import domain.LogOperacao;
 import util.VersionMapUtil;
 

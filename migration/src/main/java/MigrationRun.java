@@ -2,9 +2,9 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoOperations;
 
-import database.MongoDatabase;
 import database.RegistroEntradaDAO;
 import domain.RegistroEntrada;
+import mining.MongoDatabase;
 import mining.RegistroEntradaMining;
 
 public class MigrationRun {

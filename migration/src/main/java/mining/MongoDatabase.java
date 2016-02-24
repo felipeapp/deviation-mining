@@ -1,4 +1,4 @@
-package database;
+package mining;
 
 import java.net.UnknownHostException;
 
