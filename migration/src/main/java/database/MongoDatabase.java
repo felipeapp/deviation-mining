@@ -2,23 +2,29 @@ package database;
 
 import java.net.UnknownHostException;
 
-import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
 import com.mongodb.MongoClientURI;
 
-import domain.RegistroEntrada;
 import util.MigrationUtil;
 
+/**
+ * This class Controls the connection with the mongobd
+ * 
+ * @author felipe
+ *
+ */
 public class MongoDatabase {
 
+	/* Allow to make inserts, updates and queries in the mongobd */
 	private static MongoOperations mongo_ops;
 
-	public MongoDatabase() {
+	/**
+	 * Public Constructor
+	 */
+	private MongoDatabase() {
 		if (mongo_ops == null) {
 			String db = MigrationUtil.getProperty("nosql_db");
 			String host = MigrationUtil.getProperty("nosql_host");
@@ -36,23 +42,21 @@ public class MongoDatabase {
 			}
 		}
 	}
+	
+	/** Static Factory Method to build a MongoDatabase object  */
+	public static MongoOperations buildMongoDatabase() { return new MongoDatabase().getMongo_ops(); }
+	
+	
+	private MongoOperations getMongo_ops() { return mongo_ops; }
 
-	public void save(RegistroEntrada entrada) {
-		try {
-			mongo_ops.insert(entrada);
-		} catch (InvalidDataAccessResourceUsageException e) {
-			System.out.println("Entrada " + entrada.getIdEntrada() + " não salva: " + e.getMessage());
-		}
-	}
-
-	public int getMaxIdEntrada() {
-		DBCursor cursor = mongo_ops.getCollection("registroEntrada").find().sort(new BasicDBObject("idEntrada", -1))
-				.limit(1);
-
-		if (cursor.hasNext())
-			return mongo_ops.getConverter().read(RegistroEntrada.class, cursor.next()).getIdEntrada();
-
-		return 0;
-	}
+	
+//	/** Save a RegistroEntrada document in MongoBD */
+//	public void save(RegistroEntrada entrada) {
+//		try {
+//			mongo_ops.insert(entrada);
+//		} catch (InvalidDataAccessResourceUsageException e) {
+//			System.out.println("Entrada " + entrada.getIdEntrada() + " não salva: " + e.getMessage());
+//		}
+//	}
 
 }
