@@ -3,19 +3,19 @@
  */
 package mining;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-
-import domain.LogOperacao;
 import util.VersionMapUtil;
+import domain.LogOperacao;
+import domain.RegistroEntrada;
 
 /**
  * This class should have mining method to get information of mongodb to discovery degradation in UFRN systems
@@ -38,7 +38,7 @@ public class UserScenariosMining {
 	 *  FIXME!
 	 * 
 	 * @param version of the system
-	 * @return A mapping have the   <user_id, {timeScenario1, timeScenario2, timeScenario3, ..., timeScenarioN}> 
+	 * @return A mapping have the   <user_id+scenario, {timeScenario1, timeScenario2, timeScenario3, ..., timeScenarioN}> 
 	 */
 	public Map<String, List<Integer>> findUserScenario(String version){
 		
@@ -48,23 +48,31 @@ public class UserScenariosMining {
 		Date initialDate = VersionMapUtil.getInitialDateOfVersion(version);
 		Date finalDate = VersionMapUtil.getFinalDateOfVersion(version);
 		
-		BasicDBObject query = new BasicDBObject("Date", 
-			    new BasicDBObject("$gt", initialDate)).append("$lte", finalDate);
 		
+		MongoTemplate mongoTemplate = MongoDatabase.buildMongoDatabaseWithMongoTemplate();
 		
-		MongoOperations mongoOp = MongoDatabase.buildMongoDatabase();
+		Query query = new Query(Criteria.where("logOperacao.horario").gt(initialDate).lt(finalDate));
 		
-		DBCursor cursor = mongoOp.getCollection("logOperacao").find(query);
+		List<RegistroEntrada> registros = mongoTemplate.find(query, RegistroEntrada.class);
 		
-		List<LogOperacao> listLogOperacao = new ArrayList<>();
+		Map<String, List<Integer>> retorno = new HashMap<String, List<Integer>>();
 		
-		while (cursor.hasNext()){
-			listLogOperacao.add( mongoOp.getConverter().read(LogOperacao.class, cursor.next()) );
+		for (RegistroEntrada registroEntrada : registros) {
+			
+			for (LogOperacao log : registroEntrada.getLogOperacao() ){
+				
+				String key = registroEntrada.getIdUsuario()+log.getAction();
+				
+				if(retorno.containsKey(key) ){
+					retorno.get(key).add(log.getTempo());
+				}else{
+					retorno.put(key, Arrays.asList( new Integer[]{log.getTempo()}));
+				}
+			}
+			
 		}
 		
-		// TODO install the mongobd and see if this is working and improve the search
-		
-		return null;
+		return retorno;
 	}
 
 }
