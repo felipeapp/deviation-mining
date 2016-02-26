@@ -6,9 +6,9 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
-import com.mongodb.MongoClientURI;
-
 import util.MigrationUtil;
+
+import com.mongodb.MongoClientURI;
 
 /**
  * This class Controls the connection with the mongobd
@@ -21,6 +21,8 @@ public class MongoDatabase {
 	/* Allow to make inserts, updates and queries in the mongobd */
 	private static MongoOperations mongo_ops;
 
+	private static MongoTemplate mongoTemplete;
+	
 	/**
 	 * Public Constructor
 	 */
@@ -37,6 +39,7 @@ public class MongoDatabase {
 
 			try {
 				mongo_ops = new MongoTemplate(new SimpleMongoDbFactory(uri));
+				mongoTemplete = new MongoTemplate(new SimpleMongoDbFactory(uri));
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -46,8 +49,13 @@ public class MongoDatabase {
 	/** Static Factory Method to build a MongoDatabase object  */
 	public static MongoOperations buildMongoDatabase() { return new MongoDatabase().getMongo_ops(); }
 	
+	/** Static Factory Method to build a MongoDatabase object  */
+	public static MongoTemplate buildMongoDatabaseWithMongoTemplate() { return new MongoDatabase().getMongoTemplate(); }
+	
 	
 	private MongoOperations getMongo_ops() { return mongo_ops; }
+	
+	private MongoTemplate getMongoTemplate() { return mongoTemplete; }
 
 	
 //	/** Save a RegistroEntrada document in MongoBD */
