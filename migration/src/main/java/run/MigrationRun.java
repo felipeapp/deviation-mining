@@ -1,6 +1,8 @@
 package run;
+
 import java.util.List;
 
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 import database.RegistroEntradaDAO;
@@ -28,7 +30,12 @@ public class MigrationRun {
 			System.out.println("Migrando entrada: " + ids.get(i) + " - " + (i + 1) + " / " + ids.size());
 
 			RegistroEntrada entrada = dao.findByID(ids.get(i));
-			mongoOp.insert(entrada);
+
+			try {
+				mongoOp.insert(entrada);
+			} catch (InvalidDataAccessResourceUsageException e) {
+				System.out.println("Entrada " + entrada.getIdEntrada() + " não salva: " + e.getMessage());
+			}
 
 			if ((i + 1) % 10 == 0)
 				System.out.println("Tempo parcial: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");

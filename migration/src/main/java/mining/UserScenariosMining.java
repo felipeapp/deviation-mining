@@ -42,8 +42,6 @@ public class UserScenariosMining {
 	 */
 	public Map<String, List<Integer>> findUserScenario(String version){
 		
-		Map<String, List<Integer>> map = new HashMap<>();
-		
 		// get all log between these dates
 		Date initialDate = VersionMapUtil.getInitialDateOfVersion(version);
 		Date finalDate = VersionMapUtil.getFinalDateOfVersion(version);

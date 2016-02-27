@@ -1,6 +1,7 @@
 package util;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,12 @@ public abstract class MigrationUtil {
 
 			try {
 				properties.load(new FileInputStream("src/main/resources/database.properties"));
+			} catch (FileNotFoundException e) {
+				try {
+					properties.load(new FileInputStream("database.properties"));
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
