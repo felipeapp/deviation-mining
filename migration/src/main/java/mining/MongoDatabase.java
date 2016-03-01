@@ -6,9 +6,9 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
-import util.MigrationUtil;
-
 import com.mongodb.MongoClientURI;
+
+import util.MigrationUtil;
 
 /**
  * This class Controls the connection with the mongobd
@@ -34,8 +34,9 @@ public class MongoDatabase {
 			String user = MigrationUtil.getProperty("nosql_user");
 			String pwd = MigrationUtil.getProperty("nosql_password");
 
-			MongoClientURI uri = new MongoClientURI(
-					"mongodb://" + user + ":" + pwd + "@" + host + ":" + port + "/" + db + "?authSource=admin");
+			String connection = "mongodb://" + ( ! user.isEmpty() && ! pwd.isEmpty() ?  user + ":" + pwd + "@" : "" ) + host + ":" + port + "/" + db + "?authSource=admin";
+			
+			MongoClientURI uri = new MongoClientURI(connection);
 
 			try {
 				mongo_ops = new MongoTemplate(new SimpleMongoDbFactory(uri));

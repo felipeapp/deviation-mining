@@ -13,9 +13,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import util.VersionMapUtil;
 import domain.LogOperacao;
 import domain.RegistroEntrada;
+import util.VersionMapUtil;
 
 /**
  * This class should have mining method to get information of mongodb to discovery degradation in UFRN systems
@@ -73,4 +73,12 @@ public class UserScenariosMining {
 		return retorno;
 	}
 
+	public static void main(String[] args) {
+		Map<String, List<Integer>> map = new UserScenariosMining().findUserScenario("SIGAA-3.5.0");
+		
+		for (String key : map.keySet()) {
+			System.out.println(">>>>"+map.get(key));
+		}
+	}
+	
 }
