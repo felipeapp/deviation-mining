@@ -2,7 +2,6 @@ package run;
 
 import java.util.List;
 
-import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 import database.RegistroEntradaDAO;
@@ -33,7 +32,7 @@ public class MigrationRun {
 
 			try {
 				mongoOp.insert(entrada);
-			} catch (InvalidDataAccessResourceUsageException e) {
+			} catch (Exception e) {
 				System.out.println("Entrada " + entrada.getIdEntrada() + " não salva: " + e.getMessage());
 			}
 
