@@ -1,33 +1,20 @@
-/**
- * 
- */
 package mining;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
+import org.springframework.data.mongodb.core.query.Query;
 
 import domain.RegistroEntrada;
 
-/**
- * @author jadson
- *
- */
 public class RegistroEntradaMining {
-	
+
 	public int getMaxIdEntrada() {
-		
 		MongoOperations mongoOp = MongoDatabase.buildMongoDatabase();
-		
-		DBCursor cursor = mongoOp.getCollection("registroEntrada").find().sort(new BasicDBObject("idEntrada", -1))
-				.limit(1);
 
-		if (cursor.hasNext())
-			return mongoOp.getConverter().read(RegistroEntrada.class, cursor.next()).getIdEntrada();
+		RegistroEntrada r = mongoOp.findOne(new Query().with(new Sort(Sort.Direction.DESC, "idEntrada")),
+				RegistroEntrada.class);
 
-		return 0;
+		return r == null ? 0 : r.getIdEntrada();
 	}
-	
 
 }
