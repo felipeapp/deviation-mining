@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import domain.LogOperacao;
 import domain.RegistroEntrada;
+import util.StatisticsUtil;
 import util.VersionMapUtil;
 
 /**
@@ -39,7 +40,7 @@ public class UserScenariosMining {
 	 * @return A mapping have the <user_id+scenario, {timeScenario1,
 	 *         timeScenario2, timeScenario3, ..., timeScenarioN}>
 	 */
-	public Map<String, List<Integer>> findUserScenario(String version) {
+	public Map<String, List<Double>> findUserScenario(String version) {
 
 		// get all log between these dates for a specific system
 		Date initialDate = VersionMapUtil.getInitialDateOfVersion(version);
@@ -52,7 +53,7 @@ public class UserScenariosMining {
 
 		List<RegistroEntrada> registros = mongoOps.find(query, RegistroEntrada.class);
 
-		Map<String, List<Integer>> retorno = new HashMap<String, List<Integer>>();
+		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
 
 		for (RegistroEntrada registroEntrada : registros) {
 
@@ -60,27 +61,61 @@ public class UserScenariosMining {
 
 				String key = registroEntrada.getIdUsuario() + log.getAction();
 
-				List<Integer> tempos = retorno.get(key);
+				List<Double> tempos = retorno.get(key);
 
 				if (tempos == null) {
-					tempos = new ArrayList<Integer>();
+					tempos = new ArrayList<Double>();
 					retorno.put(key, tempos);
 				}
 
-				tempos.add(log.getTempo());
+				// TODO: Avaliar se não existe forma melhor de codificar isso
+				tempos.add(Double.parseDouble(new Integer(log.getTempo()).toString()));
 			}
 
 		}
 
 		return retorno;
 	}
+	
+	public Map<String, Double> calculateExecutionMeanScenario(Map<String, List<Double>> mapScenarioExecutionTime){
+		
+		Map<String, Double> mapExecutionMeanScenario = new HashMap<String, Double>();
+		
+		for (String key : mapScenarioExecutionTime.keySet()) {
+			
+			Double[] listScenarioExecutionTimeAux = mapScenarioExecutionTime.get(key).toArray(new Double[0]);
+			
+			double[] listScenarioExecutionTime = new double[listScenarioExecutionTimeAux.length];
+			
+			for (int i = 0; i < listScenarioExecutionTimeAux.length; i++) {
+				listScenarioExecutionTime[i] = listScenarioExecutionTimeAux[i];
+			}
+			
+			mapExecutionMeanScenario.put(key, StatisticsUtil.mean(listScenarioExecutionTime));
+		}
+		
+		return mapExecutionMeanScenario;
+		
+	}
 
 	public static void main(String[] args) {
-		Map<String, List<Integer>> map = new UserScenariosMining().findUserScenario("SIPAC-3.5.0");
+		Map<String, List<Double>> map = new UserScenariosMining().findUserScenario("SIGAA-3.21.0");
 
+		System.out.println("Cenarios Executados e Tempos de Execucao");		
 		for (String key : map.keySet()) {
-			System.out.println(map.get(key));
+			System.out.println(key+" - "+map.get(key));
 		}
+		
+		Map<String, Double> mapExecutionMeanScenario = new UserScenariosMining().calculateExecutionMeanScenario(map);
+
+		
+		System.out.println("-----------------------------------------");
+		System.out.println("-----------------------------------------");
+		System.out.println("Media de tempo de execução ");
+		for (String key : mapExecutionMeanScenario.keySet()) {
+			System.out.println(key+" - "+mapExecutionMeanScenario.get(key));
+		}
+						
 	}
 
 }
