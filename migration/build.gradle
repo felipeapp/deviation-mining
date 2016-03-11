@@ -47,6 +47,9 @@ dependencies {
 	
 	// Apache Commons Math
 	compile 'org.apache.commons:commons-math3:3.6'
+
+	// Utility classes, google's collections
+	compile 'com.google.guava:guava:19.0'
 	
     // JUnit test framework
     testCompile 'junit:junit:4.12'

@@ -11,7 +11,7 @@ import com.mongodb.MongoClientURI;
 import util.MigrationUtil;
 
 /**
- * This class Controls the connection with the mongobd
+ * This class Controls the connection with the mongodb
  * 
  * @author felipe
  */
