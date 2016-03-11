@@ -11,3 +11,4 @@
 
 # all .class files
 *.class
+/.DS_Store
