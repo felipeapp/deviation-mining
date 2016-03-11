@@ -1,5 +1,7 @@
-/**
- * 
+/*
+ * Copyright (C) Automation Software Engineering Group
+ *
+ * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
 package mining.user_scenarios;
 
@@ -14,7 +16,7 @@ import util.StatisticsUtil;
 /**
  * Class to calculate statistic of the data return by mining.
  * 
- * @author jadson
+ * @author jadson - jadsonjs@gmail.com
  *
  */
 public class UserScenariosMiningStatistics {
@@ -30,6 +32,7 @@ public class UserScenariosMiningStatistics {
 		Map<String, Double> mapExecutionMeanScenario = new HashMap<String, Double>();
 		
 		for (String key : mapScenarioExecutionTime.keySet()) {
+			// converts the List<Integer> to double[] and calculate the mean of its elements
 			mapExecutionMeanScenario.put(key, StatisticsUtil.mean(   Doubles.toArray( mapScenarioExecutionTime.get(key) ) )   );
 		}
 		

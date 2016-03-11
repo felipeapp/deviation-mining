@@ -1,5 +1,7 @@
-/**
- * 
+/*
+ * Copyright (C) Automation Software Engineering Group
+ *
+ * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
 package mining.user_scenarios;
 
@@ -11,7 +13,7 @@ import mining.user_scenarios.UserScenariosMiningFactory.DATABASE;
 /**
  * Execute the User Scenario Mining
  * 
- * @author jadson
+ * @author jadson - jadsonjs@gmail.com
  *
  */
 public class UserScenariosMiningExecutor {
