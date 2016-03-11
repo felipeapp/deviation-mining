@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mining;
+package mining.user_scenarios;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import domain.LogOperacao;
 import domain.RegistroEntrada;
+import mining.MongoDatabase;
 import util.VersionMapUtil;
 
 /**

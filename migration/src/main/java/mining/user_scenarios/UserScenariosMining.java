@@ -1,4 +1,4 @@
-package mining;
+package mining.user_scenarios;
 
 import java.util.List;
 import java.util.Map;

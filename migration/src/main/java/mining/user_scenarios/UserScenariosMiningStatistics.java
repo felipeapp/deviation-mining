@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mining;
+package mining.user_scenarios;
 
 import java.util.HashMap;
 import java.util.List;

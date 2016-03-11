@@ -1,12 +1,12 @@
 /**
  * 
  */
-package mining;
+package mining.user_scenarios;
 
 import java.util.List;
 import java.util.Map;
 
-import mining.UserScenariosMiningFactory.DATABASE;
+import mining.user_scenarios.UserScenariosMiningFactory.DATABASE;
 
 /**
  * Execute the User Scenario Mining
