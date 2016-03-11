@@ -18,7 +18,7 @@ public class VersionMapUtilTest {
 	@Test
 	public void testGetDataInicialVersao() {
 		try {
-			Assert.assertEquals( new SimpleDateFormat("dd/MM/yy").parse("22/11/11"), VersionMapUtil.getInitialDateOfVersion("SIGAA-3.5.0") );
+			Assert.assertEquals( new SimpleDateFormat("dd/MM/yy").parse("22/11/14"), VersionMapUtil.getInitialDateOfVersion("SIGAA-3.5.0") );
 		} catch (ParseException e) {
 			Assert.fail();
 		}
@@ -30,7 +30,7 @@ public class VersionMapUtilTest {
 	@Test
 	public void testGetDataFinalVersao() {
 		try {
-			Assert.assertEquals( new SimpleDateFormat("dd/MM/yy").parse("27/03/12"), VersionMapUtil.getFinalDateOfVersion("SIGAA-3.5.0") );
+			Assert.assertEquals( new SimpleDateFormat("dd/MM/yy").parse("27/03/15"), VersionMapUtil.getFinalDateOfVersion("SIGAA-3.5.0") );
 		} catch (ParseException e) {
 			Assert.fail();
 		}

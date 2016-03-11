@@ -78,16 +78,4 @@ public abstract class StatisticsUtil {
 		return paired ? StatUtils.meanDifference(sample1, sample2) : StatUtils.mean(sample1) - StatUtils.mean(sample2);
 	}
 
-	public static void main(String[] args) {
-
-		double[] s1 = { 1.83, 0.50, 1.62, 2.48, 1.68, 1.88, 1.55, 3.06, 1.30 };
-		double[] s2 = { 0.878, 0.647, 0.598, 2.05, 1.06, 1.29, 1.06, 3.14, 1.29 };
-
-		System.out.println("Mean: " + mean(s1));
-		System.out.println("Wilconx Signed: " + wilcoxonSignedRankTest(s1, s2));
-		System.out.println("T-Test: " + tTest(s1, s2));
-		System.out.println("U-Test: " + mannWhitneyUTest(s1, s2));
-
-	}
-
 }
