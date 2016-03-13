@@ -21,12 +21,46 @@ import java.util.List;
  */
 public class VersionMapUtil {
 	
+	//Default path for the file where we have the system versions release dates //
+	private String csvFile = "src/main/resources/versions_map.csv";
+	
+	private static List<String[]> cvsLines = new ArrayList<>();
+	
+	public VersionMapUtil(){	
+		if(cvsLines.size() == 0 ){
+			BufferedReader br = null;
+			String line = "";
+			String cvsSplitBy = ";";
+			
+			try {
+	
+				br = new BufferedReader(new FileReader(csvFile));
+				while ((line = br.readLine()) != null) {
+					String[] data = line.split(cvsSplitBy);
+					cvsLines.add( data );
+				}
+	
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (br != null) {
+					try {
+						br.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+
+	
+	
 	/**
 	 * @param version
 	 * @return The initial date of a version was pushed in the UFRN
 	 */
-	public static Date getInitialDateOfVersion(String version){
-		List<String[]> cvsLines = getCSVData();
+	public Date getInitialDateOfVersion(String version){
 		
 		try {
 			for (String[] data : cvsLines) {
@@ -47,8 +81,7 @@ public class VersionMapUtil {
 	 * @param version
 	 * @return The final date of a version was pushed in the UFRN
 	 */
-	public static Date getFinalDateOfVersion(String version){
-		List<String[]> cvsLines = getCSVData();
+	public Date getFinalDateOfVersion(String version){
 		
 		try {
 			for (String[] data : cvsLines) {
@@ -64,42 +97,10 @@ public class VersionMapUtil {
 		}
 		return null;
 	}
-
 	
-	private static List<String[]> getCSVData() {
-		
-		//path for the file
-		String csvFile = "src/main/resources/versions_map.csv";
-		
-		BufferedReader br = null;
-		String line = "";
-		String cvsSplitBy = ";";
-
-		List<String[]> cvsLines = new ArrayList<>();
-		
-		try {
-
-			br = new BufferedReader(new FileReader(csvFile));
-			while ((line = br.readLine()) != null) {
-				String[] data = line.split(cvsSplitBy);
-				cvsLines.add( data );
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			return new ArrayList<String[]>();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return cvsLines;
+	// Allow define a different file
+	public void setCsvFile(String csvFile) {
+		this.csvFile = csvFile;
 	}
-	
-	
+
 }

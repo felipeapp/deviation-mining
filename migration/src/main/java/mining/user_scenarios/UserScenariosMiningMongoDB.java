@@ -43,8 +43,8 @@ public class UserScenariosMiningMongoDB implements UserScenariosMining{
 	public Map<String, List<Double>> findUserScenario(String version) {
 
 		// get all log between these dates for a specific system
-		Date initialDate = VersionMapUtil.getInitialDateOfVersion(version);
-		Date finalDate = VersionMapUtil.getFinalDateOfVersion(version);
+		Date initialDate = new VersionMapUtil().getInitialDateOfVersion(version);
+		Date finalDate = new VersionMapUtil().getFinalDateOfVersion(version);
 		String system = version.substring(0, version.indexOf('-')).trim().toUpperCase();
 
 		MongoOperations mongoOps = MongoDatabase.buildMongoDatabase();
