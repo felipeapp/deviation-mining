@@ -1,4 +1,4 @@
-package br.ufrn.ase.service;
+package br.ufrn.ase.dao;
 
 import java.net.UnknownHostException;
 

@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.service.performance;
+package br.ufrn.ase.analysis;
 
 import java.util.HashMap;
 import java.util.List;

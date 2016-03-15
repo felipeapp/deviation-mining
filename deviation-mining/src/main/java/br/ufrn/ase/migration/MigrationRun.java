@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoOperations;
 
-import br.ufrn.ase.dao.RegistroEntradaDAO;
+import br.ufrn.ase.dao.MongoDatabase;
 import br.ufrn.ase.domain.RegistroEntrada;
-import br.ufrn.ase.service.MongoDatabase;
-import br.ufrn.ase.service.RegistroEntradaMining;
+import br.ufrn.ase.migration.dao.RegistroEntradaDAO;
 
 public class MigrationRun {
 
@@ -17,7 +16,7 @@ public class MigrationRun {
 
 		MongoOperations mongoOp = MongoDatabase.buildMongoDatabase();
 
-		int max_id_entrada = new RegistroEntradaMining().getMaxIdEntrada();
+		int max_id_entrada = dao.getMaxIdEntrada();
 
 		System.out.println("Última entrada migrada: " + max_id_entrada);
 		List<Integer> ids = dao.getIDListGT(max_id_entrada);

@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.service.performance;
+package br.ufrn.ase.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public interface UserScenariosMining {
+public interface UserScenariosDAO {
 
 	
 	public Map<String, List<Double>> findUserScenario(String version);

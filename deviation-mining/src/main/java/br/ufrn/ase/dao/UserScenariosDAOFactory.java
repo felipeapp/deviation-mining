@@ -3,7 +3,9 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.service.performance;
+package br.ufrn.ase.dao;
+
+import br.ufrn.ase.dao.mongodb.UserScenariosMongoDBDAO;
 
 /**
  * 
@@ -15,7 +17,7 @@ package br.ufrn.ase.service.performance;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class UserScenariosMiningFactory {
+public class UserScenariosDAOFactory {
 
 	/**
 	 * The database supported
@@ -26,9 +28,9 @@ public class UserScenariosMiningFactory {
 	 * @param database database type
 	 * @return return the mining for specific database
 	 */
-	public static UserScenariosMining getMining(DATABASE database){
+	public static UserScenariosDAO getDAO(DATABASE database){
 		if(database == DATABASE.MONGODB)
-			return new UserScenariosMiningMongoDB();
+			return new UserScenariosMongoDBDAO();
 		else 
 			throw new UnsupportedOperationException("Mining in postgres not implemented");
 	}

@@ -1,4 +1,4 @@
-package br.ufrn.ase.dao;
+package br.ufrn.ase.migration.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

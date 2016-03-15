@@ -1,4 +1,4 @@
-package br.ufrn.ase.dao;
+package br.ufrn.ase.migration.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,6 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
+
+import br.ufrn.ase.dao.MongoDatabase;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.MigrationUtil;
@@ -14,6 +19,15 @@ public class RegistroEntradaDAO extends AbstractDAO<RegistroEntrada> {
 
 	public RegistroEntradaDAO() {
 		super();
+	}
+	
+	public int getMaxIdEntrada() {
+		MongoOperations mongoOp = MongoDatabase.buildMongoDatabase();
+
+		RegistroEntrada r = mongoOp.findOne(new Query().with(new Sort(Sort.Direction.DESC, "idEntrada")),
+				RegistroEntrada.class);
+
+		return r == null ? 0 : r.getIdEntrada();
 	}
 
 	@Override

@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.service.performance;
+package br.ufrn.ase.dao.mongodb;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -17,9 +17,10 @@ import java.util.Map;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 
+import br.ufrn.ase.dao.MongoDatabase;
+import br.ufrn.ase.dao.UserScenariosDAO;
 import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.RegistroEntrada;
-import br.ufrn.ase.service.MongoDatabase;
 import br.ufrn.ase.util.VersionMapUtil;
 
 /**
@@ -28,7 +29,7 @@ import br.ufrn.ase.util.VersionMapUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class UserScenariosMiningMongoDB implements UserScenariosMining{
+public class UserScenariosMongoDBDAO implements UserScenariosDAO{
 
 	/**
 	 * This method should get from the mongobd a map of ALL users and the time
