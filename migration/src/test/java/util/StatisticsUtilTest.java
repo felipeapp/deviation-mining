@@ -8,6 +8,8 @@ package util;
 import org.junit.Assert;
 import org.junit.Test;
 
+import br.ufrn.ase.util.StatisticsUtil;
+
 /**
  * @author jadson - jadsonjs@gmail.com
  *
@@ -18,7 +20,7 @@ public class StatisticsUtilTest {
 	double[] s2 = { 0.878, 0.647, 0.598, 2.05, 1.06, 1.29, 1.06, 3.14, 1.29 };
 	
 	/**
-	 * Test method for {@link util.StatisticsUtil#tTest(double[], double[])}.
+	 * Test method for {@link br.ufrn.ase.util.StatisticsUtil#tTest(double[], double[])}.
 	 */
 	@Test
 	public void testTTest() {
@@ -26,7 +28,7 @@ public class StatisticsUtilTest {
 	}
 
 	/**
-	 * Test method for {@link util.StatisticsUtil#mannWhitneyUTest(double[], double[])}.
+	 * Test method for {@link br.ufrn.ase.util.StatisticsUtil#mannWhitneyUTest(double[], double[])}.
 	 */
 	@Test
 	public void testMannWhitneyUTest() {
@@ -34,7 +36,7 @@ public class StatisticsUtilTest {
 	}
 
 	/**
-	 * Test method for {@link util.StatisticsUtil#wilcoxonSignedRankTest(double[], double[])}.
+	 * Test method for {@link br.ufrn.ase.util.StatisticsUtil#wilcoxonSignedRankTest(double[], double[])}.
 	 */
 	@Test
 	public void testWilcoxonSignedRankTest() {
@@ -42,7 +44,7 @@ public class StatisticsUtilTest {
 	}
 
 	/**
-	 * Test method for {@link util.StatisticsUtil#mean(double[])}.
+	 * Test method for {@link br.ufrn.ase.util.StatisticsUtil#mean(double[])}.
 	 */
 	@Test
 	public void testMean() {
@@ -50,7 +52,7 @@ public class StatisticsUtilTest {
 	}
 
 	/**
-	 * Test method for {@link util.StatisticsUtil#meanDifference(double[], double[], boolean)}.
+	 * Test method for {@link br.ufrn.ase.util.StatisticsUtil#meanDifference(double[], double[], boolean)}.
 	 */
 	@Test
 	public void testMeanDifference() {
