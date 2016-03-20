@@ -5,7 +5,7 @@
  */
 package br.ufrn.ase.dao;
 
-import br.ufrn.ase.dao.mongodb.UserScenariosMongoDBDAO;
+import br.ufrn.ase.dao.mongodb.UserScenariosMongoDAO;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class UserScenariosDAOFactory {
 	 */
 	public static UserScenariosDAO getDAO(DATABASE database){
 		if(database == DATABASE.MONGODB)
-			return new UserScenariosMongoDBDAO();
+			return new UserScenariosMongoDAO();
 		else 
 			throw new UnsupportedOperationException("Mining in postgres not implemented");
 	}

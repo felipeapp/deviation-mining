@@ -19,7 +19,7 @@ import br.ufrn.ase.util.StatisticsUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class UserScenariosMiningStatistics {
+public class UserScenariosStatistics {
 	
 	
 	/***

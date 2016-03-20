@@ -2,13 +2,13 @@ package br.ufrn.ase.gui;
 
 import java.util.Map;
 
-import br.ufrn.ase.service.performance.UserScenariosMiningService;
+import br.ufrn.ase.service.performance.UserScenariosService;
 
 public class Console {
 
 	public static void main(String[] args) {
 
-		Map<String, Double> map = new UserScenariosMiningService().calculateExecutionMeanScenario("SIGAA-3.21.0");
+		Map<String, Double> map = new UserScenariosService().calculateExecutionMeanScenario("SIGAA-3.21.0");
 
 		printInformationMap(map);
 

@@ -8,7 +8,7 @@ package br.ufrn.ase.service.performance;
 import java.util.List;
 import java.util.Map;
 
-import br.ufrn.ase.analysis.UserScenariosMiningStatistics;
+import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.dao.UserScenariosDAOFactory;
 import br.ufrn.ase.dao.UserScenariosDAOFactory.DATABASE;
 
@@ -18,7 +18,7 @@ import br.ufrn.ase.dao.UserScenariosDAOFactory.DATABASE;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class UserScenariosMiningService {
+public class UserScenariosService {
 
 	/**
 	 * Starts here.
@@ -29,7 +29,7 @@ public class UserScenariosMiningService {
 
 		Map<String, List<Double>> map = UserScenariosDAOFactory.getDAO(DATABASE.MONGODB).findUserScenario(system_version);
 
-		Map<String, Double> mapExecutionMeanScenario = new UserScenariosMiningStatistics().calculateExecutionMeanScenario(map);
+		Map<String, Double> mapExecutionMeanScenario = new UserScenariosStatistics().calculateExecutionMeanScenario(map);
 
 		return mapExecutionMeanScenario;
 

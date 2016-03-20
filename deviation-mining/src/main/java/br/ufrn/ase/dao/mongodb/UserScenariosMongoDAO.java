@@ -29,7 +29,7 @@ import br.ufrn.ase.util.VersionMapUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class UserScenariosMongoDBDAO implements UserScenariosDAO{
+public class UserScenariosMongoDAO implements UserScenariosDAO{
 
 	/**
 	 * This method should get from the mongobd a map of ALL users and the time
