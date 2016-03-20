@@ -29,7 +29,7 @@ import br.ufrn.ase.util.VersionMapUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class UserScenariosMongoDAO implements UserScenariosDAO{
+public class UserScenariosMongoDAO implements UserScenariosDAO {
 
 	/**
 	 * This method should get from the mongobd a map of ALL users and the time
@@ -38,8 +38,10 @@ public class UserScenariosMongoDAO implements UserScenariosDAO{
 	 * 
 	 * All these data will be use for construct statistic analysis.
 	 * 
-	 * @param version The version of the system
-	 * @return A mapping have the <user_id+scenario, {timeScenario1, timeScenario2, timeScenario3, ..., timeScenarioN}>
+	 * @param version
+	 *            The version of the system
+	 * @return A mapping have the <user_id+scenario, {timeScenario1,
+	 *         timeScenario2, timeScenario3, ..., timeScenarioN}>
 	 */
 	public Map<String, List<Double>> findUserScenario(String version) {
 
@@ -51,6 +53,7 @@ public class UserScenariosMongoDAO implements UserScenariosDAO{
 		MongoOperations mongoOps = MongoDatabase.buildMongoDatabase();
 
 		Query query = query(where("dataEntrada").gt(initialDate).lt(finalDate).and("sistema").is(system));
+		query.fields().include("idUsuario").include("logOperacao.action").include("logOperacao.tempo");
 
 		List<RegistroEntrada> registros = mongoOps.find(query, RegistroEntrada.class);
 
@@ -68,13 +71,13 @@ public class UserScenariosMongoDAO implements UserScenariosDAO{
 					tempos = new ArrayList<Double>();
 					retorno.put(key, tempos);
 				}
-				
-				tempos.add(  new Double( (double) log.getTempo()) );
+
+				tempos.add(new Double((double) log.getTempo()));
 			}
 
 		}
 
 		return retorno;
 	}
-	
+
 }

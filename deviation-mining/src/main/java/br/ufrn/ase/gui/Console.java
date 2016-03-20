@@ -8,7 +8,11 @@ public class Console {
 
 	public static void main(String[] args) {
 
-		Map<String, Double> map = new UserScenariosService().calculateExecutionMeanScenario("SIGAA-3.21.0");
+		long start = System.currentTimeMillis();
+
+		Map<String, Double> map = new UserScenariosService().calculateExecutionMeanScenario("SIPAC-1.0.0");
+
+		System.out.println("Tempo: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 
 		printInformationMap(map);
 
