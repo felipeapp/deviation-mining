@@ -10,7 +10,7 @@ public class Console {
 
 		long start = System.currentTimeMillis();
 
-		Map<String, Double> map = new UserScenariosService().calculateExecutionMeanScenario("SIPAC-1.0.0");
+		Map<String, Double> map = new UserScenariosService().calculateExecutionMeanScenario("SIGAA-3.21.0");
 
 		System.out.println("Tempo: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 
