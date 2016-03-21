@@ -13,7 +13,7 @@ apply plugin: 'eclipse'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group 'nosql-tools'
+group 'deviation-mining'
 version '0.0.1-SNAPSHOT'
 
 compileJava.options.encoding = 'ISO-8859-1'
@@ -44,6 +44,33 @@ dependencies {
     // JUnit and Mockito test frameworks
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.9.5'
+}
+
+
+/* Task to run the unit tests for each build */
+task unitTest(type: Test, dependsOn: testClasses, group: test, description: "Run the unit tests") {
+ 
+   include '**/AllUnitTests.*'
+   exclude '**/AllIntegrationTests.*'
+}
+ 
+/* Task to run the integration tests just for especific builds */
+task integrationTest(type: Test, dependsOn: testClasses, group: test, description: "Run the integration tests") {
+ 
+   include '**/AllIntegrationTests.*'
+   exclude '**/AllUnitTests.*'
+ 
+}
+ 
+/* Configuration for all tests */
+tasks.withType(Test) {
+ 
+    /* Memory the will be used in the test */
+    jvmArgs "-XX:MaxPermSize=1024m"
+}
+/* Disable test in the build, run the test only when call the specific task */
+test {
+   exclude '**/*'
 }
 
 
