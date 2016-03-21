@@ -5,33 +5,50 @@
  */
 package br.ufrn.ase.dao;
 
+import br.ufrn.ase.dao.mongodb.RegistroEntradaMongoDAO;
 import br.ufrn.ase.dao.mongodb.UserScenariosMongoDAO;
 
 /**
  * 
- * Allow to change the database where the mining will happen. if is relational database or nosql database.
+ * Allow to change the database where the mining will happen.
  * 
- * We don't know yet if mongodb was a good choice to mining, so this class provide change mongodb to postgre 
- * or another database any time.
+ * We don't know yet if mongodb was a good choice to mining, so this class
+ * provide the possibility of changing mongodb to postgres or another database
+ * any time.
  * 
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class UserScenariosDAOFactory {
+public abstract class DAOFactory {
 
 	/**
-	 * The database supported
+	 * The supported database
 	 */
-	public enum DATABASE{POSTGRES, MONGODB};
-	
+	public enum DATABASE {
+		POSTGRES, MONGODB
+	};
+
 	/**
-	 * @param database database type
-	 * @return return the mining for specific database
+	 * Current default database
 	 */
-	public static UserScenariosDAO getDAO(DATABASE database){
-		if(database == DATABASE.MONGODB)
-			return new UserScenariosMongoDAO();
-		else 
-			throw new UnsupportedOperationException("Mining in postgres not implemented");
+	private static final DATABASE db = DATABASE.MONGODB;
+
+	/**
+	 * @param cls
+	 *            The class to create the DAO
+	 * @return return the desired DAO
+	 */
+	public static <T> T getDAO(Class<T> cls) {
+		if (db == DATABASE.MONGODB) {
+			if (cls == RegistroEntradaDAO.class)
+				return cls.cast(new RegistroEntradaMongoDAO());
+			else if (cls == UserScenariosDAO.class)
+				return cls.cast(new UserScenariosMongoDAO());
+			else
+				throw new UnsupportedOperationException("DAO support for " + cls.getName() + " is not implemented");
+		} else {
+			throw new UnsupportedOperationException("Databse support for " + db + " is not implemented");
+		}
 	}
+
 }

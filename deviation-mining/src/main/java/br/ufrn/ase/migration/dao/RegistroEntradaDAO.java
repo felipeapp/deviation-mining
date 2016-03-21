@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 
-import br.ufrn.ase.dao.MongoDatabase;
+import br.ufrn.ase.dao.mongodb.MongoDatabase;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.MigrationUtil;
@@ -20,7 +20,7 @@ public class RegistroEntradaDAO extends AbstractDAO<RegistroEntrada> {
 	public RegistroEntradaDAO() {
 		super();
 	}
-	
+
 	public int getMaxIdEntrada() {
 		MongoOperations mongoOp = MongoDatabase.buildMongoDatabase();
 

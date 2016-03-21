@@ -16,7 +16,6 @@ import java.util.Map;
  */
 public interface UserScenariosDAO {
 
-	
 	public Map<String, List<Double>> findUserScenario(String version);
 
 }

@@ -1,4 +1,4 @@
-package br.ufrn.ase.dao;
+package br.ufrn.ase.dao.mongodb;
 
 import java.net.UnknownHostException;
 

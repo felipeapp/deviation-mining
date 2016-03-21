@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoOperations;
 
-import br.ufrn.ase.dao.MongoDatabase;
+import br.ufrn.ase.dao.mongodb.MongoDatabase;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.migration.dao.RegistroEntradaDAO;
 
