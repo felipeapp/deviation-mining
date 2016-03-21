@@ -7,7 +7,6 @@ import br.ufrn.ase.service.performance.UserScenariosService;
 public class Console {
 
 	public static void main(String[] args) {
-
 		long start = System.currentTimeMillis();
 
 		Map<String, Double> map = new UserScenariosService().calculateExecutionMeanScenario("SIGAA-3.21.0");
@@ -15,7 +14,6 @@ public class Console {
 		System.out.println("Tempo: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 
 		printInformationMap(map);
-
 	}
 
 	private static void printInformationMap(Map<String, Double> map) {

@@ -35,7 +35,7 @@ public class UserScenariosMongoDAO implements UserScenariosDAO {
 	 * @return A mapping have the <user_id+scenario, {timeScenario1,
 	 *         timeScenario2, timeScenario3, ..., timeScenarioN}>
 	 */
-	public Map<String, List<Double>> findUserScenario(String system_version) {
+	public Map<String, List<Double>> findUserScenario(String system_version, boolean is_user_enabled) {
 		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
 
 		List<RegistroEntrada> registros = DAOFactory.getDAO(RegistroEntradaDAO.class)
@@ -43,7 +43,8 @@ public class UserScenariosMongoDAO implements UserScenariosDAO {
 
 		for (RegistroEntrada registroEntrada : registros) {
 			for (LogOperacao log : registroEntrada.getLogOperacao()) {
-				String key = registroEntrada.getIdUsuario() + log.getAction();
+
+				String key = (is_user_enabled ? registroEntrada.getIdUsuario() : "") + log.getAction();
 
 				List<Double> tempos = retorno.get(key);
 

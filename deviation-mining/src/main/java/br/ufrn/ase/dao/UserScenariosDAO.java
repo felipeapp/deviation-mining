@@ -16,6 +16,6 @@ import java.util.Map;
  */
 public interface UserScenariosDAO {
 
-	public Map<String, List<Double>> findUserScenario(String version);
+	public Map<String, List<Double>> findUserScenario(String system_version, boolean is_user_enabled);
 
 }

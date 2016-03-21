@@ -20,19 +20,20 @@ import br.ufrn.ase.dao.UserScenariosDAO;
  */
 public class UserScenariosService {
 
-	/**
-	 * Starts here.
-	 * 
-	 * @param args
-	 */
 	public Map<String, Double> calculateExecutionMeanScenario(String system_version) {
-
-		Map<String, List<Double>> map = DAOFactory.getDAO(UserScenariosDAO.class).findUserScenario(system_version);
+		Map<String, List<Double>> map = DAOFactory.getDAO(UserScenariosDAO.class).findUserScenario(system_version, true);
 
 		Map<String, Double> mapExecutionMeanScenario = new UserScenariosStatistics().calculateExecutionMeanScenario(map);
 
 		return mapExecutionMeanScenario;
+	}
 
+	public Map<String, Double> calculateCoefficientOfVariation(String system_version) {
+		Map<String, List<Double>> map = DAOFactory.getDAO(UserScenariosDAO.class).findUserScenario(system_version, false);
+
+		Map<String, Double> mapCVScenario = new UserScenariosStatistics().calculateCoefficientOfVariation(map, true);
+		
+		return mapCVScenario;
 	}
 
 }
