@@ -1,6 +1,7 @@
 package br.ufrn.ase.util;
 
 import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
 import org.apache.commons.math3.stat.inference.TestUtils;
 import org.apache.commons.math3.stat.inference.WilcoxonSignedRankTest;
@@ -72,10 +73,41 @@ public abstract class StatisticsUtil {
 	 *            Values for sample two
 	 * @param paired
 	 *            It should be true if the samples are paired
-	 * @return The signed mean difference between the samples.
+	 * @return The signed mean difference between the samples
 	 */
 	public static double meanDifference(double[] sample1, double[] sample2, boolean paired) {
 		return paired ? StatUtils.meanDifference(sample1, sample2) : StatUtils.mean(sample1) - StatUtils.mean(sample2);
+	}
+
+	/**
+	 * It calculates the coefficient of variation (CV), also known as relative
+	 * standard deviation (RSD). CV is defined as the ratio of the standard
+	 * deviation to the mean. You should not use this method when the mean of
+	 * the input array was already calculated. It will recalculate the mean
+	 * again.
+	 * 
+	 * @param values
+	 *            The input array (population)
+	 * @return The coefficient of variation (CV)
+	 */
+	public static double coefficientOfVariation(double[] values) {
+		return coefficientOfVariation(values, StatUtils.mean(values));
+	}
+
+	/**
+	 * It calculates the coefficient of variation (CV), also known as relative
+	 * standard deviation (RSD). CV is defined as the ratio of the standard
+	 * deviation to the mean. You should use this method when the mean of the
+	 * input array was already calculated.
+	 * 
+	 * @param values
+	 *            The input array (population)
+	 * @param mean
+	 *            The mean of the input array values
+	 * @return The coefficient of variation (CV)
+	 */
+	public static double coefficientOfVariation(double[] values, double mean) {
+		return new StandardDeviation(true).evaluate(values, mean) / mean;
 	}
 
 }
