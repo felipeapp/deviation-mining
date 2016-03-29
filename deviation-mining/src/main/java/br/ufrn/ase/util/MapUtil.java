@@ -28,7 +28,7 @@ public abstract class MapUtil {
 	 * @param unsortMap
 	 * @return
 	 */
-	public static Map<String, Double> sortByComparator(Map<String, Double> unsortMap) {
+	public static Map<String, Double> sortByValue(Map<String, Double> unsortMap) {
 
         List<Entry<String, Double>> list = new LinkedList<Entry<String, Double>>(unsortMap.entrySet());
 

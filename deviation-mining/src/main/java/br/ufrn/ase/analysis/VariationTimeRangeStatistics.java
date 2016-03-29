@@ -37,7 +37,7 @@ public class VariationTimeRangeStatistics {
 			mapVarationTime.put(scenario,  sortedTime.get(sortedTime.size()-1) - sortedTime.get(0)  );  // calculate the variation
 		}
 	
-		return MapUtil.sortByComparator(mapVarationTime);
+		return MapUtil.sortByValue(mapVarationTime);
 	}
 	
 }
