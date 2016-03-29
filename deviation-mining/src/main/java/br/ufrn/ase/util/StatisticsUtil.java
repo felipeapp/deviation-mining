@@ -6,7 +6,7 @@ import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
 import org.apache.commons.math3.stat.inference.TestUtils;
 import org.apache.commons.math3.stat.inference.WilcoxonSignedRankTest;
 
-public abstract class StatisticsUtil {
+public class StatisticsUtil {
 
 	/**
 	 * This uses apache libs to calculate the observed significance level, or

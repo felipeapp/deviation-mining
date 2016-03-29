@@ -17,7 +17,7 @@ import java.util.Map.Entry;
  * @see How to sort a Map in Java:  http://www.mkyong.com/java/how-to-sort-a-map-in-java/
  *
  */
-public abstract class MapUtil {
+public class MapUtil {
 
 	
 	/**

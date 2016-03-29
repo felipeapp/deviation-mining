@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-public abstract class MigrationUtil {
+public class MigrationUtil {
 
 	private static Properties properties;
 
