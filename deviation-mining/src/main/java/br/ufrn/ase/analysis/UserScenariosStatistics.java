@@ -48,7 +48,7 @@ public class UserScenariosStatistics {
 			mapCVScenario.put(key, StatisticsUtil.coefficientOfVariation(Doubles.toArray(mapScenarioExecutionTime.get(key))));
 		}
 
-		return ordered ? MapUtil.sortByValues(mapCVScenario) : mapCVScenario;
+		return ordered ? MapUtil.sortByComparator(mapCVScenario) : mapCVScenario;
 	}
 
 }
