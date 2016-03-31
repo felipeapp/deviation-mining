@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.ufrn.ase.dao.RelationalDatabase;
+import br.ufrn.ase.util.MapUtil;
 
 /**
  * <p>This DAO connect with the database where we save the result of the data analysis to show quickly 
@@ -60,7 +61,7 @@ public class ResultDataAnalysisDao extends RelationalDatabase{
 	 */
 	public Map<String, Double> findVariationTimeRanges(String system_version) throws SQLException {
 		
-		String sql = " SELECT scenario, variation FROM result.variation_time_range WHERE system_version = ? ";
+		String sql = " SELECT scenario, variation FROM result.variation_time_range WHERE system_version = ? ORDER BY variation DESC";
 		
 		Map<String, Double> map = new HashMap<>();
 		
@@ -77,7 +78,7 @@ public class ResultDataAnalysisDao extends RelationalDatabase{
 			} 
 		}
 		
-		return map;
+		return MapUtil.sortByValue(map);
 	}
 
 	/**

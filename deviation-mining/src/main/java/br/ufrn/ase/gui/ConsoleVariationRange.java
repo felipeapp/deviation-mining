@@ -29,7 +29,9 @@ public class ConsoleVariationRange {
 
 		Map<String, Double> mapRange = new VariationTimeRangeService().calculateTimeRange("SIGAA-3.21.0");
 
-		new GraphicPlot().drawColumnChart(mapRange);
+		GraphicPlot plot = new GraphicPlot();
+		plot.drawColumnChart(mapRange);
+		plot.drawBoxPlotChart(mapRange);
 		
 		System.out.println("Tempo: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 

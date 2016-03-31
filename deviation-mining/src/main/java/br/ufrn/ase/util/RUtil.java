@@ -25,6 +25,8 @@ public class RUtil {
 		StringBuilder buffer = new StringBuilder();
 		boolean first = true;
 		for (String value : values) {
+			if(value.length() > 10)
+				value = value.substring(value.length()-10, value.length()); // limit the size of information to put in graphic
 			if(first)
 				buffer.append(value);
 			else
