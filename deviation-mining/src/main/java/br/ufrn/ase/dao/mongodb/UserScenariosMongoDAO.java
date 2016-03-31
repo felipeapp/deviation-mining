@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 
 import br.ufrn.ase.dao.DAOFactory;
+import br.ufrn.ase.dao.Database;
 import br.ufrn.ase.dao.RegistroEntradaDAO;
 import br.ufrn.ase.dao.UserScenariosDAO;
 import br.ufrn.ase.domain.LogOperacao;
@@ -88,7 +89,7 @@ public class UserScenariosMongoDAO implements UserScenariosDAO {
 		Date finalDate = new VersionMapUtil().getFinalDateOfVersion(version);
 		String system = version.substring(0, version.indexOf('-')).trim().toUpperCase();
 
-		MongoOperations mongoOps = MongoDatabase.buildMongoDatabase();
+		MongoOperations mongoOps = Database.buildMongoDatabase();
 
 		Query query = query(where("dataEntrada").gt(initialDate).lt(finalDate).and("sistema").is(system));
 		query.fields().include("idUsuario").include("logOperacao.action").include("logOperacao.tempo");

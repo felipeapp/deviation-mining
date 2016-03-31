@@ -11,8 +11,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -20,8 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.rosuda.JRI.Rengine;
-
-import br.ufrn.ase.util.RUtil;
 
 /**
  * Draw a boxplot graphics
@@ -36,10 +32,10 @@ import br.ufrn.ase.util.RUtil;
  * -Djava.library.path=.:/Library/Frameworks/R.framework/Resources/library/rJava/jri
  *
  */
-public class BoxPlotGraphic {
+public class GraphicPlot {
 	
-	
-	public void drawBoxPlot() throws IOException {
+	// just a test
+	public void drawPlotTest()  {
 
 		String graphName = "graph.png";
 		Rengine re = new Rengine (new String [] {"--vanilla"}, false, null);
@@ -54,28 +50,26 @@ public class BoxPlotGraphic {
 		
 		//get the image and create a new imagepanel
 		File file = new File(graphName);
-		Image image = ImageIO.read(file);
-		LineImagePanel myPanel = new LineImagePanel(image);
-		//Create a new frame and add the imagepanel
-		JFrame aFrame = new JFrame();
-		aFrame.setTitle("LineChart");
-		aFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); aFrame.getContentPane().add(myPanel, BorderLayout.CENTER);
-		aFrame.pack();
-		aFrame.setVisible(true);
-		aFrame.setSize(new Dimension(600, 600));
+		Image image = null;
+		try {
+			image = ImageIO.read(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		drawGraphicPanel(image);
 		
     }
 	
 	
-	public void drawColumnChart(Map<String, Double> mapRange) throws IOException {
+	public void drawColumnChart(Map<String, Double> mapRange) {
 
 		if(mapRange == null) throw new IllegalArgumentException("Map to plot was no passed");
 		
 		String graphName = "graph.png";
 		Rengine re = new Rengine (new String [] {"--vanilla"}, false, null);
 		
-		String nameVector = RUtil.formatRVector( new ArrayList<String>( mapRange.keySet()));
-		String valuesVector = RUtil.formatRVectorDoubleList( new ArrayList<Double>( mapRange.values()));
+		//String nameVector = RUtil.formatRVector( new ArrayList<String>( mapRange.keySet()));
+		//String valuesVector = RUtil.formatRVectorDoubleList( new ArrayList<Double>( mapRange.values()));
 		
 		re.eval("x <- c(0.02, 0.02, 0.06, 0.06, 0.11, 0.11, 0.22, 0.22, 0.56, 0.56,1.10, 1.10)");
 		re.eval("names <- c(\"t1\", \"t2\", \"t3\", \"t4\", \"t5\", \"t6\", \"t7\", \"t8\", \"t9\", \"t10\",\"t11\", \"t12\")");
@@ -88,7 +82,18 @@ public class BoxPlotGraphic {
 		
 		//get the image and create a new imagepanel
 		File file = new File(graphName);
-		Image image = ImageIO.read(file);
+		Image image = null;
+		try {
+			image = ImageIO.read(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		drawGraphicPanel(image);
+		
+    }
+
+
+	private void drawGraphicPanel(Image image) {
 		LineImagePanel myPanel = new LineImagePanel(image);
 		//Create a new frame and add the imagepanel
 		JFrame aFrame = new JFrame();
@@ -97,18 +102,9 @@ public class BoxPlotGraphic {
 		aFrame.pack();
 		aFrame.setVisible(true);
 		aFrame.setSize(new Dimension(1200, 600));
-		
-    }
-	
-	
-	
-
-	public static void main(String[] args) throws IOException {
-		Map<String, Double> mapRange =new HashMap<String, Double>();
-		mapRange.put("docente.jsp", 1420076.0d);
-		mapRange.put("docente.jsp", 814579.0d);
-		new BoxPlotGraphic().drawColumnChart(mapRange);
 	}
+	
+	
 	
 	/* A panel to draw the picture */
 	static class LineImagePanel extends JPanel {
@@ -124,5 +120,13 @@ public class BoxPlotGraphic {
     		g.drawImage(image, 0, 0, width, height, this);
         }
 	}
+	
+
+//	public static void main(String[] args) throws IOException {
+//		Map<String, Double> mapRange =new HashMap<String, Double>();
+//		mapRange.put("docente.jsp", 1420076.0d);
+//		mapRange.put("docente.jsp", 814579.0d);
+//		new GraphicPlot().drawColumnChart(mapRange);
+//	}
 
 }

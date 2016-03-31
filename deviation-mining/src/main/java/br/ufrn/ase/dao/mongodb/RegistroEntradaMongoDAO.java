@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 
+import br.ufrn.ase.dao.Database;
 import br.ufrn.ase.dao.RegistroEntradaDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.util.VersionMapUtil;
@@ -31,7 +32,7 @@ public class RegistroEntradaMongoDAO implements RegistroEntradaDAO {
 		Date finalDate = new VersionMapUtil().getFinalDateOfVersion(system_version);
 		String system = system_version.substring(0, system_version.indexOf('-')).trim().toUpperCase();
 
-		MongoOperations mongoOps = MongoDatabase.buildMongoDatabase();
+		MongoOperations mongoOps = Database.buildMongoDatabase();
 
 		Query query = query(where("dataEntrada").gt(initialDate).lt(finalDate).and("sistema").is(system));
 

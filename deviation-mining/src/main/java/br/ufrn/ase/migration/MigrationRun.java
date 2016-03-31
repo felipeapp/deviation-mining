@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoOperations;
 
-import br.ufrn.ase.dao.mongodb.MongoDatabase;
+import br.ufrn.ase.dao.Database;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.migration.dao.RegistroEntradaDAO;
 
@@ -14,7 +14,7 @@ public class MigrationRun {
 
 		RegistroEntradaDAO dao = new RegistroEntradaDAO();
 
-		MongoOperations mongoOp = MongoDatabase.buildMongoDatabase();
+		MongoOperations mongoOp = Database.buildMongoDatabase();
 
 		int max_id_entrada = dao.getMaxIdEntrada();
 

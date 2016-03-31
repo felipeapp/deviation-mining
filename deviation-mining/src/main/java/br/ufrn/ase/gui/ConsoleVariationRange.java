@@ -7,6 +7,7 @@ package br.ufrn.ase.gui;
 
 import java.util.Map;
 
+import br.ufrn.ase.r.GraphicPlot;
 import br.ufrn.ase.service.performance.VariationTimeRangeService;
 
 /**
@@ -28,9 +29,7 @@ public class ConsoleVariationRange {
 
 		Map<String, Double> mapRange = new VariationTimeRangeService().calculateTimeRange("SIGAA-3.21.0");
 
-		for (String scenario : mapRange.keySet()) {
-			System.out.println("scenario: "+scenario+" -> variation: "+mapRange.get(scenario) );
-		}
+		new GraphicPlot().drawColumnChart(mapRange);
 		
 		System.out.println("Tempo: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 
