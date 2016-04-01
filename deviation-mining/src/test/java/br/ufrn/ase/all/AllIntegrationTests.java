@@ -3,13 +3,13 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package all;
+package br.ufrn.ase.all;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import r.JRItest;
+import br.ufrn.ase.r.JRItest;
 
 /**
  * @author jadson - jadsonjs@gmail.com

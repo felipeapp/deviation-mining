@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package util;
+package br.ufrn.ase.util;
 
 import org.junit.Assert;
 import org.junit.Test;

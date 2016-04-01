@@ -7,6 +7,10 @@ package br.ufrn.ase.gui;
 
 import java.util.Map;
 
+import br.ufrn.ase.analysis.VariationTimeRangeStatistics;
+import br.ufrn.ase.dao.Database;
+import br.ufrn.ase.dao.mongodb.UserScenariosMongoDAO;
+import br.ufrn.ase.dao.postgres.ResultDataAnalysisDao;
 import br.ufrn.ase.r.GraphicPlot;
 import br.ufrn.ase.service.performance.VariationTimeRangeService;
 
@@ -27,7 +31,13 @@ public class ConsoleVariationRange {
 		
 		System.out.println("Inicando execução... ");
 
-		Map<String, Double> mapRange = new VariationTimeRangeService().calculateTimeRange("SIGAA-3.21.0");
+		ResultDataAnalysisDao resultDao = new ResultDataAnalysisDao(Database.buildResultDatabaseConnection());
+		UserScenariosMongoDAO userScenariosMongoDAO = new UserScenariosMongoDAO();
+		VariationTimeRangeStatistics variationTimeRangeStatistics = new VariationTimeRangeStatistics();
+				
+		Map<String, Double> mapRange = new VariationTimeRangeService
+					(resultDao, userScenariosMongoDAO, variationTimeRangeStatistics)
+						.calculateTimeRange("SIGAA-3.21.0");
 
 		GraphicPlot plot = new GraphicPlot();
 		plot.drawColumnChart(mapRange);

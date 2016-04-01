@@ -1,4 +1,4 @@
-package util;
+package br.ufrn.ase.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
