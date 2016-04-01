@@ -33,9 +33,14 @@ public class VariationTimeRangeStatisticsTest {
 		
 		Map<String, Double> _return = new VariationTimeRangeStatistics().calculateVariationTimeRange(map);
 		
-		Assert.assertEquals(2.0d, new Double(_return.get("1.jsp")), 0.0d);
-		Assert.assertEquals(10.05d, new Double(_return.get("2.jsp")), 0.0d);
-		Assert.assertEquals(20.0d, new Double(_return.get("3.jsp")), 0.0d);
+		/*
+		 * Test if the variation calculate if correct
+		 * 
+		 * IF the bigger - smaller if calculate correctly
+		 */
+		Assert.assertEquals(2.0d, new Double(_return.get("1.jsp")), 0.0d);   // 3.0 - 1.0 =  2.0
+		Assert.assertEquals(10.05d, new Double(_return.get("2.jsp")), 0.0d); // 10.15 - 0.10 =  10.05
+		Assert.assertEquals(20.0d, new Double(_return.get("3.jsp")), 0.0d);  // 30.0 - 10.0 =  02.0
 		
 	}
 

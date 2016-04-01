@@ -28,6 +28,10 @@ public class VariationTimeRangeService{
 
 	public VariationTimeRangeService(ResultDataAnalysisDao resultDataAnalysisDao, UserScenariosMongoDAO userScenariosMongoDAO, 
 			VariationTimeRangeStatistics variationTimeRangeStatistics){
+		
+		if(resultDataAnalysisDao == null || userScenariosMongoDAO == null || variationTimeRangeStatistics == null)
+			throw new IllegalArgumentException("Informaiton missing");
+		
 		this.resultDataAnalysisDao = resultDataAnalysisDao;
 		this.userScenariosMongoDAO = userScenariosMongoDAO;
 		this.variationTimeRangeStatistics = variationTimeRangeStatistics;
