@@ -14,6 +14,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * Test if the class VariationTimeRangeStatistics is making the computation correctly.
+ * 
  * @author jadson - jadsonjs@gmail.com
  *
  */
@@ -40,7 +42,7 @@ public class VariationTimeRangeStatisticsTest {
 		 */
 		Assert.assertEquals(2.0d, new Double(_return.get("1.jsp")), 0.0d);   // 3.0 - 1.0 =  2.0
 		Assert.assertEquals(10.05d, new Double(_return.get("2.jsp")), 0.0d); // 10.15 - 0.10 =  10.05
-		Assert.assertEquals(20.0d, new Double(_return.get("3.jsp")), 0.0d);  // 30.0 - 10.0 =  02.0
+		Assert.assertEquals(20.0d, new Double(_return.get("3.jsp")), 0.0d);  // 30.0 - 10.0 =  20.0
 		
 	}
 
