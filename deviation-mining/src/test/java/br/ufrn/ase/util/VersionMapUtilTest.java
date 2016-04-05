@@ -7,10 +7,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.ufrn.ase.util.VersionMapUtil;
-
 /**
- * Test extract data of UFRN system published versions
+ * Test extract data of UFRN system published versions.
+ * 
  * @author jadson
  */
 public class VersionMapUtilTest {

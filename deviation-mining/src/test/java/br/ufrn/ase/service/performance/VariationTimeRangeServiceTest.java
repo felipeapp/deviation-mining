@@ -22,6 +22,8 @@ import br.ufrn.ase.dao.postgres.ResultDataAnalysisDao;
 import br.ufrn.ase.util.MapUtil;
 
 /**
+ * Test the service class.
+ * 
  * @author jadson - jadsonjs@gmail.com
  *
  */

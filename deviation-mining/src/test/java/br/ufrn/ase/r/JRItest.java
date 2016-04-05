@@ -10,6 +10,9 @@ import org.junit.Test;
 import org.rosuda.JRI.Rengine;
 
 /**
+ * Test the integration between Java and R using JRI. This is a integration test because need the 
+ * R installed in your machine to be executed.
+ * 
  * @author jadson - jadsonjs@gmail.com
  *
  * @see http://www.codophile.com/how-to-integrate-r-with-java-using-rjava/

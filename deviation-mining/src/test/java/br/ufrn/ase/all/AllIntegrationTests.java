@@ -12,6 +12,9 @@ import org.junit.runners.Suite.SuiteClasses;
 import br.ufrn.ase.r.JRItest;
 
 /**
+ * Execute all integration test of the tool. Integration tests are tests when the tool communicates 
+ * with others system, like database or R execution environment.
+ * 
  * @author jadson - jadsonjs@gmail.com
  *
  */

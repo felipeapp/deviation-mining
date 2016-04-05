@@ -10,12 +10,17 @@ import br.ufrn.ase.util.StatisticsUtilTest;
 import br.ufrn.ase.util.VersionMapUtilTest;
 
 /**
- * Run all tests of the tool
+ * Run all unit tests of the tool.
+ * 
  * @author jadson
  */
 @RunWith(Suite.class)
-@SuiteClasses({VersionMapUtilTest.class, StatisticsUtilTest.class, RUtilTest.class, 
-	VariationTimeRangeStatisticsTest.class, VariationTimeRangeServiceTest.class})
+@SuiteClasses({
+	VersionMapUtilTest.class, 
+	StatisticsUtilTest.class, 
+	RUtilTest.class, 
+	VariationTimeRangeStatisticsTest.class, 
+	VariationTimeRangeServiceTest.class})
 public class AllUnitTests {
 
 }
