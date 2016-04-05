@@ -23,7 +23,7 @@ import org.rosuda.JRI.Rengine;
 import br.ufrn.ase.util.RUtil;
 
 /**
- * Draw a boxplot graphics
+ * This class draw some kinds of graphics using R statistics.
  * 
  * @author jadson - jadsonjs@gmail.com
  * 
@@ -37,13 +37,14 @@ import br.ufrn.ase.util.RUtil;
  */
 public class GraphicPlot {
 	
+	/** The engine of JRI */
 	private Rengine re;
 	
 	public GraphicPlot(){
 		re = new Rengine (new String [] {"--vanilla"}, false, null);
 	}
 	
-	// just a test
+	/** Draw a simple dotted graphic, just for tests */
 	public void drawPlotTest()  {
 
 		String graphName = "graph.png";
@@ -64,14 +65,14 @@ public class GraphicPlot {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		drawGraphicPanel(image);
+		drawGraphicWindow(image);
 		
     }
 	
-	
+	/** Draw a ColumnBar graphic */
 	public void drawColumnChart(Map<String, Double> mapRange) {
 
-		if(mapRange == null) throw new IllegalArgumentException("Map to plot was no passed");
+		if(mapRange == null) throw new IllegalArgumentException("Information to plot wasn't passed");
 		
 		String graphName = "columnchart.png";
 		
@@ -98,14 +99,14 @@ public class GraphicPlot {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		drawGraphicPanel(image);
+		drawGraphicWindow(image);
 		
     }
 
-	/** Draw a boxplot to se varation in some number */
+	/** Draw a BoxPlot graphic */
 	public void drawBoxPlotChart(Map<String, Double> mapRange) {
 
-		if(mapRange == null) throw new IllegalArgumentException("Map to plot was no passed");
+		if(mapRange == null) throw new IllegalArgumentException("Information to plot wasn't passed");
 		
 		String graphName = "boxplot.png";
 		
@@ -132,21 +133,21 @@ public class GraphicPlot {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		drawGraphicPanel(image);
+		drawGraphicWindow(image);
 		
     }
 
-	private void drawGraphicPanel(Image image) {
+	/* Draw the image inside a JFrame */
+	private void drawGraphicWindow(Image image) {
 		LineImagePanel myPanel = new LineImagePanel(image);
 		//Create a new frame and add the imagepanel
 		JFrame aFrame = new JFrame();
-		aFrame.setTitle("LineChart");
-		aFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); aFrame.getContentPane().add(myPanel, BorderLayout.CENTER);
+		aFrame.setTitle("Chart");
+		aFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); 
+		aFrame.getContentPane().add(myPanel, BorderLayout.CENTER);
 		aFrame.pack();
 		aFrame.setVisible(true);
 		aFrame.setSize(new Dimension(1200, 600));
-		aFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		
 	}
 	
 	
