@@ -107,7 +107,7 @@ public class StatisticsUtil {
 	 * @return The coefficient of variation (CV)
 	 */
 	public static double coefficientOfVariation(double[] values, double mean) {
-		return new StandardDeviation(true).evaluate(values, mean) / mean;
+		return new StandardDeviation().evaluate(values, mean) / mean;
 	}
 
 }
