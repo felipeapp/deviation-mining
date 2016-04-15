@@ -16,84 +16,84 @@ import br.ufrn.ase.dao.RelationalDatabase;
 import br.ufrn.ase.util.MapUtil;
 
 /**
- * <p>This DAO connect with the database where we save the result of the data analysis to show quickly 
- * the processed results</p>
+ * <p>
+ * This DAO connect with the database where we save the result of the data
+ * analysis to show quickly the processed results
+ * </p>
  * 
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class ResultDataAnalysisDao extends RelationalDatabase{
+public class ResultDataAnalysisDAO extends RelationalDatabase {
 
 	/**
 	 * @param connection
 	 */
-	public ResultDataAnalysisDao(Connection connection) {
+	public ResultDataAnalysisDAO(Connection connection) {
 		super(connection);
 	}
-	
-	
+
 	/**
 	 * @param map
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void insertVariationTimeRanges(Map<String, Double> mapRange, String system_version) throws SQLException {
-		
+
 		String sql = " INSERT INTO result.variation_time_range ( scenario, system_version, variation) VALUES (?, ?, ?) ";
-		
+
 		try (PreparedStatement prepated = getConnection().prepareStatement(sql);) {
-			
+
 			for (String scenario : mapRange.keySet()) {
 				prepated.setString(1, scenario);
 				prepated.setString(2, system_version);
 				prepated.setDouble(3, mapRange.get(scenario));
 				prepated.addBatch();
 			}
-			
+
 			prepated.executeBatch();
 		}
 	}
-	
 
 	/**
 	 * @param system_version
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public Map<String, Double> findVariationTimeRanges(String system_version) throws SQLException {
-		
+
 		String sql = " SELECT scenario, variation FROM result.variation_time_range WHERE system_version = ? ORDER BY variation DESC";
-		
+
 		Map<String, Double> map = new HashMap<>();
-		
+
 		try (PreparedStatement prepated = getConnection().prepareStatement(sql);) {
-		
+
 			prepated.setString(1, system_version);
-		
+
 			ResultSet rs = prepated.executeQuery();
 
 			while (rs.next()) {
 				String key = rs.getString(1);
 				Double value = rs.getDouble(2);
 				map.put(key, value);
-			} 
+			}
 		}
-		
+
 		return MapUtil.sortByValue(map);
 	}
 
 	/**
 	 * @param system_version
 	 * @return
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public int countVariationTimeRanges(String system_version) throws SQLException {
-		
+
 		String sql = " SELECT count(*) FROM result.variation_time_range WHERE system_version = ? ";
-		
+
 		try (PreparedStatement prepated = getConnection().prepareStatement(sql);) {
-		
+
 			prepated.setString(1, system_version);
-		
+
 			ResultSet rs = prepated.executeQuery();
 
 			if (rs.next()) {
@@ -103,8 +103,5 @@ public class ResultDataAnalysisDao extends RelationalDatabase{
 			}
 		}
 	}
-
-	
-	
 
 }
