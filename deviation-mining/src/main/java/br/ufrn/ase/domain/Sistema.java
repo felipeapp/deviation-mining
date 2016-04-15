@@ -36,5 +36,9 @@ public enum Sistema {
 
 		return Unknown;
 	}
+	
+	public int getValue() {
+        return id_sistema;
+    }
 
 }

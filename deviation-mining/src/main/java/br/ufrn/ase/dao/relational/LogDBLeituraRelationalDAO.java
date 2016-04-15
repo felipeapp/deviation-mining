@@ -1,4 +1,4 @@
-package br.ufrn.ase.migration.dao;
+package br.ufrn.ase.dao.relational;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,11 +8,7 @@ import br.ufrn.ase.domain.LogDBLeitura;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.MigrationUtil;
 
-public class LogDBLeituraDAO extends AbstractDAO<LogDBLeitura> {
-
-	protected LogDBLeituraDAO() {
-		super();
-	}
+public class LogDBLeituraRelationalDAO extends AbstractMigrationRelationalDAO<LogDBLeitura> {
 
 	@Override
 	protected LogDBLeitura getAttributesFromRS(ResultSet rs) throws SQLException {
@@ -42,7 +38,7 @@ public class LogDBLeituraDAO extends AbstractDAO<LogDBLeitura> {
 
 	public static void main(String[] args) {
 
-		LogDBLeituraDAO dao = new LogDBLeituraDAO();
+		LogDBLeituraRelationalDAO dao = new LogDBLeituraRelationalDAO();
 
 		List<LogDBLeitura> logs = dao.findByIdEntrada(2050375140);
 

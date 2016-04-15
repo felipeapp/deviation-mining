@@ -3,16 +3,14 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.dao.postgres;
+package br.ufrn.ase.dao.relational;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.ufrn.ase.dao.RelationalDatabase;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -24,14 +22,7 @@ import br.ufrn.ase.util.MapUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class ResultDataAnalysisDAO extends RelationalDatabase {
-
-	/**
-	 * @param connection
-	 */
-	public ResultDataAnalysisDAO(Connection connection) {
-		super(connection);
-	}
+public class ResultDataAnalysisDAO extends AbstractCacheRelationalDAO {
 
 	/**
 	 * @param map
@@ -41,7 +32,7 @@ public class ResultDataAnalysisDAO extends RelationalDatabase {
 
 		String sql = " INSERT INTO result.variation_time_range ( scenario, system_version, variation) VALUES (?, ?, ?) ";
 
-		try (PreparedStatement prepated = getConnection().prepareStatement(sql);) {
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
 
 			for (String scenario : mapRange.keySet()) {
 				prepated.setString(1, scenario);
@@ -65,7 +56,7 @@ public class ResultDataAnalysisDAO extends RelationalDatabase {
 
 		Map<String, Double> map = new HashMap<>();
 
-		try (PreparedStatement prepated = getConnection().prepareStatement(sql);) {
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
 
 			prepated.setString(1, system_version);
 
@@ -90,7 +81,7 @@ public class ResultDataAnalysisDAO extends RelationalDatabase {
 
 		String sql = " SELECT count(*) FROM result.variation_time_range WHERE system_version = ? ";
 
-		try (PreparedStatement prepated = getConnection().prepareStatement(sql);) {
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
 
 			prepated.setString(1, system_version);
 

@@ -1,4 +1,4 @@
-package br.ufrn.ase.migration.dao;
+package br.ufrn.ase.dao.relational;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,11 +8,7 @@ import br.ufrn.ase.domain.LogJDBCUpdate;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.MigrationUtil;
 
-public class LogJDBCUpdateDAO extends AbstractDAO<LogJDBCUpdate> {
-
-	protected LogJDBCUpdateDAO() {
-		super();
-	}
+public class LogJDBCUpdateRelationalDAO extends AbstractMigrationRelationalDAO<LogJDBCUpdate> {
 
 	@Override
 	protected LogJDBCUpdate getAttributesFromRS(ResultSet rs) throws SQLException {
@@ -41,7 +37,7 @@ public class LogJDBCUpdateDAO extends AbstractDAO<LogJDBCUpdate> {
 
 	public static void main(String[] args) {
 
-		LogJDBCUpdateDAO dao = new LogJDBCUpdateDAO();
+		LogJDBCUpdateRelationalDAO dao = new LogJDBCUpdateRelationalDAO();
 
 		List<LogJDBCUpdate> logs = dao.findByIdEntrada(2000460849);
 

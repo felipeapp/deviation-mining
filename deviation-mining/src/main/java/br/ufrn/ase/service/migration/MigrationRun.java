@@ -1,25 +1,22 @@
-package br.ufrn.ase.migration;
+package br.ufrn.ase.service.migration;
 
 import java.util.List;
 
-import org.springframework.data.mongodb.core.MongoOperations;
-
-import br.ufrn.ase.dao.Database;
+import br.ufrn.ase.dao.RegistroEntradaDAO;
+import br.ufrn.ase.dao.nosql.RegistroEntradaMongoDAO;
+import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
-import br.ufrn.ase.migration.dao.RegistroEntradaDAO;
 
 public class MigrationRun {
 
 	public static void main(String[] args) {
+		RegistroEntradaDAO relational_dao = new RegistroEntradaRelationalDAO();
+		RegistroEntradaDAO mongo_dao = new RegistroEntradaMongoDAO();
 
-		RegistroEntradaDAO dao = new RegistroEntradaDAO();
-
-		MongoOperations mongoOp = Database.buildMongoDatabase();
-
-		int max_id_entrada = dao.getMaxIdEntrada();
+		int max_id_entrada = mongo_dao.getMaxIdEntrada();
 
 		System.out.println("Última entrada migrada: " + max_id_entrada);
-		List<Integer> ids = dao.getIDListGT(max_id_entrada);
+		List<Integer> ids = relational_dao.getIDListGreaterThan(max_id_entrada);
 
 		System.out.println("Total de entradas pendentes: " + ids.size());
 		long start = System.currentTimeMillis();
@@ -27,10 +24,10 @@ public class MigrationRun {
 		for (int i = 0; i < ids.size(); i++) {
 			System.out.println("Migrando entrada: " + ids.get(i) + " - " + (i + 1) + " / " + ids.size());
 
-			RegistroEntrada entrada = dao.findByID(ids.get(i));
+			RegistroEntrada entrada = relational_dao.findByID(ids.get(i));
 
 			try {
-				mongoOp.insert(entrada);
+				mongo_dao.insert(entrada);
 			} catch (Exception e) {
 				System.out.println("Entrada " + entrada.getIdEntrada() + " não salva: " + e.getMessage());
 			}
@@ -40,7 +37,6 @@ public class MigrationRun {
 		}
 
 		System.out.println("Tempo total: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
-
 	}
 
 }

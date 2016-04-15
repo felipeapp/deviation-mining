@@ -17,23 +17,21 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import br.ufrn.ase.analysis.VariationTimeRangeStatistics;
-import br.ufrn.ase.dao.mongodb.UserScenariosMongoDAO;
-import br.ufrn.ase.dao.postgres.ResultDataAnalysisDAO;
+import br.ufrn.ase.dao.relational.ResultDataAnalysisDAO;
 import br.ufrn.ase.util.MapUtil;
 
 /**
  * Test the service class.
  * 
  * @author jadson - jadsonjs@gmail.com
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class VariationTimeRangeServiceTest {
-	
+
 	@Mock
-	private ResultDataAnalysisDAO resultDataAnalysisDao;
+	private ResultDataAnalysisDAO resultDataAnalysisDAO;
 	@Mock
-	private UserScenariosMongoDAO userScenariosMongoDAO;
+	private UserScenariosService userScenariosService;
 	@Mock
 	private VariationTimeRangeStatistics variationTimeRangeStatistics;
 
@@ -42,31 +40,29 @@ public class VariationTimeRangeServiceTest {
 	 */
 	@Test
 	public void testCalculateTimeRangeUsingCache() {
-		
 		String system_version = "SIGAA-3.21.0";
-		
+
 		Map<String, Double> mapRange = new HashMap<String, Double>();
 		mapRange.put("1.jsp", 12.000d);
 		mapRange.put("2.jsp", 2.000d);
 		mapRange.put("3.jsp", 0.01d);
-		
+
 		mapRange = MapUtil.sortByValue(mapRange);
-		
+
 		try {
-			Mockito.when(resultDataAnalysisDao.countVariationTimeRanges(system_version)).thenReturn(1);
-			Mockito.when(resultDataAnalysisDao.findVariationTimeRanges(system_version)).thenReturn(mapRange);
-			
+			Mockito.when(resultDataAnalysisDAO.countVariationTimeRanges(system_version)).thenReturn(1);
+			Mockito.when(resultDataAnalysisDAO.findVariationTimeRanges(system_version)).thenReturn(mapRange);
+
 			Double previusValue = Double.MAX_VALUE;
 			for (String key : mapRange.keySet()) {
 				Double value = mapRange.get(key);
-				if(value > previusValue)
+				if (value > previusValue)
 					Assert.fail("HasMap is not orded");
 				else
 					previusValue = value;
 			}
-			
+
 			Assert.assertTrue(true); // ok
-			
 		} catch (SQLException e) {
 			Assert.fail(e.getMessage());
 		}

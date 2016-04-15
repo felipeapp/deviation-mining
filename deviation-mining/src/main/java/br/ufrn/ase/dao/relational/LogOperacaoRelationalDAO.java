@@ -1,4 +1,4 @@
-package br.ufrn.ase.migration.dao;
+package br.ufrn.ase.dao.relational;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +8,7 @@ import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.MigrationUtil;
 
-public class LogOperacaoDAO extends AbstractDAO<LogOperacao> {
+public class LogOperacaoRelationalDAO extends AbstractMigrationRelationalDAO<LogOperacao> {
 
 	@Override
 	protected LogOperacao getAttributesFromRS(ResultSet rs) throws SQLException {
@@ -40,7 +40,7 @@ public class LogOperacaoDAO extends AbstractDAO<LogOperacao> {
 
 	public static void main(String[] args) {
 
-		LogOperacaoDAO dao = new LogOperacaoDAO();
+		LogOperacaoRelationalDAO dao = new LogOperacaoRelationalDAO();
 
 		List<LogOperacao> logs = dao.findByIdEntrada(53242492);
 

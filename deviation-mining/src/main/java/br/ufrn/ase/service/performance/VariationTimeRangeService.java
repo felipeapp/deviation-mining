@@ -11,61 +11,63 @@ import java.util.List;
 import java.util.Map;
 
 import br.ufrn.ase.analysis.VariationTimeRangeStatistics;
-import br.ufrn.ase.dao.UserScenariosDAO;
-import br.ufrn.ase.dao.postgres.ResultDataAnalysisDAO;
+import br.ufrn.ase.dao.relational.ResultDataAnalysisDAO;
 
 /**
  * This service calculate scenarios of larger and smaller variation at runtime
  * 
  * @author jadson - jadsonjs@gmail.com
- *
  */
-public class VariationTimeRangeService{
+public class VariationTimeRangeService {
 
-	private ResultDataAnalysisDAO resultDataAnalysisDao;
-	private UserScenariosDAO userScenariosMongoDAO;
+	private ResultDataAnalysisDAO resultDataAnalysisDAO;
+	private UserScenariosService userScenariosService;
 	private VariationTimeRangeStatistics variationTimeRangeStatistics;
 
-	public VariationTimeRangeService(ResultDataAnalysisDAO resultDataAnalysisDao, UserScenariosDAO userScenariosMongoDAO, 
-			VariationTimeRangeStatistics variationTimeRangeStatistics){
-		
-		if(userScenariosMongoDAO == null || variationTimeRangeStatistics == null)
+	public VariationTimeRangeService(ResultDataAnalysisDAO resultDataAnalysisDao,
+			UserScenariosService userScenariosService, VariationTimeRangeStatistics variationTimeRangeStatistics) {
+
+		if (userScenariosService == null || variationTimeRangeStatistics == null)
 			throw new IllegalArgumentException("Informaiton missing");
-		
-		this.resultDataAnalysisDao = resultDataAnalysisDao;
-		this.userScenariosMongoDAO = userScenariosMongoDAO;
+
+		this.resultDataAnalysisDAO = resultDataAnalysisDao;
+		this.userScenariosService = userScenariosService;
 		this.variationTimeRangeStatistics = variationTimeRangeStatistics;
 	}
 
-	/**
-	 * Starts here.
-	 * 
-	 * @param args
-	 */
 	public Map<String, Double> calculateTimeRange(String system_version) {
-
 		Map<String, List<Double>> map = new HashMap<String, List<Double>>();
 		Map<String, Double> mapRange = new HashMap<String, Double>();
-		
-		try{
-			if (resultDataAnalysisDao == null) {
-				map = userScenariosMongoDAO.findUserScenario(system_version);                 // mining information
-				mapRange = variationTimeRangeStatistics.calculateVariationTimeRange(map);     // calculate result
-			}
-			else if(resultDataAnalysisDao.countVariationTimeRanges(system_version) == 0){ // cache is clear
-				map = userScenariosMongoDAO.findUserScenario(system_version);                 // mining information
-				mapRange = variationTimeRangeStatistics.calculateVariationTimeRange(map);     // calculate result
-				resultDataAnalysisDao.insertVariationTimeRanges(mapRange, system_version);    // save in  the cache
-			}else{
-				mapRange = resultDataAnalysisDao.findVariationTimeRanges(system_version);   // get from the cache
-			}
-		
-		}catch(SQLException sqlEx){
-			sqlEx.printStackTrace();
-		}
-		
-		return mapRange;
 
+		try {
+			// Cache is not configured
+			if (resultDataAnalysisDAO == null) {
+				// Mining information
+				map = userScenariosService.findUserScenario(system_version, true);
+
+				// Calculate result
+				mapRange = variationTimeRangeStatistics.calculateVariationTimeRange(map);
+			}
+			// Cache is clear
+			else if (resultDataAnalysisDAO.countVariationTimeRanges(system_version) == 0) {
+				// Mining information
+				map = userScenariosService.findUserScenario(system_version, true);
+
+				// Calculate result
+				mapRange = variationTimeRangeStatistics.calculateVariationTimeRange(map);
+
+				// Save in cache
+				resultDataAnalysisDAO.insertVariationTimeRanges(mapRange, system_version);
+			}
+			// Get from the cache
+			else {
+				mapRange = resultDataAnalysisDAO.findVariationTimeRanges(system_version);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return mapRange;
 	}
-	
+
 }

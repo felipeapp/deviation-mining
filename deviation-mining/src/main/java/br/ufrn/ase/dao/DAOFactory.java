@@ -5,8 +5,8 @@
  */
 package br.ufrn.ase.dao;
 
-import br.ufrn.ase.dao.mongodb.RegistroEntradaMongoDAO;
-import br.ufrn.ase.dao.mongodb.UserScenariosMongoDAO;
+import br.ufrn.ase.dao.nosql.RegistroEntradaMongoDAO;
+import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
 
 /**
  * 
@@ -42,13 +42,14 @@ public abstract class DAOFactory {
 		if (db == DATABASE.MONGODB) {
 			if (cls == RegistroEntradaDAO.class)
 				return cls.cast(new RegistroEntradaMongoDAO());
-			else if (cls == UserScenariosDAO.class)
-				return cls.cast(new UserScenariosMongoDAO());
-			else
-				throw new UnsupportedOperationException("DAO support for " + cls.getName() + " is not implemented");
+		} else if (db == DATABASE.POSTGRES) {
+			if (cls == RegistroEntradaDAO.class)
+				return cls.cast(new RegistroEntradaRelationalDAO());
 		} else {
 			throw new UnsupportedOperationException("Databse support for " + db + " is not implemented");
 		}
+
+		throw new UnsupportedOperationException("DAO support for " + cls.getName() + " is not implemented");
 	}
 
 }
