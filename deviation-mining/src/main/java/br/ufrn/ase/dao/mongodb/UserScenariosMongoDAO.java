@@ -57,7 +57,7 @@ public class UserScenariosMongoDAO implements UserScenariosDAO {
 					retorno.put(key, tempos);
 				}
 
-				tempos.add(new Double((double) log.getTempo()));
+				tempos.add((double) log.getTempo());
 			}
 		}
 

@@ -34,7 +34,8 @@ public class RegistroEntradaMongoDAO implements RegistroEntradaDAO {
 
 		MongoOperations mongoOps = Database.buildMongoDatabase();
 
-		Query query = query(where("dataEntrada").gt(initialDate).lt(finalDate).and("sistema").is(system));
+		Query query = query(where("dataEntrada").gte(initialDate).lte(finalDate).and("sistema").is(system)
+				.and("logOperacao").exists(true).not().size(0));
 
 		for (String f : fields)
 			query.fields().include(f);
