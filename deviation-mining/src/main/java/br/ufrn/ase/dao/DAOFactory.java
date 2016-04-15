@@ -7,9 +7,9 @@ package br.ufrn.ase.dao;
 
 import br.ufrn.ase.dao.mongo.RegistroEntradaMongoDAO;
 import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
+import br.ufrn.ase.util.MigrationUtil;
 
 /**
- * 
  * Allow to change the database where the mining will happen.
  * 
  * We don't know yet if mongodb was a good choice to mining, so this class
@@ -17,21 +17,20 @@ import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
  * any time.
  * 
  * @author jadson - jadsonjs@gmail.com
- *
  */
 public abstract class DAOFactory {
 
 	/**
 	 * The supported database
 	 */
-	public enum DATABASE {
+	private enum DATABASE {
 		POSTGRES, MONGODB
 	};
 
 	/**
 	 * Current default database
 	 */
-	private static final DATABASE db = DATABASE.MONGODB;
+	private static final DATABASE db = DATABASE.valueOf(MigrationUtil.getProperty("default_db").toUpperCase());
 
 	/**
 	 * @param cls
