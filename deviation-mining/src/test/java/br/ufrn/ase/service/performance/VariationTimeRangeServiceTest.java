@@ -18,7 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import br.ufrn.ase.analysis.VariationTimeRangeStatistics;
 import br.ufrn.ase.dao.mongodb.UserScenariosMongoDAO;
-import br.ufrn.ase.dao.postgres.ResultDataAnalysisDao;
+import br.ufrn.ase.dao.postgres.ResultDataAnalysisDAO;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -31,7 +31,7 @@ import br.ufrn.ase.util.MapUtil;
 public class VariationTimeRangeServiceTest {
 	
 	@Mock
-	private ResultDataAnalysisDao resultDataAnalysisDao;
+	private ResultDataAnalysisDAO resultDataAnalysisDao;
 	@Mock
 	private UserScenariosMongoDAO userScenariosMongoDAO;
 	@Mock

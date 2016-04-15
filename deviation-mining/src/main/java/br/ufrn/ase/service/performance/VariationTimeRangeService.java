@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import br.ufrn.ase.analysis.VariationTimeRangeStatistics;
-import br.ufrn.ase.dao.mongodb.UserScenariosMongoDAO;
-import br.ufrn.ase.dao.postgres.ResultDataAnalysisDao;
+import br.ufrn.ase.dao.UserScenariosDAO;
+import br.ufrn.ase.dao.postgres.ResultDataAnalysisDAO;
 
 /**
  * This service calculate scenarios of larger and smaller variation at runtime
@@ -22,14 +22,14 @@ import br.ufrn.ase.dao.postgres.ResultDataAnalysisDao;
  */
 public class VariationTimeRangeService{
 
-	private ResultDataAnalysisDao resultDataAnalysisDao;
-	private UserScenariosMongoDAO userScenariosMongoDAO;
+	private ResultDataAnalysisDAO resultDataAnalysisDao;
+	private UserScenariosDAO userScenariosMongoDAO;
 	private VariationTimeRangeStatistics variationTimeRangeStatistics;
 
-	public VariationTimeRangeService(ResultDataAnalysisDao resultDataAnalysisDao, UserScenariosMongoDAO userScenariosMongoDAO, 
+	public VariationTimeRangeService(ResultDataAnalysisDAO resultDataAnalysisDao, UserScenariosDAO userScenariosMongoDAO, 
 			VariationTimeRangeStatistics variationTimeRangeStatistics){
 		
-		if(resultDataAnalysisDao == null || userScenariosMongoDAO == null || variationTimeRangeStatistics == null)
+		if(userScenariosMongoDAO == null || variationTimeRangeStatistics == null)
 			throw new IllegalArgumentException("Informaiton missing");
 		
 		this.resultDataAnalysisDao = resultDataAnalysisDao;
@@ -48,7 +48,11 @@ public class VariationTimeRangeService{
 		Map<String, Double> mapRange = new HashMap<String, Double>();
 		
 		try{
-			if(resultDataAnalysisDao.countVariationTimeRanges(system_version) == 0){ // cache is clear
+			if (resultDataAnalysisDao == null) {
+				map = userScenariosMongoDAO.findUserScenario(system_version);                 // mining information
+				mapRange = variationTimeRangeStatistics.calculateVariationTimeRange(map);     // calculate result
+			}
+			else if(resultDataAnalysisDao.countVariationTimeRanges(system_version) == 0){ // cache is clear
 				map = userScenariosMongoDAO.findUserScenario(system_version);                 // mining information
 				mapRange = variationTimeRangeStatistics.calculateVariationTimeRange(map);     // calculate result
 				resultDataAnalysisDao.insertVariationTimeRanges(mapRange, system_version);    // save in  the cache
