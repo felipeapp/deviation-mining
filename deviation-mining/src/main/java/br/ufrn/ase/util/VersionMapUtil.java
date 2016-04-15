@@ -4,6 +4,7 @@
 package br.ufrn.ase.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -32,9 +33,13 @@ public class VersionMapUtil {
 			String line = "";
 			String cvsSplitBy = ";";
 			
+			File f = new File(csvFile);
+			if (!f.exists())
+				f = new File(csvFile.substring(csvFile.lastIndexOf('/') + 1));
+			
 			try {
 	
-				br = new BufferedReader(new FileReader(csvFile));
+				br = new BufferedReader(new FileReader(f));
 				while ((line = br.readLine()) != null) {
 					String[] data = line.split(cvsSplitBy);
 					cvsLines.add( data );

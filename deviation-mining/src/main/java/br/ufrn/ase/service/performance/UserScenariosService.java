@@ -16,6 +16,7 @@ import br.ufrn.ase.dao.DAOFactory;
 import br.ufrn.ase.dao.RegistroEntradaDAO;
 import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.RegistroEntrada;
+import br.ufrn.ase.util.SettingsUtil;
 import br.ufrn.ase.util.VersionMapUtil;
 
 /**
@@ -62,8 +63,14 @@ public class UserScenariosService {
 		Date finalDate = new VersionMapUtil().getFinalDateOfVersion(system_version);
 		String system_name = system_version.substring(0, system_version.indexOf('-')).trim().toUpperCase();
 
-		List<RegistroEntrada> registros = DAOFactory.getDAO(RegistroEntradaDAO.class)
-				.findAllBySystemVersion(system_name, initialDate, finalDate);
+		RegistroEntradaDAO dao = DAOFactory.getDAO(RegistroEntradaDAO.class);
+
+		long start = System.currentTimeMillis();
+
+		List<RegistroEntrada> registros = dao.findAllBySystemVersion(system_name, initialDate, finalDate);
+
+		System.out.println("###;" + registros.size() + ";" + SettingsUtil.getProperty("default_db") + ";"
+				+ (System.currentTimeMillis() - start) / 1000.0);
 
 		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
 

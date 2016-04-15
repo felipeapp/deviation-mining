@@ -4,7 +4,7 @@ import java.util.Map;
 
 import br.ufrn.ase.service.performance.UserScenariosService;
 
-public class Console {
+public class ConsoleMean {
 
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
