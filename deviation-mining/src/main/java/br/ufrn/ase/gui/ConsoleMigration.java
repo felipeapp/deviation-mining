@@ -1,4 +1,4 @@
-package br.ufrn.ase.service.migration;
+package br.ufrn.ase.gui;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import br.ufrn.ase.dao.mongo.RegistroEntradaMongoDAO;
 import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
 
-public class MigrationRun {
+public class ConsoleMigration {
 
 	public static void main(String[] args) {
 		RegistroEntradaDAO relational_dao = new RegistroEntradaRelationalDAO();
