@@ -30,7 +30,7 @@ public abstract class DAOFactory {
 	/**
 	 * Current default database
 	 */
-	private static final DATABASE db = DATABASE.valueOf(SettingsUtil.getProperty("default_db").toUpperCase());
+	private static DATABASE db = DATABASE.valueOf(SettingsUtil.getProperty("default_db").toUpperCase());
 
 	/**
 	 * @param cls
@@ -49,6 +49,14 @@ public abstract class DAOFactory {
 		}
 
 		throw new UnsupportedOperationException("DAO support for " + cls.getName() + " is not implemented");
+	}
+
+	/**
+	 * Change current default database
+	 */
+	public static void setDefaultDB(String database) {
+		db = DATABASE.valueOf(database.toUpperCase());
+		SettingsUtil.setProperty("default_db", database);
 	}
 
 }

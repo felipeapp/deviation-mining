@@ -7,10 +7,10 @@ import java.util.Properties;
 
 public abstract class SettingsUtil {
 
-	private static Properties properties;
+	private static Properties properties = new Properties();
 
 	public static String getProperty(String key) {
-		if (properties == null) {
+		if (properties.isEmpty()) {
 			properties = new Properties();
 
 			try {
@@ -27,6 +27,10 @@ public abstract class SettingsUtil {
 		}
 
 		return properties.getProperty(key);
+	}
+
+	public static void setProperty(String key, String value) {
+		properties.setProperty(key, value);
 	}
 
 }

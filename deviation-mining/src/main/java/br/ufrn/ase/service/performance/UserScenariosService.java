@@ -69,8 +69,8 @@ public class UserScenariosService {
 
 		List<RegistroEntrada> registros = dao.findAllBySystemVersion(system_name, initialDate, finalDate);
 
-		System.out.println("###;" + registros.size() + ";" + SettingsUtil.getProperty("default_db") + ";"
-				+ (System.currentTimeMillis() - start) / 1000.0);
+		System.out.println(registros.size() + ";" + SettingsUtil.getProperty("default_db") + ";"
+				+ (System.currentTimeMillis() - start));
 
 		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
 
