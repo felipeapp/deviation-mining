@@ -3,7 +3,7 @@ package br.ufrn.ase.domain;
 import java.util.Date;
 import java.util.List;
 
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
 
 public class RegistroEntrada {
 
@@ -173,12 +173,11 @@ public class RegistroEntrada {
 	@Override
 	public String toString() {
 		return "RegistroEntrada [id=" + id + ", idEntrada=" + idEntrada + ", idUsuario=" + idUsuario + ", dataEntrada="
-				+ MigrationUtil.formatDateWithMs(dataEntrada) + ", dataSaida="
-				+ MigrationUtil.formatDateWithMs(dataSaida) + ", ip=" + ip + ", ipInternoNat=" + ipInternoNat
-				+ ", host=" + host + ", userAgent=" + userAgent + ", resolucao=" + resolucao + ", passaporte="
-				+ passaporte + ", canal=" + canal + ", sistema=" + sistema + ", logDB=" + logDB + ", logDBLeitura="
-				+ logDBLeitura + ", logJDBCUpdate=" + logJDBCUpdate + ", logMovimento=" + logMovimento
-				+ ", logOperacao=" + logOperacao + "]";
+				+ DateUtil.formatDateWithMs(dataEntrada) + ", dataSaida=" + DateUtil.formatDateWithMs(dataSaida)
+				+ ", ip=" + ip + ", ipInternoNat=" + ipInternoNat + ", host=" + host + ", userAgent=" + userAgent
+				+ ", resolucao=" + resolucao + ", passaporte=" + passaporte + ", canal=" + canal + ", sistema="
+				+ sistema + ", logDB=" + logDB + ", logDBLeitura=" + logDBLeitura + ", logJDBCUpdate=" + logJDBCUpdate
+				+ ", logMovimento=" + logMovimento + ", logOperacao=" + logOperacao + "]";
 	}
 
 }

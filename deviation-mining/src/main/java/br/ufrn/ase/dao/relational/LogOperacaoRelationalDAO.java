@@ -6,7 +6,7 @@ import java.util.List;
 
 import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.Sistema;
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
 
 public class LogOperacaoRelationalDAO extends AbstractMigrationRelationalDAO<LogOperacao> {
 
@@ -16,7 +16,7 @@ public class LogOperacaoRelationalDAO extends AbstractMigrationRelationalDAO<Log
 
 		log.setAction(rs.getString("action"));
 		log.setErro(rs.getBoolean("erro"));
-		log.setHorario(MigrationUtil.getDateFromDBTimestamp(rs.getTimestamp("hora")));
+		log.setHorario(DateUtil.getDateFromDBTimestamp(rs.getTimestamp("hora")));
 		log.setIdAcessoPublico(rs.getInt("id_acesso_publico"));
 		log.setIdOperacao(rs.getInt("id_operacao"));
 		log.setMensagens(rs.getString("mensagens"));

@@ -2,7 +2,7 @@ package br.ufrn.ase.domain;
 
 import java.util.Date;
 
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
 
 public class LogMovimento {
 
@@ -55,8 +55,7 @@ public class LogMovimento {
 	@Override
 	public String toString() {
 		return "LogMovimento [idMovimento=" + idMovimento + ", idLogMovimento=" + idLogMovimento + ", codigoMovimento="
-				+ codigoMovimento + ", horario=" + MigrationUtil.formatDateWithMs(horario) + ", sistema=" + sistema
-				+ "]";
+				+ codigoMovimento + ", horario=" + DateUtil.formatDateWithMs(horario) + ", sistema=" + sistema + "]";
 	}
 
 }

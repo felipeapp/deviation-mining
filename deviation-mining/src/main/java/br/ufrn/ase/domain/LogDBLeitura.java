@@ -2,7 +2,7 @@ package br.ufrn.ase.domain;
 
 import java.util.Date;
 
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
 
 public class LogDBLeitura {
 
@@ -82,7 +82,7 @@ public class LogDBLeitura {
 	@Override
 	public String toString() {
 		return "LogDBLeitura [tabela=" + tabela + ", idElemento=" + idElemento + ", idUsuario=" + idUsuario
-				+ ", horario=" + MigrationUtil.formatDateWithMs(horario) + ", codigoMovimento=" + codigoMovimento
+				+ ", horario=" + DateUtil.formatDateWithMs(horario) + ", codigoMovimento=" + codigoMovimento
 				+ ", idTurmaVirtual=" + idTurmaVirtual + ", idLogDBLeitura=" + idLogDBLeitura + ", sistema=" + sistema
 				+ "]";
 	}

@@ -6,7 +6,7 @@ import java.util.List;
 
 import br.ufrn.ase.domain.LogMovimento;
 import br.ufrn.ase.domain.Sistema;
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
 
 public class LogMovimentoRelationalDAO extends AbstractMigrationRelationalDAO<LogMovimento> {
 
@@ -15,7 +15,7 @@ public class LogMovimentoRelationalDAO extends AbstractMigrationRelationalDAO<Lo
 		LogMovimento log = new LogMovimento();
 
 		log.setCodigoMovimento(rs.getInt("cod_movimento"));
-		log.setHorario(MigrationUtil.getDateFromDBTimestamp(rs.getTimestamp("data")));
+		log.setHorario(DateUtil.getDateFromDBTimestamp(rs.getTimestamp("data")));
 		log.setIdLogMovimento(rs.getInt("id_log_movimento"));
 		log.setIdMovimento(rs.getInt("id_movimento"));
 		log.setSistema(Sistema.fromValue(rs.getInt("id_sistema")));

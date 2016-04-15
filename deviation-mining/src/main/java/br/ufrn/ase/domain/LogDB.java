@@ -2,7 +2,8 @@ package br.ufrn.ase.domain;
 
 import java.util.Date;
 
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
+import br.ufrn.ase.util.StringUtil;
 
 public class LogDB {
 
@@ -91,9 +92,9 @@ public class LogDB {
 	@Override
 	public String toString() {
 		return "LogDB [operacao=" + operacao + ", tabela=" + tabela + ", idElemento=" + idElemento + ", idUsuario="
-				+ idUsuario + ", horario=" + MigrationUtil.formatDateWithMs(horario) + ", codigoMovimento="
-				+ codigoMovimento + ", alteracoes=" + MigrationUtil.getFirstLine(alteracoes) + ", sistema=" + sistema
-				+ ", idLogDB=" + idLogDB + "]";
+				+ idUsuario + ", horario=" + DateUtil.formatDateWithMs(horario) + ", codigoMovimento=" + codigoMovimento
+				+ ", alteracoes=" + StringUtil.getFirstLine(alteracoes) + ", sistema=" + sistema + ", idLogDB="
+				+ idLogDB + "]";
 	}
 
 }

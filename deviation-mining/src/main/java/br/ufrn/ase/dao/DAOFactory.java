@@ -7,7 +7,7 @@ package br.ufrn.ase.dao;
 
 import br.ufrn.ase.dao.mongo.RegistroEntradaMongoDAO;
 import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.SettingsUtil;
 
 /**
  * Allow to change the database where the mining will happen.
@@ -30,7 +30,7 @@ public abstract class DAOFactory {
 	/**
 	 * Current default database
 	 */
-	private static final DATABASE db = DATABASE.valueOf(MigrationUtil.getProperty("default_db").toUpperCase());
+	private static final DATABASE db = DATABASE.valueOf(SettingsUtil.getProperty("default_db").toUpperCase());
 
 	/**
 	 * @param cls

@@ -6,7 +6,7 @@ import java.util.List;
 
 import br.ufrn.ase.domain.LogJDBCUpdate;
 import br.ufrn.ase.domain.Sistema;
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
 
 public class LogJDBCUpdateRelationalDAO extends AbstractMigrationRelationalDAO<LogJDBCUpdate> {
 
@@ -15,7 +15,7 @@ public class LogJDBCUpdateRelationalDAO extends AbstractMigrationRelationalDAO<L
 		LogJDBCUpdate log = new LogJDBCUpdate();
 
 		log.setCodigoMovimento(rs.getInt("cod_movimento"));
-		log.setHorario(MigrationUtil.getDateFromDBTimestamp(rs.getTimestamp("data")));
+		log.setHorario(DateUtil.getDateFromDBTimestamp(rs.getTimestamp("data")));
 		log.setIdLogJdbcUpdate(rs.getInt("id"));
 		log.setIdUusuario(rs.getInt("id_usuario"));
 		log.setParametros(rs.getString("params"));

@@ -3,7 +3,6 @@ package br.ufrn.ase.dao.relational;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +12,7 @@ import br.ufrn.ase.dao.RegistroEntradaDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.service.performance.UserScenariosService;
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
 
 public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO<RegistroEntrada>
 		implements RegistroEntradaDAO {
@@ -23,8 +22,8 @@ public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO
 		RegistroEntrada entrada = new RegistroEntrada();
 
 		entrada.setCanal(rs.getString("canal"));
-		entrada.setDataEntrada(MigrationUtil.getDateFromDBTimestamp(rs.getTimestamp("data")));
-		entrada.setDataSaida(MigrationUtil.getDateFromDBTimestamp(rs.getTimestamp("data_saida")));
+		entrada.setDataEntrada(DateUtil.getDateFromDBTimestamp(rs.getTimestamp("data")));
+		entrada.setDataSaida(DateUtil.getDateFromDBTimestamp(rs.getTimestamp("data_saida")));
 		entrada.setHost(rs.getString("host"));
 		entrada.setIdEntrada(rs.getInt("id_entrada"));
 		entrada.setIdUsuario(rs.getInt("id_usuario"));
@@ -116,8 +115,8 @@ public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO
 			PreparedStatement stmt = connection
 					.prepareStatement("select * from registro_entrada where data between ? and ? and id_sistema = ?");
 
-			stmt.setTimestamp(1, new Timestamp(initialDate.getTime()));
-			stmt.setTimestamp(2, new Timestamp(finalDate.getTime()));
+			stmt.setTimestamp(1, DateUtil.getDBTimestampFromDate(initialDate));
+			stmt.setTimestamp(2, DateUtil.getDBTimestampFromDate(finalDate));
 			stmt.setInt(3, Sistema.valueOf(systemName).getValue());
 
 			ResultSet rs = stmt.executeQuery();

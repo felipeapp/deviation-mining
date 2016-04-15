@@ -2,7 +2,7 @@ package br.ufrn.ase.domain;
 
 import java.util.Date;
 
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
 
 public class LogJDBCUpdate {
 
@@ -73,7 +73,7 @@ public class LogJDBCUpdate {
 	@Override
 	public String toString() {
 		return "LogJDBCUpdate [idLogJdbcUpdate=" + idLogJdbcUpdate + ", sql=" + sql + ", idUusuario=" + idUusuario
-				+ ", horario=" + MigrationUtil.formatDateWithMs(horario) + ", codigoMovimento=" + codigoMovimento
+				+ ", horario=" + DateUtil.formatDateWithMs(horario) + ", codigoMovimento=" + codigoMovimento
 				+ ", sistema=" + sistema + ", parametros=" + parametros + "]";
 	}
 

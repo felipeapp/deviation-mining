@@ -2,7 +2,8 @@ package br.ufrn.ase.domain;
 
 import java.util.Date;
 
-import br.ufrn.ase.util.MigrationUtil;
+import br.ufrn.ase.util.DateUtil;
+import br.ufrn.ase.util.StringUtil;
 
 public class LogOperacao {
 
@@ -99,10 +100,10 @@ public class LogOperacao {
 
 	@Override
 	public String toString() {
-		return "LogOperacao [action=" + action + ", horario=" + MigrationUtil.formatDateWithMs(horario)
-				+ ", parametros=" + parametros + ", tempo=" + tempo + ", erro=" + erro + ", trace="
-				+ MigrationUtil.getFirstLine(trace) + ", idOperacao=" + idOperacao + ", idAcessoPublico="
-				+ idAcessoPublico + ", mensagens=" + mensagens + ", sistema=" + sistema + "]";
+		return "LogOperacao [action=" + action + ", horario=" + DateUtil.formatDateWithMs(horario) + ", parametros="
+				+ parametros + ", tempo=" + tempo + ", erro=" + erro + ", trace=" + StringUtil.getFirstLine(trace)
+				+ ", idOperacao=" + idOperacao + ", idAcessoPublico=" + idAcessoPublico + ", mensagens=" + mensagens
+				+ ", sistema=" + sistema + "]";
 	}
 
 }
