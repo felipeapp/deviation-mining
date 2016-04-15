@@ -1,4 +1,4 @@
-package br.ufrn.ase.dao.nosql;
+package br.ufrn.ase.dao.mongo;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;

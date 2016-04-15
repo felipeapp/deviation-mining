@@ -3,7 +3,7 @@ package br.ufrn.ase.service.migration;
 import java.util.List;
 
 import br.ufrn.ase.dao.RegistroEntradaDAO;
-import br.ufrn.ase.dao.nosql.RegistroEntradaMongoDAO;
+import br.ufrn.ase.dao.mongo.RegistroEntradaMongoDAO;
 import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
 

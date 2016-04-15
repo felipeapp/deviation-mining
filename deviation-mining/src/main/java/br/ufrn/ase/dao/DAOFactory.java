@@ -5,7 +5,7 @@
  */
 package br.ufrn.ase.dao;
 
-import br.ufrn.ase.dao.nosql.RegistroEntradaMongoDAO;
+import br.ufrn.ase.dao.mongo.RegistroEntradaMongoDAO;
 import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
 
 /**

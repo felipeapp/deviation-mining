@@ -1,4 +1,4 @@
-package br.ufrn.ase.dao.nosql;
+package br.ufrn.ase.dao.mongo;
 
 import java.net.UnknownHostException;
 
