@@ -21,7 +21,6 @@ compileTestJava.options.encoding = 'ISO-8859-1'
 compileJava.options.debugOptions.debugLevel = "source,lines,vars"
 compileTestJava.options.debugOptions.debugLevel = "source,lines,vars"
 
-
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use 'jcenter' for resolving your dependencies.
@@ -33,9 +32,12 @@ repositories {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-	compile 'org.slf4j:slf4j-simple:1.7.18'                               // SLF4J Simple Binding
+	// Required SLF4J libraries
+	compile 'org.slf4j:slf4j-simple:1.7.21'                               
+	compile 'org.slf4j:jcl-over-slf4j:1.7.21'
+	
 	compile 'org.mongodb:mongo-java-driver:3.2.2'                         // Driver to access mongoDB 
-	compile 'org.springframework.data:spring-data-mongodb:1.8.4.RELEASE'  // Spring Data support to MongoDB
+	compile 'org.springframework.data:spring-data-mongodb:1.9.1.RELEASE'  // Spring Data support to MongoDB
 	compile 'org.postgresql:postgresql:9.4.1208'                          // Driver to access PostgreSQL
 	compile 'org.apache.commons:commons-math3:3.6.1'                      // Apache Commons Math
 	compile 'com.google.guava:guava:19.0'                                 // Utility classes, google's collections
@@ -43,36 +45,45 @@ dependencies {
 	
     // JUnit and Mockito test frameworks
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'org.mockito:mockito-all:1.10.19'
 }
 
+task queryPostgreSQL(type: JavaExec) {
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'br.ufrn.ase.gui.ConsoleQueryTest'
+	args 'postgres', 'no'
+	jvmArgs "-Xmx2048m"
+}
+
+task queryMongoDB(type: JavaExec) {
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'br.ufrn.ase.gui.ConsoleQueryTest'
+	args 'mongodb', 'no'
+	jvmArgs "-Xmx2048m"
+}
 
 /* Task to run the unit tests for each build */
 task unitTest(type: Test, dependsOn: testClasses, group: test, description: "Run the unit tests") {
- 
    include '**/AllUnitTests.*'
    exclude '**/AllIntegrationTests.*'
 }
  
 /* Task to run the integration tests just for especific builds */
 task integrationTest(type: Test, dependsOn: testClasses, group: test, description: "Run the integration tests") {
- 
    include '**/AllIntegrationTests.*'
    exclude '**/AllUnitTests.*'
- 
 }
  
 /* Configuration for all tests */
 tasks.withType(Test) {
- 
     /* Memory the will be used in the test */
     jvmArgs "-XX:MaxPermSize=1024m"
 }
+
 /* Disable test in the build, run the test only when call the specific task */
 test {
    exclude '**/*'
 }
-
 
 // Configure the eclipse project and classpath
 eclipse {

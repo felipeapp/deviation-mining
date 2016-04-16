@@ -11,7 +11,7 @@ import br.ufrn.ase.service.performance.UserScenariosService;
 public class ConsoleQueryTest {
 
 	public static void main(String[] args) {
-		System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "WARN");
+		System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
 		if (args.length == 2) {
 			DAOFactory.setDefaultDB(args[0]);
