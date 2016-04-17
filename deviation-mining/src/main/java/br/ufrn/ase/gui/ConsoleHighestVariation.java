@@ -24,6 +24,8 @@ import br.ufrn.ase.util.MapUtil;
  */
 public class ConsoleHighestVariation {
 
+	public final static int QTD = 10;
+	
 	/**
 	 * @param args
 	 */
@@ -33,7 +35,6 @@ public class ConsoleHighestVariation {
 		
 		long start = System.currentTimeMillis();
 		
-		int RANGE = 10;
 		
 		UserScenariosService userScenariosService = new UserScenariosService();
 		
@@ -45,7 +46,7 @@ public class ConsoleHighestVariation {
 		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario("SIGAA-3.21.0", false);
 		Map<String, Double> mapRange_3_21 = new UserScenariosStatistics().calculateCoefficientOfVariation(retorno_3_21, true);
 
-		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, RANGE);
+		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, QTD);
 		
 		
 		GraphicPlot plot = new GraphicPlot();

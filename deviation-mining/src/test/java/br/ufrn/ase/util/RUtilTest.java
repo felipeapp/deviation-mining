@@ -10,8 +10,6 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import br.ufrn.ase.util.RUtil;
-
 /**
  * @author jadson - jadsonjs@gmail.com
  *
@@ -23,7 +21,7 @@ public class RUtilTest {
 	 */
 	@Test
 	public void testFormatRVector() {
-		Assert.assertEquals("c(1,2,3,4,5)", RUtil.formatRVector( Arrays.asList( new String[]{"1", "2", "3", "4", "5"})) );
+		Assert.assertEquals("c(1.0,2.0,3.0,4.0,5.0)", RUtil.formatRVector( Arrays.asList( new Double[]{1d, 2d, 3d, 4d, 5d})) );
 	}
 
 }

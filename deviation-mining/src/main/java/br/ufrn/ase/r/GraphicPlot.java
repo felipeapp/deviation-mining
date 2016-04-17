@@ -37,12 +37,17 @@ import br.ufrn.ase.util.RUtil;
  *
  */
 public class GraphicPlot {
+	
+	public final int WIDTH = 1280;
+	public final int HEIGHT = 800;
+	public final int RESOLUTION = 100;
 
 	/** The engine of JRI */
 	private Rengine re;
 
 	public GraphicPlot() {
 		re = new Rengine(new String[] { "--vanilla" }, false, null);
+		re.eval("JavaGD()");
 	}
 
 	/** Draw a simple dotted graphic, just for tests */
@@ -52,7 +57,7 @@ public class GraphicPlot {
 		re.eval("x <- c(0.02, 0.02, 0.06, 0.06, 0.11, 0.11, 0.22, 0.22, 0.56, 0.56,1.10, 1.10)");
 		re.eval("y <- c(76, 47, 97, 107, 123, 139, 159, 152, 191, 201, 207, 200)");
 
-		re.eval("png(file=\"" + graphName + "\",width=1600,height=1600,res=400)");
+		re.eval("png(file=\"" + graphName + "\",width="+WIDTH+",height="+HEIGHT+",res="+RESOLUTION+")");
 		re.eval("plot(x,y)");
 		re.eval("dev.off()");
 
@@ -78,17 +83,17 @@ public class GraphicPlot {
 
 		String graphName = "columnchart.png";
 
-		String nameVector = RUtil.formatRVector(new ArrayList<String>(mapRange.keySet()));
-		String valuesVector = RUtil.formatRVectorDoubleList(new ArrayList<Double>(mapRange.values()));
+		String nameVector = RUtil.formatRVectorLabels(new ArrayList<String>(mapRange.keySet()));
+		String valuesVector = RUtil.formatRVector(new ArrayList<Double>(mapRange.values()));
 
 		System.out.println(nameVector);
 		System.out.println(valuesVector);
+		
+		re.eval("values <- " + valuesVector);
+		re.eval("names <- " + nameVector);
 
-		re.eval("x <- " + valuesVector);
-		re.eval("name <- " + nameVector);
-
-		re.eval("png(file=\"" + graphName + "\",width=2600,height=1600,res=200)");
-		re.eval("barplot(x, main=\"Teste\", xlab=\"scenario\", ylab=\"time\", names.arg = names ) ");
+		re.eval("png(file=\"" + graphName + "\",width=2600,height=1600,res=150)");
+		re.eval("barplot(values, main=\"Teste\", xlab=\"scenario\", ylab=\"time\", names.arg = names ) ");
 		re.eval("dev.off()");
 
 		re.end();
@@ -113,8 +118,8 @@ public class GraphicPlot {
 
 		String graphName = "boxplot.png";
 
-		String nameVector = RUtil.formatRVector(new ArrayList<String>(mapRange.keySet()));
-		String valuesVector = RUtil.formatRVectorDoubleList(new ArrayList<Double>(mapRange.values()));
+		String nameVector = RUtil.formatRVectorLabels(new ArrayList<String>(mapRange.keySet()));
+		String valuesVector = RUtil.formatRVector(new ArrayList<Double>(mapRange.values()));
 
 		System.out.println(nameVector);
 		System.out.println(valuesVector);
@@ -122,7 +127,7 @@ public class GraphicPlot {
 		re.eval("x <- " + valuesVector);
 		re.eval("name <- " + nameVector);
 
-		re.eval("png(file=\"" + graphName + "\",width=2600,height=1600,res=200)");
+		re.eval("png(file=\"" + graphName + "\",width=2600,height=1600,res=150)");
 		re.eval("boxplot(x, horizontal=TRUE) ");
 		re.eval("dev.off()");
 
@@ -150,7 +155,7 @@ public class GraphicPlot {
 		aFrame.getContentPane().add(myPanel, BorderLayout.CENTER);
 		aFrame.pack();
 		aFrame.setVisible(true);
-		aFrame.setSize(new Dimension(1200, 600));
+		aFrame.setSize(new Dimension(WIDTH, HEIGHT));
 	}
 
 	/* A panel to draw the picture */
@@ -169,6 +174,10 @@ public class GraphicPlot {
 			int width = this.getSize().width;
 			g.drawImage(image, 0, 0, width, height, this);
 		}
+	}
+	
+	public static void main(String[] args) {
+		new GraphicPlot().drawPlotTest();
 	}
 
 }
