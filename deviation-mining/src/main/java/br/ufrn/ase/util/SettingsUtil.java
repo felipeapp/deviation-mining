@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+
 public abstract class SettingsUtil {
 
 	private static Properties properties = new Properties();

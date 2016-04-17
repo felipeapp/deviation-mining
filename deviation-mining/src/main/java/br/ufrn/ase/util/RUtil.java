@@ -7,8 +7,8 @@ package br.ufrn.ase.util;
 
 import java.util.List;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 
 /**
  * @author jadson - jadsonjs@gmail.com
@@ -25,8 +25,8 @@ public class RUtil {
 		StringBuilder buffer = new StringBuilder();
 		boolean first = true;
 		for (String value : values) {
-			if(value.length() > 10)
-				value = value.substring(value.length()-10, value.length()); // limit the size of information to put in graphic
+			if(value.length() > 100)
+				value = value.substring(value.length()-100, value.length()); // limit the size of information to put in graphic
 			if(first)
 				buffer.append(value);
 			else
@@ -42,12 +42,17 @@ public class RUtil {
 	 * @return
 	 */
 	public static String formatRVectorDoubleList(List<Double> values) {
-		List<String> strings = Lists.transform(values, new Function<Double, String>() {
-	        @Override
-	        public String apply(Double from) {
-	            return from.toString();
-	        }
-	    });
+		
+		// java 8 way
+		List<String> strings = Lists.transform(values, from -> from.toString() );
+		
+		// java 7 way
+//		List<String> strings = Lists.transform(values, new Function<Double, String>() {
+//	        @Override
+//	        public String apply(Double from) {
+//	            return from.toString();
+//	        }
+//	    });
 		return formatRVector(strings);
 	}
 

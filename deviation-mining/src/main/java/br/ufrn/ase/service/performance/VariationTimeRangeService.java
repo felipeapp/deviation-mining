@@ -21,11 +21,24 @@ import br.ufrn.ase.dao.relational.ResultDataAnalysisDAO;
 public class VariationTimeRangeService {
 
 	private ResultDataAnalysisDAO resultDataAnalysisDAO;
+	
+	/* To reuse services */
 	private UserScenariosService userScenariosService;
+	
+	/* To calculate statistics services */
 	private VariationTimeRangeStatistics variationTimeRangeStatistics;
+	
+	/*If we will analyze user + scenario or just scenario*/
+	private boolean userAndScenario;
 
+	/**
+	 * Constructor
+	 * @param resultDataAnalysisDao
+	 * @param userScenariosService
+	 * @param variationTimeRangeStatistics
+	 */
 	public VariationTimeRangeService(ResultDataAnalysisDAO resultDataAnalysisDao,
-			UserScenariosService userScenariosService, VariationTimeRangeStatistics variationTimeRangeStatistics) {
+			UserScenariosService userScenariosService, VariationTimeRangeStatistics variationTimeRangeStatistics, boolean userAndScenario) {
 
 		if (userScenariosService == null || variationTimeRangeStatistics == null)
 			throw new IllegalArgumentException("Informaiton missing");
@@ -33,6 +46,7 @@ public class VariationTimeRangeService {
 		this.resultDataAnalysisDAO = resultDataAnalysisDao;
 		this.userScenariosService = userScenariosService;
 		this.variationTimeRangeStatistics = variationTimeRangeStatistics;
+		this.userAndScenario = userAndScenario;
 	}
 
 	public Map<String, Double> calculateTimeRange(String system_version) {
@@ -43,7 +57,7 @@ public class VariationTimeRangeService {
 			// Cache is not configured
 			if (resultDataAnalysisDAO == null) {
 				// Mining information
-				map = userScenariosService.findUserScenario(system_version, true);
+				map = userScenariosService.findUserScenario(system_version, userAndScenario);
 
 				// Calculate result
 				mapRange = variationTimeRangeStatistics.calculateVariationTimeRange(map);
@@ -51,7 +65,7 @@ public class VariationTimeRangeService {
 			// Cache is clear
 			else if (resultDataAnalysisDAO.countVariationTimeRanges(system_version) == 0) {
 				// Mining information
-				map = userScenariosService.findUserScenario(system_version, true);
+				map = userScenariosService.findUserScenario(system_version, userAndScenario);
 
 				// Calculate result
 				mapRange = variationTimeRangeStatistics.calculateVariationTimeRange(map);

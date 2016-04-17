@@ -20,22 +20,22 @@ import br.ufrn.ase.service.performance.VariationTimeRangeService;
 public class ConsoleVariationRange {
 
 	public static void main(String[] args) {
+		
+		System.out.println("Starting ... ");
+		
 		long start = System.currentTimeMillis();
-
-		System.out.println("Inicando execução... ");
-
-		//ResultDataAnalysisDAO resultDAO = new ResultDataAnalysisDAO();
+		
 		UserScenariosService userScenariosService = new UserScenariosService();
 		VariationTimeRangeStatistics variationTimeRangeStatistics = new VariationTimeRangeStatistics();
 
-		Map<String, Double> mapRange = new VariationTimeRangeService(null, userScenariosService,
-				variationTimeRangeStatistics).calculateTimeRange("SIGAA-3.21.0");
+		VariationTimeRangeService service = new VariationTimeRangeService(null, userScenariosService, variationTimeRangeStatistics, false);
+		Map<String, Double> mapRange = service.calculateTimeRange("SIGAA-3.21.0");
 
 		GraphicPlot plot = new GraphicPlot();
 		plot.drawColumnChart(mapRange);
 		plot.drawBoxPlotChart(mapRange);
 
-		System.out.println("Tempo: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
+		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 	}
 
 }

@@ -1,7 +1,9 @@
 package br.ufrn.ase.util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +48,29 @@ public class MapUtil {
 		}
 
 		return sortedMap;
+	}
+
+	/**
+	 * Get the top RANGE elements for a map
+	 * 
+	 * @param mapRange_3_21
+	 * @param rANGE
+	 * @return
+	 */
+	public static Map<String, Double> cutOff(Map<String, Double> map, final int RANGE) {
+		
+		map = MapUtil.sortByValue(map);
+		
+		Map<String, Double> mapTemp = new HashMap<>();
+		
+		List<String> keys = new ArrayList<String>(map.keySet());
+		List<Double> values = new ArrayList<Double>(map.values());
+		
+		for(int i = 0 ;  i < (map.size() > RANGE ? RANGE : map.size() );  i++){
+			mapTemp.put( keys.get(i), values.get(i) );
+	    }
+		
+		return MapUtil.sortByValue(mapTemp);
 	}
 
 }

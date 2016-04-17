@@ -6,7 +6,7 @@ import java.util.List;
 import br.ufrn.ase.domain.RegistroEntrada;
 
 /**
- * Database operations for RegistroEntrada.
+ * Interface for Database operations for RegistroEntrada.
  * 
  * @author Felipe
  */

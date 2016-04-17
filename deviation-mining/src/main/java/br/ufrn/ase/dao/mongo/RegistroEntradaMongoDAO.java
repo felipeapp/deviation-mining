@@ -14,8 +14,16 @@ import br.ufrn.ase.dao.RegistroEntradaDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.service.performance.UserScenariosService;
 
+/**
+ * Make query the RegistroEntrada on MongoDB for the SINFO log database structure.
+ *
+ */
 public class RegistroEntradaMongoDAO extends AbstractBasicMongoDAO implements RegistroEntradaDAO {
 
+	
+	/**
+	 * Return all RegistroEntrada of a system between a period of time
+	 */
 	@Override
 	public List<RegistroEntrada> findAllBySystemVersion(String system_name, Date initialDate, Date finalDate) {
 		Query query = query(where("dataEntrada").gte(initialDate).lte(finalDate).and("sistema").is(system_name)
@@ -29,6 +37,9 @@ public class RegistroEntradaMongoDAO extends AbstractBasicMongoDAO implements Re
 		return mongo_ops.find(query, RegistroEntrada.class);
 	}
 
+	/**
+	 * Return the last RegistroEntrada identifier
+	 */
 	@Override
 	public int getMaxIdEntrada() {
 		RegistroEntrada r = mongo_ops.findOne(new Query().with(new Sort(Sort.Direction.DESC, "idEntrada")),
@@ -37,6 +48,9 @@ public class RegistroEntradaMongoDAO extends AbstractBasicMongoDAO implements Re
 		return r == null ? 0 : r.getIdEntrada();
 	}
 
+	/**
+	 * Insert a new RegistroEntrada in the database
+	 */
 	@Override
 	public void insert(RegistroEntrada r) {
 		mongo_ops.insert(r);
@@ -52,6 +66,9 @@ public class RegistroEntradaMongoDAO extends AbstractBasicMongoDAO implements Re
 		throw new UnsupportedOperationException("getIDListGreaterThan() is not implemented by RegistroEntradaMongoDAO");
 	}
 
+	
+	
+	
 	public static void main(String[] args) {
 		UserScenariosService s = new UserScenariosService();
 
