@@ -54,7 +54,7 @@ public class ConsoleHighestVariation {
 		//plot.drawColumnChart(mapRange_3_20);
 		//plot.drawBoxPlotChart(mapRange_3_20);
 		
-		plot.drawColumnChart(mapRange_3_21);
+		plot.drawColumnChart(mapRange_3_21, "Variation", "Scenario", "Times");
 		plot.drawBoxPlotChart(mapRange_3_21);
 
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");

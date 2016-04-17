@@ -38,9 +38,9 @@ import br.ufrn.ase.util.RUtil;
  */
 public class GraphicPlot {
 	
-	public final int WIDTH = 1280;
-	public final int HEIGHT = 800;
-	public final int RESOLUTION = 100;
+	public final int WIDTH = 1280; // the width of the graphic
+	public final int HEIGHT = 800; // the width of the graphic
+	public final int RESOLUTION = 50; // the resolution (the side of the graphic latter)
 
 	/** The engine of JRI */
 	private Rengine re;
@@ -76,7 +76,7 @@ public class GraphicPlot {
 	}
 
 	/** Draw a ColumnBar graphic */
-	public void drawColumnChart(Map<String, Double> mapRange) {
+	public void drawColumnChart(Map<String, Double> mapRange, String title, String xLabel, String yLabel) {
 
 		if (mapRange == null)
 			throw new IllegalArgumentException("Information to plot wasn't passed");
@@ -92,8 +92,8 @@ public class GraphicPlot {
 		re.eval("values <- " + valuesVector);
 		re.eval("names <- " + nameVector);
 
-		re.eval("png(file=\"" + graphName + "\",width=2600,height=1600,res=150)");
-		re.eval("barplot(values, main=\"Teste\", xlab=\"scenario\", ylab=\"time\", names.arg = names ) ");
+		re.eval("png(file=\"" + graphName + "\",width="+WIDTH+",height="+HEIGHT+",res="+RESOLUTION+")");
+		re.eval("barplot(values, main=\""+title+"\", xlab=\""+xLabel+"\", ylab=\""+yLabel+"\", names.arg = names ) ");
 		re.eval("dev.off()");
 
 		re.end();
@@ -127,7 +127,7 @@ public class GraphicPlot {
 		re.eval("x <- " + valuesVector);
 		re.eval("name <- " + nameVector);
 
-		re.eval("png(file=\"" + graphName + "\",width=2600,height=1600,res=150)");
+		re.eval("png(file=\"" + graphName + "\",width="+WIDTH+",height="+HEIGHT+",res="+RESOLUTION+")");
 		re.eval("boxplot(x, horizontal=TRUE) ");
 		re.eval("dev.off()");
 

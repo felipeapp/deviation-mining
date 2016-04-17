@@ -20,17 +20,14 @@ public class RUtil {
 	 * @return
 	 */
 	public static String formatRVectorLabels(List<String> labels){
-		final int MAX_LABEL_SIZE = 100;
 		
 		StringBuilder buffer = new StringBuilder();
 		boolean first = true;
 		for (String label : labels) {
-			if(label.length() > MAX_LABEL_SIZE)
-				label = label.substring(label.length()-MAX_LABEL_SIZE, label.length()); // limit the size of information to put in graphic
 			if(first)
-				buffer.append("'"+label+"'");
+				buffer.append("'"+StringUtil.formatScenarioName(label)+"'");
 			else
-				buffer.append(",'"+label+"'");
+				buffer.append(",'"+StringUtil.formatScenarioName(label)+"'");
 			first = false;
 		}
 		

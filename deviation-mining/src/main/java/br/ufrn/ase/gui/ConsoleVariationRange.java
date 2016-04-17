@@ -32,7 +32,7 @@ public class ConsoleVariationRange {
 		Map<String, Double> mapRange = service.calculateTimeRange("SIGAA-3.21.0");
 
 		GraphicPlot plot = new GraphicPlot();
-		plot.drawColumnChart(mapRange);
+		plot.drawColumnChart(mapRange, "Range", "Scenario", "Times");
 		plot.drawBoxPlotChart(mapRange);
 
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
