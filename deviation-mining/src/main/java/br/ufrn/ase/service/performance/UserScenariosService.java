@@ -16,7 +16,6 @@ import br.ufrn.ase.dao.DAOFactory;
 import br.ufrn.ase.dao.RegistroEntradaDAO;
 import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.RegistroEntrada;
-import br.ufrn.ase.util.SettingsUtil;
 import br.ufrn.ase.util.VersionMapUtil;
 
 /**
@@ -65,19 +64,19 @@ public class UserScenariosService {
 
 		RegistroEntradaDAO dao = DAOFactory.getDAO(RegistroEntradaDAO.class);
 
-		long start = System.currentTimeMillis();
+		//long start = System.currentTimeMillis();
 
 		List<RegistroEntrada> registros = dao.findAllBySystemVersion(system_name, initialDate, finalDate);
 
-		System.out.println(registros.size() + ";" + SettingsUtil.getProperty("default_db") + ";"
-				+ (System.currentTimeMillis() - start));
+		//System.out.println(registros.size() + ";" + SettingsUtil.getProperty("default_db") + ";"
+		//		+ (System.currentTimeMillis() - start));
 
 		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
 
 		for (RegistroEntrada registroEntrada : registros) {
 			for (LogOperacao log : registroEntrada.getLogOperacao()) {
 
-				String key = (is_user_enabled ? registroEntrada.getIdUsuario() : "") + log.getAction();
+				String key = (is_user_enabled ? registroEntrada.getIdUsuario()+"_" : "") + log.getAction();
 
 				List<Double> tempos = retorno.get(key);
 
@@ -89,6 +88,12 @@ public class UserScenariosService {
 				tempos.add((double) log.getTempo());
 			}
 		}
+		
+		
+//		for(String key: retorno.keySet()){
+//			System.out.println(key+ retorno.get(key) );
+//		}
+		
 
 		return retorno;
 	}

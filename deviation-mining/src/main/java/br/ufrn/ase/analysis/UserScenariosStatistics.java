@@ -51,4 +51,22 @@ public class UserScenariosStatistics {
 		return ordered ? MapUtil.sortByValue(mapCVScenario) : mapCVScenario;
 	}
 
+	/**
+	 * Calculate the quantity of access the some scenario
+	 * 
+	 * @param mapScenarioExecutionTime
+	 * @return
+	 */
+	public Map<String, Double> calculateExecutionAmountScenario(Map<String, List<Double>> mapScenarioExecutionTime) {
+		
+		Map<String, Double> mapCVScenario = new HashMap<String, Double>();
+
+		for (String key : mapScenarioExecutionTime.keySet()) {
+			// converts the List<Double> to double[] and calculate the CV
+			mapCVScenario.put(key, new Double( mapScenarioExecutionTime.get(key).size() ));
+		}
+
+		return MapUtil.sortByValue(mapCVScenario);
+	}
+	
 }
