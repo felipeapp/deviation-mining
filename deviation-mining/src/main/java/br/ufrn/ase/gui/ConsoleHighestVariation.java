@@ -38,10 +38,6 @@ public class ConsoleHighestVariation {
 		
 		UserScenariosService userScenariosService = new UserScenariosService();
 		
-		//Map<String, List<Double>> retorno_3_20 = userScenariosService.findUserScenario("SIGAA-3.20.0", false);
-		//Map<String, Double> mapRange_3_20 = new UserScenariosStatistics().calculateCoefficientOfVariation(retorno_3_20, true);
-
-		//mapRange_3_20 = MapUtil.cutOff(mapRange_3_20, RANGE);
 		
 		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario("SIGAA-3.21.0", false);
 		Map<String, Double> mapRange_3_21 = new UserScenariosStatistics().calculateCoefficientOfVariation(retorno_3_21, true);
@@ -50,9 +46,6 @@ public class ConsoleHighestVariation {
 		
 		
 		GraphicPlot plot = new GraphicPlot();
-		
-		//plot.drawColumnChart(mapRange_3_20);
-		//plot.drawBoxPlotChart(mapRange_3_20);
 		
 		plot.drawColumnChart(mapRange_3_21, "Variation", "Scenario", "Times");
 		plot.drawBoxPlotChart(mapRange_3_21);

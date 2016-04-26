@@ -36,7 +36,7 @@ public class UserScenariosStatistics {
 			mapExecutionMeanScenario.put(key, StatisticsUtil.mean(Doubles.toArray(mapScenarioExecutionTime.get(key))));
 		}
 
-		return mapExecutionMeanScenario;
+		return MapUtil.sortByValue(mapExecutionMeanScenario);
 	}
 
 	public Map<String, Double> calculateCoefficientOfVariation(Map<String, List<Double>> mapScenarioExecutionTime,
