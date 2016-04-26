@@ -19,7 +19,7 @@ import br.ufrn.ase.util.MapUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class ConsoleMostAcessScenarios {
+public class ConsoleMostAccessScenarios {
 	
 	public final static int QTD = 10;
 
