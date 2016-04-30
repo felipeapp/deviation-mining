@@ -13,9 +13,8 @@ import java.util.Map;
 
 import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.dao.DAOFactory;
-import br.ufrn.ase.dao.RegistroEntradaDAO;
+import br.ufrn.ase.dao.relational.performance.LogOperacaoDao;
 import br.ufrn.ase.domain.LogOperacao;
-import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.util.VersionMapUtil;
 
 /**
@@ -58,42 +57,32 @@ public class UserScenariosService {
 	 *         timeScenarioN}> if is_user_enabled is false.
 	 */
 	public Map<String, List<Double>> findUserScenario(String system_version, boolean is_user_enabled) {
-		Date initialDate = new VersionMapUtil().getInitialDateOfVersion(system_version);
-		Date finalDate = new VersionMapUtil().getFinalDateOfVersion(system_version);
+		
+		
+		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(system_version);
+		Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(system_version);
 		String system_name = system_version.substring(0, system_version.indexOf('-')).trim().toUpperCase();
 
-		RegistroEntradaDAO dao = DAOFactory.getDAO(RegistroEntradaDAO.class);
+		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 
-		//long start = System.currentTimeMillis();
-
-		List<RegistroEntrada> registros = dao.findAllBySystemVersion(system_name, initialDate, finalDate);
-
-		//System.out.println(registros.size() + ";" + SettingsUtil.getProperty("default_db") + ";"
-		//		+ (System.currentTimeMillis() - start));
-
+		List<LogOperacao> logs = dao.findAllBySystemVersion(system_name, initialDate, finalDate);
+		
 		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
 
-		for (RegistroEntrada registroEntrada : registros) {
-			for (LogOperacao log : registroEntrada.getLogOperacao()) {
+		
+		for (LogOperacao log : logs) {
 
-				String key = (is_user_enabled ? registroEntrada.getIdUsuario()+"_" : "") + log.getAction();
+			String key = (is_user_enabled ? log.getRegistroEntrada().getIdUsuario()+"_" : "") + log.getAction();
 
-				List<Double> tempos = retorno.get(key);
+			List<Double> tempos = retorno.get(key);
 
-				if (tempos == null) {
-					tempos = new ArrayList<Double>();
-					retorno.put(key, tempos);
-				}
-
-				tempos.add((double) log.getTempo());
+			if (tempos == null) {
+				tempos = new ArrayList<Double>();
+				retorno.put(key, tempos);
 			}
-		}
-		
-		
-//		for(String key: retorno.keySet()){
-//			System.out.println(key+ retorno.get(key) );
-//		}
-		
+
+			tempos.add((double) log.getTempo());
+		}	
 
 		return retorno;
 	}

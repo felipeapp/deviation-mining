@@ -1,4 +1,4 @@
-package br.ufrn.ase.gui;
+package br.ufrn.ase.gui.basic;
 
 import java.util.Map;
 

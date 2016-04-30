@@ -1,11 +1,10 @@
-package br.ufrn.ase.gui;
+package br.ufrn.ase.gui.basic;
 
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.impl.SimpleLogger;
 
-import br.ufrn.ase.dao.DAOFactory;
 import br.ufrn.ase.service.performance.UserScenariosService;
 
 public class ConsoleQueryTest {
@@ -14,7 +13,7 @@ public class ConsoleQueryTest {
 		System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
 		if (args.length == 2) {
-			DAOFactory.setDefaultDB(args[0]);
+			//DAOFactory.setDefaultDB(args[0]);
 
 			Map<String, List<Double>> map = new UserScenariosService().findUserScenario("SIGAA-3.21.0", true);
 

@@ -17,6 +17,7 @@ public class LogOperacao {
 	private int idAcessoPublico;
 	private String mensagens;
 	private Sistema sistema;
+	private RegistroEntrada registroEntrada;
 
 	public String getAction() {
 		return action;
@@ -96,6 +97,14 @@ public class LogOperacao {
 
 	public void setSistema(Sistema sistema) {
 		this.sistema = sistema;
+	}
+	
+	public RegistroEntrada getRegistroEntrada() {
+		return registroEntrada;
+	}
+
+	public void setRegistroEntrada(RegistroEntrada registroEntrada) {
+		this.registroEntrada = registroEntrada;
 	}
 
 	@Override

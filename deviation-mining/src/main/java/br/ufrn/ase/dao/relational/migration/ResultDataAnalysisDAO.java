@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.dao.relational;
+package br.ufrn.ase.dao.relational.migration;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

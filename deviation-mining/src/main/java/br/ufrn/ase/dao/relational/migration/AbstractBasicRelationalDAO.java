@@ -1,4 +1,4 @@
-package br.ufrn.ase.dao.relational;
+package br.ufrn.ase.dao.relational.migration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,17 +6,17 @@ import java.sql.SQLException;
 
 import br.ufrn.ase.util.SettingsUtil;
 
-public abstract class AbstractCacheRelationalDAO {
+public abstract class AbstractBasicRelationalDAO {
 	protected static Connection connection;
 
-	protected AbstractCacheRelationalDAO() {
+	protected AbstractBasicRelationalDAO() {
 		try {
 			if (connection == null) {
-				String db = SettingsUtil.getProperty("cache_db");
-				String host = SettingsUtil.getProperty("cache_host");
-				String port = SettingsUtil.getProperty("cache_port");
-				String user = SettingsUtil.getProperty("cache_user");
-				String pwd = SettingsUtil.getProperty("cache_password");
+				String db = SettingsUtil.getProperty("sql_db");
+				String host = SettingsUtil.getProperty("sql_host");
+				String port = SettingsUtil.getProperty("sql_port");
+				String user = SettingsUtil.getProperty("sql_user");
+				String pwd = SettingsUtil.getProperty("sql_password");
 
 				String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
 

@@ -1,4 +1,4 @@
-package br.ufrn.ase.dao.relational;
+package br.ufrn.ase.dao.relational.migration;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,14 +8,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import br.ufrn.ase.dao.RegistroEntradaDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.service.performance.UserScenariosService;
 import br.ufrn.ase.util.DateUtil;
 
-public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO<RegistroEntrada>
-		implements RegistroEntradaDAO {
+public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO<RegistroEntrada> {
 
 	@Override
 	protected RegistroEntrada getAttributesFromRS(ResultSet rs) throws SQLException {
@@ -47,7 +45,7 @@ public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO
 		return "id_entrada";
 	}
 
-	@Override
+	
 	public List<Integer> getIDListGreaterThan(int idEntrada) {
 		List<Integer> list = new ArrayList<Integer>();
 
@@ -71,7 +69,7 @@ public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO
 		return list;
 	}
 
-	@Override
+	
 	public RegistroEntrada findByID(int idEntrada) {
 		RegistroEntrada entrada = null;
 
@@ -107,7 +105,7 @@ public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO
 		return entrada;
 	}
 
-	@Override
+	
 	public List<RegistroEntrada> findAllBySystemVersion(String systemName, Date initialDate, Date finalDate) {
 		List<RegistroEntrada> list = new ArrayList<RegistroEntrada>();
 
@@ -141,15 +139,7 @@ public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO
 		return list;
 	}
 
-	@Override
-	public int getMaxIdEntrada() {
-		throw new UnsupportedOperationException("getMaxIdEntrada() is not implemented by RegistroEntradaRelationalDAO");
-	}
-
-	@Override
-	public void insert(RegistroEntrada entrada) {
-		throw new UnsupportedOperationException("insert() is not implemented by RegistroEntradaRelationalDAO");
-	}
+	
 
 	public static void _main(String[] args) {
 		RegistroEntradaRelationalDAO dao = new RegistroEntradaRelationalDAO();

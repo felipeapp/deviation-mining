@@ -1,29 +1,24 @@
+/*
+ * Copyright (C) Automation Software Engineering Group
+ *
+ * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
+ */
 package br.ufrn.ase.dao.relational;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
-import br.ufrn.ase.util.SettingsUtil;
-
+/**
+ * @author jadson - jadsonjs@gmail.com
+ *
+ */
 public abstract class AbstractBasicRelationalDAO {
-	protected static Connection connection;
 
-	protected AbstractBasicRelationalDAO() {
-		try {
-			if (connection == null) {
-				String db = SettingsUtil.getProperty("sql_db");
-				String host = SettingsUtil.getProperty("sql_host");
-				String port = SettingsUtil.getProperty("sql_port");
-				String user = SettingsUtil.getProperty("sql_user");
-				String pwd = SettingsUtil.getProperty("sql_password");
-
-				String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
-
-				connection = DriverManager.getConnection(url, user, pwd);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	/** Connection to be used by son classes */
+	protected Connection connection;
+	
+	public AbstractBasicRelationalDAO(Connection connection){
+		if(connection == null)
+			throw new IllegalArgumentException("Connection is null");
+		this.connection = connection;
 	}
 }

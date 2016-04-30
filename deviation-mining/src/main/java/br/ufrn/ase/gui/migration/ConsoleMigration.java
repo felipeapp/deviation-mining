@@ -1,17 +1,18 @@
-package br.ufrn.ase.gui;
+package br.ufrn.ase.gui.migration;
 
 import java.util.List;
 
-import br.ufrn.ase.dao.RegistroEntradaDAO;
-import br.ufrn.ase.dao.mongo.RegistroEntradaMongoDAO;
-import br.ufrn.ase.dao.relational.RegistroEntradaRelationalDAO;
+import br.ufrn.ase.dao.DAOFactory;
+import br.ufrn.ase.dao.mongo.performance.RegistroEntradaMongoDAO;
+import br.ufrn.ase.dao.relational.migration.RegistroEntradaRelationalDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
 
 public class ConsoleMigration {
 
 	public static void main(String[] args) {
-		RegistroEntradaDAO relational_dao = new RegistroEntradaRelationalDAO();
-		RegistroEntradaDAO mongo_dao = new RegistroEntradaMongoDAO();
+		
+		RegistroEntradaRelationalDAO relational_dao = DAOFactory.getRelationalDAO(RegistroEntradaRelationalDAO.class);
+		RegistroEntradaMongoDAO mongo_dao           = DAOFactory.getNoSQLDAO(RegistroEntradaMongoDAO.class);
 
 		int max_id_entrada = mongo_dao.getMaxIdEntrada();
 

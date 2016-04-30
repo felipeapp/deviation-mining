@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.gui;
+package br.ufrn.ase.gui.basic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,18 +21,30 @@ import br.ufrn.ase.util.MapUtil;
  */
 public class ConsoleHighestAverageMostSignificant {
 
-	public final static int QTD = 10;
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
-		System.out.println("Starting ... ");
 		
 		long start = System.currentTimeMillis();
 		
+		System.out.println("Starting ... ");
+	
+		Map<String, Double> mapTemp = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(10);
 		
+		GraphicPlot plot = new GraphicPlot();
+		
+		plot.drawColumnChart(mapTemp, "Average Most Significant", "Scenario", "Times");
+		plot.drawBoxPlotChart(mapTemp);
+		
+		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
+
+	}
+	
+	
+	public Map<String, Double> getHighestAverageMostSignificantScenario(int qtd){
+			
 		UserScenariosService userScenariosService = new UserScenariosService();
 		
 		// We want to sort the 2 criteria entirely distinct
@@ -49,23 +61,16 @@ public class ConsoleHighestAverageMostSignificant {
 		Map<String, Double> mapTemp = new HashMap<>();
 		
 		
-		for (int i = 0; i < ( QTD * 2 < mostAccessKeys.size() ? QTD * 2: mostAccessKeys.size() ); i++) {
+		for (int i = 0; i < ( qtd * 2 < mostAccessKeys.size() ? qtd * 2: mostAccessKeys.size() ); i++) {
 			String scenarioMostAccess = mostAccessKeys.get(i);
 			
 			mapTemp.put(scenarioMostAccess, mapRange_3_21Mean.get(scenarioMostAccess));
 		}
 		
-		mapTemp = MapUtil.cutOff(mapTemp, QTD);
+		mapTemp = MapUtil.cutOff(mapTemp, qtd);
 		
 		
-		GraphicPlot plot = new GraphicPlot();
-		
-		
-		plot.drawColumnChart(mapTemp, "Average Most Significant", "Scenario", "Times");
-		plot.drawBoxPlotChart(mapTemp);
-
-		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
-
+		return mapTemp;
 	}
 
 }
