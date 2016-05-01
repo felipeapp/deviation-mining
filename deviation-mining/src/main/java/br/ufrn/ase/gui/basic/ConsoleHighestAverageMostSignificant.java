@@ -31,7 +31,7 @@ public class ConsoleHighestAverageMostSignificant {
 		
 		System.out.println("Starting ... ");
 	
-		Map<String, Double> mapTemp = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(10);
+		Map<String, Double> mapTemp = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario("SIGAA-3.21.0", 10);
 		
 		GraphicPlot plot = new GraphicPlot();
 		
@@ -43,7 +43,7 @@ public class ConsoleHighestAverageMostSignificant {
 	}
 	
 	
-	public Map<String, Double> getHighestAverageMostSignificantScenario(int qtd){
+	public Map<String, Double> getHighestAverageMostSignificantScenario(String systemVersion, int qtd){
 			
 		UserScenariosService userScenariosService = new UserScenariosService();
 		
@@ -51,7 +51,7 @@ public class ConsoleHighestAverageMostSignificant {
 		// How I do it?
 		
 		// Fist calculate the most variation and the most access
-		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario("SIGAA-3.21.0", false);
+		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario(systemVersion, false);
 		Map<String, Double> mapRange_3_21Mean = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno_3_21);
 		Map<String, Double> mapRange_3_21MostAccess = new UserScenariosStatistics().calculateExecutionAmountScenario(retorno_3_21);
 		
