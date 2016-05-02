@@ -2,7 +2,6 @@ package br.ufrn.ase.util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -46,11 +45,19 @@ public abstract class DateUtil {
 	 * @param date
 	 * @return
 	 */
-	public static LocalDateTime toLocalDataTime(Date date) {
+	public static LocalDateTime toLocalDateTime(Date date) {
 		if(date == null) return null;
-		Instant instantTemp = Instant.ofEpochMilli(date.getTime());
-		LocalDateTime timeTemp =  LocalDateTime.ofInstant(instantTemp, ZoneId.systemDefault());
-		return timeTemp;
+		return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+	}
+	
+	/**
+	 * Convert Date to LocalDataTime of Java8
+	 * @param date
+	 * @return
+	 */
+	public static Date toDate(LocalDateTime localDateTime) {
+		if(localDateTime == null) return null;
+		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
 
 }

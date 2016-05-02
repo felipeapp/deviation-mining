@@ -56,16 +56,16 @@ public class UserScenariosService {
 	 *         or <scenario, {timeScenario1, timeScenario2, timeScenario3, ...,
 	 *         timeScenarioN}> if is_user_enabled is false.
 	 */
-	public Map<String, List<Double>> findUserScenario(String system_version, boolean is_user_enabled) {
+	public Map<String, List<Double>> findUserScenario(String systemVersion, boolean is_user_enabled) {
 		
 		
-		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(system_version);
-		Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(system_version);
-		String system_name = system_version.substring(0, system_version.indexOf('-')).trim().toUpperCase();
+		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(systemVersion);
+		Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(systemVersion);
+		String systemName = systemVersion.substring(0, systemVersion.indexOf('-')).trim().toUpperCase();
 
 		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 
-		List<LogOperacao> logs = dao.findAllBySystemVersion(system_name, initialDate, finalDate);
+		List<LogOperacao> logs = dao.findAllBySystemVersion(systemName, initialDate, finalDate);
 		
 		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
 
