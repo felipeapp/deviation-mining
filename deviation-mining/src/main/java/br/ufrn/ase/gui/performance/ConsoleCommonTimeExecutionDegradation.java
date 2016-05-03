@@ -5,6 +5,7 @@
  */
 package br.ufrn.ase.gui.performance;
 
+import java.util.List;
 import java.util.Map;
 
 import br.ufrn.ase.gui.basic.ConsoleHighestAverageMostSignificant;
@@ -32,15 +33,22 @@ public class ConsoleCommonTimeExecutionDegradation {
 		
 		System.out.println("Starting ... ");
 		
-		Map<String, Double> topScenarios = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(systemVersion, 10);
-		
-		new CommonTimeExecutionDegradationService().calculateCommonTimeExecutionDegradation(systemVersion, topScenarios);
+		getCommonTimeExecutionDegradation(systemVersion);
 		
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
-//		
-//		GraphicPlot plot = new GraphicPlot();
-//		
-//		plot.drawColumnChart(scenariosOverAvarage, "Average Most Significant", "Scenario", "Times");
+
+	}
+
+	private static void getCommonTimeExecutionDegradation(String systemVersion) {
+		
+		Map<String, Double> topScenarios = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(systemVersion, 10);
+		
+		List<String> scenarioDegradation = new CommonTimeExecutionDegradationService().calculateCommonTimeExecutionDegradation(systemVersion, topScenarios);
+		
+		// we find the potential degradation scenarios
+		for (String string : scenarioDegradation) {
+			System.out.println("*****"+string+"*****");
+		}
 	}
 
 }

@@ -15,12 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import br.ufrn.ase.analysis.UserScenariosStatistics;
+import com.google.common.primitives.Doubles;
+
 import br.ufrn.ase.dao.DAOFactory;
 import br.ufrn.ase.dao.relational.performance.LogOperacaoDao;
 import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.degradation.Interval;
 import br.ufrn.ase.util.DateUtil;
+import br.ufrn.ase.util.MapUtil;
+import br.ufrn.ase.util.StatisticsUtil;
 
 /**
  * 
@@ -56,14 +59,19 @@ public class CommonTimeExecutionDegradationService {
 		
 		List<LogOperacao> scenariosExecutedOverloadTime = getSencariosExecutedInOverloadTime(commonTimesOverload, systemVersion);
 		
-		Map<String, List<Double>> scenariosAverage =  getExecutionOfScenario(scenariosExecutedOverloadTime);
+		List<LogOperacao> scenariosExecutedOverloadTimeAllExecutions =  getExecutionOfScenario(scenariosExecutedOverloadTime);
 		
-		Map<String, Double> mapExecutionMeanScenario = new UserScenariosStatistics().calculateExecutionMeanScenario(scenariosAverage);
+		Map<String, Double> scenariosExecutedOverloadTimeMean = calculateExecutionMeanScenario(scenariosExecutedOverloadTimeAllExecutions);
 		
-		return getScenarioOverAverageSameInterval(scenariosExecutedOverloadTime, commonTimesOverload, mapExecutionMeanScenario);
+		return getScenarioOverAverageSameInterval(scenariosExecutedOverloadTimeAllExecutions, scenariosExecutedOverloadTimeMean, commonTimesOverload);
 
 	}
 
+
+	
+
+
+	
 
 
 
@@ -163,10 +171,12 @@ public class CommonTimeExecutionDegradationService {
 	
 	
 	/**
+	 * Return all execution of the scenario passed. 
+	 * 
 	 * @param scenariosExecutedOverloadTime
 	 * @return
 	 */
-	private Map<String, List<Double>> getExecutionOfScenario(List<LogOperacao> scenariosExecutedOverloadTime) {
+	private List<LogOperacao>  getExecutionOfScenario(List<LogOperacao> scenariosExecutedOverloadTime) {
 		
 		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 		
@@ -176,44 +186,85 @@ public class CommonTimeExecutionDegradationService {
 			scenarios.add(logOperacao.getAction());
 		}
 
-		List<LogOperacao> logs = dao.findAllByScenario(scenarios);
+		return dao.findAllByScenario(scenarios);
 		
-		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
-		
-		for (LogOperacao log : logs) {
-
-			String key = log.getAction();
-
-			List<Double> tempos = retorno.get(key);
-
-			if (tempos == null) {
-				tempos = new ArrayList<Double>();
-				retorno.put(key, tempos);
-			}
-
-			tempos.add((double) log.getTempo());
-		}	
-		
-		return retorno;
 	}
 	
 	
+	/***
+	 * Calculate the average of the times of a user
+	 * 
+	 * @param mapScenarioExecutionTime
+	 * @return
+	 */
+	public Map<String, Double> calculateExecutionMeanScenario(List<LogOperacao> scenariosExecutions) {
+		
+		Map<String, List<Double>> map = new HashMap<String, List<Double>>();
+		
+		for (LogOperacao log : scenariosExecutions) {
+			String key =  log.getAction();
 
+			List<Double> tempos = map.get(key);
+
+			if (tempos == null) {
+				tempos = new ArrayList<Double>();
+				map.put(key, tempos);
+			}
+
+			tempos.add((double) log.getTempo());
+		}
+		
+		// calculate the mean
+		
+		Map<String, Double> mapExecutionMeanScenario = new HashMap<String, Double>();
+
+		for (String key : map.keySet()) {
+			// converts the List<Double> to double[] and calculate the mean
+			mapExecutionMeanScenario.put(key, StatisticsUtil.mean(Doubles.toArray(map.get(key))));
+		}
+
+		return MapUtil.sortByValue(mapExecutionMeanScenario);
+	}
+	
+	
 	/**
 	 * This is the last method of this scenario.
 	 * 
 	 * This method find the scenario that execute over average in the same interval of the top 10.
 	 * 
-	 * @param scenariosExecutedOverloadTime
+	 * @param scenariosExecutedOverloadTimeAllExecutions
+	 * @param scenariosExecutedOverloadTimeMean
 	 * @param commonTimesOverload
-	 * @param mapExecutionMeanScenario
 	 * @return
 	 */
-	private List<String> getScenarioOverAverageSameInterval(List<LogOperacao> scenariosExecutedOverloadTime,
-				List<Interval> commonTimesOverload, Map<String, Double> mapExecutionMeanScenario) {
+	private List<String> getScenarioOverAverageSameInterval(
+			List<LogOperacao> scenariosExecutedOverloadTimeAllExecutions,
+			Map<String, Double> scenariosExecutedOverloadTimeMean, List<Interval> commonTimesOverload) {
 		
-		return new ArrayList<>();
+		Set<String> scenarios = new HashSet<>();
+		
+		// O(n2)
+		for (LogOperacao log : scenariosExecutedOverloadTimeAllExecutions) {
+			
+			// if execute above the average
+			if(log.getTempo() > scenariosExecutedOverloadTimeMean.get(log.getAction() ) ){ 
+				
+				
+				// now we have to the if execute in the times of overload of the system (get using the top 10 scenarios)
+				forIntervals:
+				for (Interval interval : commonTimesOverload) {
+					if(DateUtil.isBetweenPeriod(DateUtil.toLocalDateTime(log.getHorario()), interval.getInitialTime(), interval.getFinalTime())){
+						scenarios.add(log.getAction());
+						break forIntervals;
+					}
+				}
+			} 
+			
+		}
+		
+		return new ArrayList<>(scenarios);
 	}
+
 
 
 	/**
