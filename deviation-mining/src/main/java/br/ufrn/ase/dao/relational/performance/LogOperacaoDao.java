@@ -5,7 +5,6 @@
  */
 package br.ufrn.ase.dao.relational.performance;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -113,7 +112,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	
 				ResultSet rs = stmt.executeQuery();
 				
-				list = mountCommonProjection(rs);
+				list.addAll( mountCommonProjection(rs) );
 				
 				rs.close();
 				stmt.close();
@@ -152,7 +151,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	
 				ResultSet rs = stmt.executeQuery();
 				
-				list = mountCommonProjection(rs);
+				list.addAll(mountCommonProjection(rs));
 				
 				rs.close();
 				stmt.close();
@@ -175,25 +174,79 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 */
 	public List<LogOperacao> findAllByScenario(List<String> scenarios) {
 		
-		String sql = 
-				" SELECT log.action, log.tempo "+
-				" FROM log_operacao log " +
-				" WHERE log.action in (?) ORDER BY action ";
+		if(scenarios.size() == 0 ) return new ArrayList<>();
 		
 		List<LogOperacao> list = new ArrayList<LogOperacao>();
+		
+		int supported = 500;
+		
+		//    0 to 500
+		//  501 to 1000
+		// 1001 to 1500
+		// 1501 to 2000
+		// 2001 to 2500
+		// 2501 to list.size()
+		
+		int steps = scenarios.size() / supported;
+		
+		for (int index = 0; index <= steps; index++) {
+			
+			int fromIndex = index == 0 ? 0 : (index*supported)+1;
+			int toIndex = (index+1)*supported < scenarios.size() ?  (index+1)*supported : scenarios.size();
+		
+			List<String> scenariosTemp = scenarios.subList(fromIndex, toIndex);
+			
+			list.addAll(findAllByScenarioWithLimit(scenariosTemp, supported));
+			
+		}
 
+		return list;
+	}
+	
+	/***
+	 * Execute the 1 query with max of 100 parameters
+	 * @param scenarios
+	 * @return
+	 */
+	private List<LogOperacao> findAllByScenarioWithLimit(List<String> scenarios, int limit) {
+		
+		if(scenarios.size() == 0 ) return new ArrayList<>();
+		
+		if(scenarios.size() > limit ) throw new IllegalArgumentException("scenarios size"+scenarios.size()+" allow: "+limit);
+		
+		List<LogOperacao> list = new ArrayList<LogOperacao>();
+		
+	
+		StringBuilder sql = new  StringBuilder(
+				" SELECT log.action, log.tempo, log.hora "+
+				" FROM log_operacao log " +
+				" WHERE log.action in (  ");
+		
+		for (int i = 0; i < scenarios.size(); i++) {
+			if(i == 0 )
+				sql.append("?");
+			else
+				sql.append(",?");
+	    }
+		
+		sql.append(" ) ORDER BY action");
+		
 		try {
-			PreparedStatement stmt = connection.prepareStatement(sql);
-
-			Array array = connection.createArrayOf("VARCHAR", scenarios.toArray(new String[0]) );
-			stmt.setArray(1, array);
+			
+			PreparedStatement stmt = connection.prepareStatement(sql.toString());
+			
+			for (int i = 0; i < scenarios.size(); i++) {
+		        String param = scenarios.get(i);
+		        stmt.setString(i+1, param);
+		    }
 
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
 				LogOperacao log = new LogOperacao();
-				log.setAction( rs.getString(1) );
-				log.setTempo(  rs.getInt(2)    );
+				log.setAction(  rs.getString(1) );
+				log.setTempo(   rs.getInt(2)    );
+				log.setHorario( DateUtil.getDateFromDBTimestamp(rs.getTimestamp(3))  );
 				list.add(log);
 			}
 

@@ -50,20 +50,35 @@ public class CommonTimeExecutionDegradationService {
 	
 	public List<String> calculateCommonTimeExecutionDegradation(String systemVersion, Map<String, Double> topScenarios) {
 		
-		final int INTERVAL = 30;                                    // x minutes for the interval
-		final double PERCENTAGE_DEGRADATION_SAME_PERIOD = 1.0;      // at least x% degrade in the period 
+		final int INTERVAL = 60;                                    // x minutes for the interval
+		final double PERCENTAGE_DEGRADATION_SAME_PERIOD = 0.7;      // at least x% degrade in the period 
 		
-		List<LogOperacao> topScenariosAboveAverage = getExecutionTimeAboveAverageBySencarios(topScenarios);
+		List<LogOperacao> allExecutionTopScenariosAboveAverage = getExecutionTimeAboveAverageBySencarios(topScenarios);
 		
-		List<Interval> commonTimesOverload = verifyCommonTimeOverloaded(topScenariosAboveAverage, INTERVAL, PERCENTAGE_DEGRADATION_SAME_PERIOD);
+		System.out.println("Exectuion of top scenairios above average: "+allExecutionTopScenariosAboveAverage.size());
 		
+		List<Interval> commonTimesOverload = verifyCommonTimeOverloaded(allExecutionTopScenariosAboveAverage, INTERVAL, PERCENTAGE_DEGRADATION_SAME_PERIOD);
+		
+		System.out.println("Intervals overload executions: "+commonTimesOverload.size());
+		
+		// other scenarios same interval
 		List<LogOperacao> scenariosExecutedOverloadTime = getSencariosExecutedInOverloadTime(commonTimesOverload, systemVersion);
 		
-		List<LogOperacao> scenariosExecutedOverloadTimeAllExecutions =  getExecutionOfScenario(scenariosExecutedOverloadTime);
+		System.out.println("Other scenarios same interval: "+scenariosExecutedOverloadTime.size());
+		
+		List<LogOperacao> scenariosExecutedOverloadTimeAllExecutions =  getAllExecutionOfScenarios(scenariosExecutedOverloadTime);
+		
+		System.out.println("All execution of others scenarios: "+scenariosExecutedOverloadTimeAllExecutions.size());
 		
 		Map<String, Double> scenariosExecutedOverloadTimeMean = calculateExecutionMeanScenario(scenariosExecutedOverloadTimeAllExecutions);
 		
-		return getScenarioOverAverageSameInterval(scenariosExecutedOverloadTimeAllExecutions, scenariosExecutedOverloadTimeMean, commonTimesOverload);
+		System.out.println("Mean of execution of others scenarios: "+scenariosExecutedOverloadTimeMean.size());
+		
+		List<String> allScenariosOverAverageSameInterval = getScenarioOverAverageSameInterval(scenariosExecutedOverloadTimeAllExecutions, scenariosExecutedOverloadTimeMean, commonTimesOverload);
+		
+		System.out.println("All scenarios Over Average Same Interval: "+allScenariosOverAverageSameInterval.size());
+		
+		return allScenariosOverAverageSameInterval;
 
 	}
 
@@ -77,6 +92,8 @@ public class CommonTimeExecutionDegradationService {
 
 
 	/**
+	 * Return All execution of the top scenarios above average.
+	 * 
 	 * @param topScenarios
 	 * @return
 	 */
@@ -99,14 +116,14 @@ public class CommonTimeExecutionDegradationService {
 	 * @param topScenariosAboveAverage
 	 * @return
 	 */
-	private List<Interval> verifyCommonTimeOverloaded(List<LogOperacao> topScenariosAboveAverage, final int INTERVAL, final double PERCENTAGE_DEGRADATION_SAME_PERIOD) {
+	private List<Interval> verifyCommonTimeOverloaded(List<LogOperacao> scenariosAboveAverage, final int INTERVAL, final double PERCENTAGE_DEGRADATION_SAME_PERIOD) {
 		
-		List<Interval> commonTime = new ArrayList<>();
+		Set<Interval> commonTime = new HashSet<>();
 		
 		List<Date> allTimes = new ArrayList<>();
 		Set<String> allScenarios = new HashSet<>();
 		
-		for (LogOperacao logOperacao : topScenariosAboveAverage) {
+		for (LogOperacao logOperacao : scenariosAboveAverage) {
 			allTimes.add( logOperacao.getHorario() );
 			allScenarios.add( logOperacao.getAction() );
 		}
@@ -119,6 +136,11 @@ public class CommonTimeExecutionDegradationService {
 		LocalDateTime currentTime = initialTime;
 		LocalDateTime nextTime = getNextInterval(INTERVAL, initialTime, finalTime);
 		
+		
+		double percentageDegraded = allScenarios.size() * PERCENTAGE_DEGRADATION_SAME_PERIOD;
+		
+		int interval = 0;
+		
 		/* O(n2) 
 		 * 
 		 * for each interval, verify each log have happen in this interval
@@ -127,9 +149,12 @@ public class CommonTimeExecutionDegradationService {
 		 */
 		while(nextTime.isBefore(finalTime) ){
 			
+			if(interval % 1000 == 0)
+				System.out.println("-> Analyzing: "+interval+ " intervals");
+			
 			Set<String> scenariosAtPeriod = new HashSet<>();
 			
-			for (LogOperacao logOperacao : topScenariosAboveAverage) {
+			for (LogOperacao logOperacao : scenariosAboveAverage) {
 				
 				LocalDateTime timeTemp = DateUtil.toLocalDateTime(logOperacao.getHorario());
 	
@@ -140,7 +165,7 @@ public class CommonTimeExecutionDegradationService {
 			}
 			
 			// x%  degraded in the interval, save it, it is the interval that we want
-			if( scenariosAtPeriod.size() >= ( allScenarios.size() * PERCENTAGE_DEGRADATION_SAME_PERIOD ) ){ 
+			if( scenariosAtPeriod.size() >= percentageDegraded  ){ 
 				commonTime.add( new Interval(currentTime, nextTime) );
 			}
 			
@@ -148,13 +173,17 @@ public class CommonTimeExecutionDegradationService {
 			// Updates the interval, goes to the next interval
 			currentTime = nextTime;
 			nextTime = getNextInterval(INTERVAL, nextTime, finalTime);
+			
+			interval++;
 		}
-		return commonTime;
+		return new ArrayList<>(commonTime);
 	}
 
 	
 	
 	/**
+	 * Return others scenarios the executer overloadTime in the same interval 
+	 * 
 	 * @param topScenarios
 	 * @return
 	 */
@@ -176,7 +205,7 @@ public class CommonTimeExecutionDegradationService {
 	 * @param scenariosExecutedOverloadTime
 	 * @return
 	 */
-	private List<LogOperacao>  getExecutionOfScenario(List<LogOperacao> scenariosExecutedOverloadTime) {
+	private List<LogOperacao>  getAllExecutionOfScenarios(List<LogOperacao> scenariosExecutedOverloadTime) {
 		
 		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 		
