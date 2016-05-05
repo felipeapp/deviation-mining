@@ -12,8 +12,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import br.ufrn.ase.dao.relational.AbstractBasicRelationalDAO;
 import br.ufrn.ase.domain.LogOperacao;
@@ -89,13 +91,13 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 * @param finalDate
 	 * @return
 	 */
-	public List<LogOperacao> findAllOperationAboveAverage(Map<String, Double> topScenarios) {
+	public List<LogOperacao> findAllOperationAboveAverage(Map<String, Double> topScenarios, Date initialDate, Date finalDate) {
 		
 		String sqlAboreAverage = 
 				" SELECT "+COMMON_PROJECTION+
 				" FROM log_operacao log "+
 				" INNER JOIN registro_entrada registro ON registro.id_entrada = log.id_registro_entrada "+
-				" WHERE log.action= ? AND log.tempo > ? ";
+				" WHERE log.action= ? AND log.tempo > ? AND (log.hora between ? AND ?)";
 		
 		List<LogOperacao> list = new ArrayList<LogOperacao>();
 		
@@ -109,6 +111,8 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	
 				stmt.setString(1, scenario );
 				stmt.setDouble(2, average  );
+				stmt.setDate(3, new java.sql.Date( initialDate.getTime())  );
+				stmt.setDate(4, new java.sql.Date( finalDate.getTime()  )  );
 	
 				ResultSet rs = stmt.executeQuery();
 				
@@ -129,18 +133,17 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 * @param commonTimesOverload
 	 * @return
 	 */
-	public List<LogOperacao> findAllOperationInTheInterval(List<Interval> commonTimesOverload, String systemName) {
+	public List<String> findAllScenariosInTheInterval(List<Interval> commonTimesOverload, String systemName) {
 		
 		String sql = 
-				" SELECT "+COMMON_PROJECTION+
+				" SELECT DISTINCT log.action "+
 				" FROM log_operacao log "+
 				" INNER JOIN registro_entrada registro ON registro.id_entrada = log.id_registro_entrada "+
 				" WHERE ( log.hora between ? AND ? ) AND log.id_sistema = ? ";
 		
-		List<LogOperacao> list = new ArrayList<LogOperacao>();
+		Set<String> set = new HashSet<String>();
 		
 		for (Interval interval : commonTimesOverload) {
-			
 			
 			try {
 				PreparedStatement stmt = connection.prepareStatement(sql);
@@ -151,8 +154,9 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	
 				ResultSet rs = stmt.executeQuery();
 				
-				list.addAll(mountCommonProjection(rs));
-				
+				while (rs.next()) {
+					set.add( rs.getString(1) );
+				}
 				rs.close();
 				stmt.close();
 			} catch (SQLException e) {
@@ -160,7 +164,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 			}
 		}
 
-		return list;
+		return new ArrayList<String>(set);
 	}
 	
 	
@@ -172,7 +176,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 * @param finalDate
 	 * @return
 	 */
-	public List<LogOperacao> findAllByScenario(List<String> scenarios) {
+	public List<LogOperacao> findAllByScenario(List<String> scenarios, Date initialDate, Date finalDate) {
 		
 		if(scenarios.size() == 0 ) return new ArrayList<>();
 		
@@ -196,7 +200,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 		
 			List<String> scenariosTemp = scenarios.subList(fromIndex, toIndex);
 			
-			list.addAll(findAllByScenarioWithLimit(scenariosTemp, supported));
+			list.addAll(findAllByScenarioWithLimit(scenariosTemp, initialDate, finalDate, supported));
 			
 		}
 
@@ -208,7 +212,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 * @param scenarios
 	 * @return
 	 */
-	private List<LogOperacao> findAllByScenarioWithLimit(List<String> scenarios, int limit) {
+	private List<LogOperacao> findAllByScenarioWithLimit(List<String> scenarios, Date initialDate, Date finalDate, int limit) {
 		
 		if(scenarios.size() == 0 ) return new ArrayList<>();
 		
@@ -229,17 +233,25 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 				sql.append(",?");
 	    }
 		
-		sql.append(" ) ORDER BY action");
+		sql.append(" ) ");
+		
+		sql.append(" AND (log.hora between ? AND ? ) ");
+		
+		sql.append(" ORDER BY action");
 		
 		try {
 			
 			PreparedStatement stmt = connection.prepareStatement(sql.toString());
 			
-			for (int i = 0; i < scenarios.size(); i++) {
-		        String param = scenarios.get(i);
-		        stmt.setString(i+1, param);
+			int paramIndex =0;
+			for ( ; paramIndex < scenarios.size(); paramIndex++) {
+		        String param = scenarios.get(paramIndex);
+		        stmt.setString(paramIndex+1, param);
 		    }
 
+			stmt.setDate(paramIndex+1, new java.sql.Date( initialDate.getTime())  );
+			stmt.setDate(paramIndex+2, new java.sql.Date( finalDate.getTime()  )  );
+			
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {

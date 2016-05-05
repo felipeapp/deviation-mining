@@ -24,6 +24,7 @@ import br.ufrn.ase.domain.degradation.Interval;
 import br.ufrn.ase.util.DateUtil;
 import br.ufrn.ase.util.MapUtil;
 import br.ufrn.ase.util.StatisticsUtil;
+import br.ufrn.ase.util.VersionMapUtil;
 
 /**
  * 
@@ -50,10 +51,16 @@ public class CommonTimeExecutionDegradationService {
 	
 	public List<String> calculateCommonTimeExecutionDegradation(String systemVersion, Map<String, Double> topScenarios) {
 		
-		final int INTERVAL = 60;                                    // x minutes for the interval
-		final double PERCENTAGE_DEGRADATION_SAME_PERIOD = 0.7;      // at least x% degrade in the period 
+		final int INTERVAL = 30;                                    // x minutes for the interval
+		final double PERCENTAGE_DEGRADATION_SAME_PERIOD = 1.0;      // at least x% degrade in the period 
 		
-		List<LogOperacao> allExecutionTopScenariosAboveAverage = getExecutionTimeAboveAverageBySencarios(topScenarios);
+		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(systemVersion);
+		Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(systemVersion);
+		
+		System.out.println("Get top scenarios: "+topScenarios.size());
+		printTopScenairos(topScenarios);
+		
+		List<LogOperacao> allExecutionTopScenariosAboveAverage = getExecutionTimeAboveAverageBySencarios(topScenarios, initialDate, finalDate);
 		
 		System.out.println("Exectuion of top scenairios above average: "+allExecutionTopScenariosAboveAverage.size());
 		
@@ -61,12 +68,14 @@ public class CommonTimeExecutionDegradationService {
 		
 		System.out.println("Intervals overload executions: "+commonTimesOverload.size());
 		
+		printIntervals(commonTimesOverload);
+		
 		// other scenarios same interval
-		List<LogOperacao> scenariosExecutedOverloadTime = getSencariosExecutedInOverloadTime(commonTimesOverload, systemVersion);
+		List<String> scenariosExecutedOverloadTime = getSencariosExecutedInOverloadTime(commonTimesOverload, systemVersion);
 		
 		System.out.println("Other scenarios same interval: "+scenariosExecutedOverloadTime.size());
 		
-		List<LogOperacao> scenariosExecutedOverloadTimeAllExecutions =  getAllExecutionOfScenarios(scenariosExecutedOverloadTime);
+		List<LogOperacao> scenariosExecutedOverloadTimeAllExecutions =  getAllExecutionOfScenarios(scenariosExecutedOverloadTime, initialDate, finalDate);
 		
 		System.out.println("All execution of others scenarios: "+scenariosExecutedOverloadTimeAllExecutions.size());
 		
@@ -83,11 +92,32 @@ public class CommonTimeExecutionDegradationService {
 	}
 
 
-	
+	/**
+	 * @param commonTimesOverload
+	 */
+	private void printIntervals(List<Interval> commonTimesOverload) {
+		for (Interval i : commonTimesOverload) {
+			System.out.println(i);
+		}
+		System.out.println(" --------------------------- ");
+	}
+
+
+	/**
+	 * @param topScenarios
+	 */
+	private void printTopScenairos(Map<String, Double> topScenarios) {
+		for (String scenario : topScenarios.keySet()) {
+			System.out.println(scenario+""+topScenarios.get(scenario));
+		}
+		System.out.println(" --------------------------- ");
+	}
 
 
 	
 
+
+	
 
 
 
@@ -97,11 +127,11 @@ public class CommonTimeExecutionDegradationService {
 	 * @param topScenarios
 	 * @return
 	 */
-	private List<LogOperacao> getExecutionTimeAboveAverageBySencarios(Map<String, Double> topScenarios) {
+	private List<LogOperacao> getExecutionTimeAboveAverageBySencarios(Map<String, Double> topScenarios, Date initialDate, Date finalDate) {
 		
 		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 
-		List<LogOperacao> logs = dao.findAllOperationAboveAverage(topScenarios);
+		List<LogOperacao> logs = dao.findAllOperationAboveAverage(topScenarios, initialDate, finalDate);
 		
 		return logs;
 	}
@@ -117,6 +147,8 @@ public class CommonTimeExecutionDegradationService {
 	 * @return
 	 */
 	private List<Interval> verifyCommonTimeOverloaded(List<LogOperacao> scenariosAboveAverage, final int INTERVAL, final double PERCENTAGE_DEGRADATION_SAME_PERIOD) {
+		
+		if(scenariosAboveAverage.size() == 0 ) return new ArrayList<Interval>();
 		
 		Set<Interval> commonTime = new HashSet<>();
 		
@@ -187,13 +219,13 @@ public class CommonTimeExecutionDegradationService {
 	 * @param topScenarios
 	 * @return
 	 */
-	private List<LogOperacao> getSencariosExecutedInOverloadTime(List<Interval> commonTimesOverload, String systemVersion) {
+	private List<String> getSencariosExecutedInOverloadTime(List<Interval> commonTimesOverload, String systemVersion) {
 		
 		String systemName = systemVersion.substring(0, systemVersion.indexOf('-')).trim().toUpperCase();
 		
 		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 
-		List<LogOperacao> logs = dao.findAllOperationInTheInterval(commonTimesOverload, systemName);
+		List<String> logs = dao.findAllScenariosInTheInterval(commonTimesOverload, systemName);
 		
 		return logs;
 	}
@@ -205,17 +237,11 @@ public class CommonTimeExecutionDegradationService {
 	 * @param scenariosExecutedOverloadTime
 	 * @return
 	 */
-	private List<LogOperacao>  getAllExecutionOfScenarios(List<LogOperacao> scenariosExecutedOverloadTime) {
+	private List<LogOperacao>  getAllExecutionOfScenarios(List<String> scenariosExecutedOverloadTime, Date initialDate, Date finalDate) {
 		
 		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
-		
-		List<String> scenarios = new ArrayList<>(); 
-		
-		for (LogOperacao logOperacao : scenariosExecutedOverloadTime) {
-			scenarios.add(logOperacao.getAction());
-		}
 
-		return dao.findAllByScenario(scenarios);
+		return dao.findAllByScenario(scenariosExecutedOverloadTime, initialDate, finalDate);
 		
 	}
 	

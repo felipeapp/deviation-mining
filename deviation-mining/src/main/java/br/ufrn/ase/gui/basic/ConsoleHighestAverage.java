@@ -30,13 +30,7 @@ public class ConsoleHighestAverage {
 		
 		long start = System.currentTimeMillis();
 		
-		
-		UserScenariosService userScenariosService = new UserScenariosService();
-		
-		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario("SIGAA-3.21.0", false);
-		Map<String, Double> mapRange_3_21 = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno_3_21);
-
-		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, QTD);
+		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage("SIGAA-3.21.0");
 		
 		
 		GraphicPlot plot = new GraphicPlot();
@@ -47,6 +41,18 @@ public class ConsoleHighestAverage {
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 
 
+	}
+	
+	public Map<String, Double> getScenariosHighestAverage(String systemVersion){
+		 
+		UserScenariosService userScenariosService = new UserScenariosService();
+		
+		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario(systemVersion, false);
+		Map<String, Double> mapRange_3_21 = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno_3_21);
+
+		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, QTD);
+		
+		return mapRange_3_21;
 	}
 
 }
