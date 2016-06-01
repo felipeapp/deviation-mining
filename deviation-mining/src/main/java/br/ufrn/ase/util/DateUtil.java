@@ -59,5 +59,17 @@ public abstract class DateUtil {
 		if(localDateTime == null) return null;
 		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
+	
+	/**
+	 * return the next interval until the limit
+	 * 
+	 * @param INTERVAL in minutes
+	 * @param initialTime
+	 * @param finalTime
+	 * @return
+	 */
+	public static LocalDateTime getNextInterval(final int INTERVAL, LocalDateTime time, LocalDateTime limit) {
+		return time.plusMinutes(INTERVAL).compareTo(limit) < 0 ?  time.plusMinutes(INTERVAL) : limit;
+	}
 
 }

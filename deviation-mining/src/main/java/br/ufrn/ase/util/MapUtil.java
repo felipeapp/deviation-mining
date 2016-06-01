@@ -1,5 +1,8 @@
 package br.ufrn.ase.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -71,6 +74,23 @@ public class MapUtil {
 	    }
 		
 		return MapUtil.sortByValue(mapTemp);
+	}
+	
+	/**
+	 * This method print the qtd of bytes of a map
+	 * @param map
+	 */
+	public static void printMapSize(@SuppressWarnings("rawtypes") Map map) {
+	    try{
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        ObjectOutputStream oos = new ObjectOutputStream(baos);
+	        oos.writeObject(map);
+	        oos.close();
+	        System.out.println("Map Qtd of elements: " + map.size());
+	        System.out.println("Map Size in Bytes: " + baos.size());
+	    }catch(IOException e){
+	        e.printStackTrace();
+	    }
 	}
 
 }

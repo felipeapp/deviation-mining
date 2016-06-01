@@ -166,7 +166,7 @@ public class CommonTimeExecutionDegradationService {
 		LocalDateTime finalTime =    DateUtil.toLocalDateTime(allTimes.get(allTimes.size()-1)); 
 		
 		LocalDateTime currentTime = initialTime;
-		LocalDateTime nextTime = getNextInterval(INTERVAL, initialTime, finalTime);
+		LocalDateTime nextTime = DateUtil.getNextInterval(INTERVAL, initialTime, finalTime);
 		
 		
 		double percentageDegraded = allScenarios.size() * PERCENTAGE_DEGRADATION_SAME_PERIOD;
@@ -204,7 +204,7 @@ public class CommonTimeExecutionDegradationService {
 			
 			// Updates the interval, goes to the next interval
 			currentTime = nextTime;
-			nextTime = getNextInterval(INTERVAL, nextTime, finalTime);
+			nextTime = DateUtil.getNextInterval(INTERVAL, nextTime, finalTime);
 			
 			interval++;
 		}
@@ -318,20 +318,6 @@ public class CommonTimeExecutionDegradationService {
 		}
 		
 		return new ArrayList<>(scenarios);
-	}
-
-
-
-	/**
-	 * return the next interval until the limit
-	 * 
-	 * @param INTERVAL
-	 * @param initialTime
-	 * @param finalTime
-	 * @return
-	 */
-	private LocalDateTime getNextInterval(final int INTERVAL, LocalDateTime time, LocalDateTime limit) {
-		return time.plusMinutes(INTERVAL).compareTo(limit) < 0 ?  time.plusMinutes(INTERVAL) : limit;
 	}
 
 

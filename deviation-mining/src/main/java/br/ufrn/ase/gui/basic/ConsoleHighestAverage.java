@@ -30,7 +30,7 @@ public class ConsoleHighestAverage {
 		
 		long start = System.currentTimeMillis();
 		
-		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage("SIGAA-3.21.0");
+		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage("SIGAA-3.22.0");
 		
 		
 		GraphicPlot plot = new GraphicPlot();
