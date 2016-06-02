@@ -8,6 +8,7 @@ package br.ufrn.ase.gui.performance.basic;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+
 import br.ufrn.ase.r.GraphicPlot;
 import br.ufrn.ase.service.performance.basic.HighestAverageService;
 import br.ufrn.ase.util.MapUtil;
@@ -30,9 +31,10 @@ public class ConsoleHighestAverage {
 		
 		long start = System.currentTimeMillis();
 		
+		String systemVersion = JOptionPane.showInputDialog(null, "Enter System Version ");
 		boolean executeMining = Boolean.parseBoolean(JOptionPane.showInputDialog(null, "Execute Mining? true or false ? "));
 		
-		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage("SIGAA-3.23.0", executeMining);
+		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage(systemVersion, executeMining);
 		
 		
 		GraphicPlot plot = new GraphicPlot();

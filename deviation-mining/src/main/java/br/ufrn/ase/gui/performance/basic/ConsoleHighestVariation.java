@@ -36,9 +36,10 @@ public class ConsoleHighestVariation {
 		
 		long start = System.currentTimeMillis();
 		
+		String systemVersion = JOptionPane.showInputDialog(null, "Enter System Version ");
 		boolean executeMining = Boolean.parseBoolean(JOptionPane.showInputDialog(null, "Execute Mining? true or false ? "));
 		
-		Map<String, Double> mapRange_3_21 = new ConsoleHighestVariation().getScenariosHighestVariation("SIGAA-3.23.0", executeMining);
+		Map<String, Double> mapRange_3_21 = new ConsoleHighestVariation().getScenariosHighestVariation(systemVersion, executeMining);
 
 		GraphicPlot plot = new GraphicPlot();
 		
