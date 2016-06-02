@@ -10,7 +10,7 @@ import java.util.Map;
 
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.domain.Sistema;
-import br.ufrn.ase.service.performance.UserScenariosService;
+import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
 import br.ufrn.ase.util.DateUtil;
 
 public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO<RegistroEntrada> {
@@ -159,13 +159,13 @@ public class RegistroEntradaRelationalDAO extends AbstractMigrationRelationalDAO
 	}
 
 	public static void main(String[] args) {
-		UserScenariosService s = new UserScenariosService();
+		UserScenariosPerformanceService s = new UserScenariosPerformanceService();
 
 		System.out.println("######################################");
 
 		long start = System.currentTimeMillis();
 
-		Map<String, List<Double>> map = s.findUserScenario("SIGAA-3.21.0", true);
+		Map<String, List<Double>> map = s.findTimesExecutionOfUserScenarios("SIGAA-3.21.0", true);
 
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 		System.out.println("Size: " + map.size());

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.google.common.primitives.Doubles;
 
+import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
 import br.ufrn.ase.util.MapUtil;
 import br.ufrn.ase.util.StatisticsUtil;
 
@@ -67,6 +68,23 @@ public class UserScenariosStatistics {
 		}
 
 		return MapUtil.sortByValue(mapCVScenario);
+	}
+	
+	public Map<String, Double> calculateExecutionMeanScenario(String system_version) {
+		Map<String, List<Double>> map = new UserScenariosPerformanceService().findTimesExecutionOfUserScenarios(system_version, true);
+	
+		Map<String, Double> mapExecutionMeanScenario = new UserScenariosStatistics()
+				.calculateExecutionMeanScenario(map);
+	
+		return mapExecutionMeanScenario;
+	}
+	
+	public Map<String, Double> calculateCoefficientOfVariation(String system_version) {
+		Map<String, List<Double>> map = new UserScenariosPerformanceService().findTimesExecutionOfUserScenarios(system_version, true);
+	
+		Map<String, Double> mapCVScenario = new UserScenariosStatistics().calculateCoefficientOfVariation(map, true);
+	
+		return mapCVScenario;
 	}
 	
 }

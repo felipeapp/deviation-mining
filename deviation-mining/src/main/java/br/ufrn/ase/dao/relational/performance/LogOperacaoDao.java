@@ -42,6 +42,8 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	}
 	
 	/**
+	 * MAIN query used in the tools for performance operation
+	 * 
 	 * This method returns the action and the time spend for this action in an interval of data
 	 * 
 	 * @param systemName
@@ -49,7 +51,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 * @param finalDate
 	 * @return
 	 */
-	public List<LogOperacao> findAllBySystemVersion(String systemName, Date initialDate, Date finalDate) {
+	public List<LogOperacao> findAllLogOperacaoInsideIntervalBySystemVersion(int systemId, Date initialDate, Date finalDate) {
 		
 		/**General query for performance */
 		String sql = 
@@ -66,7 +68,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 
 			stmt.setTimestamp(1, DateUtil.getDBTimestampFromDate(initialDate));
 			stmt.setTimestamp(2, DateUtil.getDBTimestampFromDate(finalDate)  );
-			stmt.setInt(      3, Sistema.valueOf(systemName).getValue()      );
+			stmt.setInt(3, systemId);
 
 			ResultSet rs = stmt.executeQuery();
 

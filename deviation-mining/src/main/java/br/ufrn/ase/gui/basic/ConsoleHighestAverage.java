@@ -10,7 +10,7 @@ import java.util.Map;
 
 import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.r.GraphicPlot;
-import br.ufrn.ase.service.performance.UserScenariosService;
+import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -45,9 +45,10 @@ public class ConsoleHighestAverage {
 	
 	public Map<String, Double> getScenariosHighestAverage(String systemVersion){
 		 
-		UserScenariosService userScenariosService = new UserScenariosService();
+		UserScenariosPerformanceService userScenariosService = new UserScenariosPerformanceService();
 		
-		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario(systemVersion, false);
+		Map<String, List<Double>> retorno_3_21 = userScenariosService.findTimesExecutionOfUserScenarios(systemVersion, false);
+		
 		Map<String, Double> mapRange_3_21 = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno_3_21);
 
 		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, QTD);

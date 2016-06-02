@@ -31,7 +31,7 @@ public class VariationTimeRangeServiceTest {
 	@Mock
 	private ResultDataAnalysisDAO resultDataAnalysisDAO;
 	@Mock
-	private UserScenariosService userScenariosService;
+	private UserScenariosPerformanceService userScenariosService;
 	@Mock
 	private VariationTimeRangeStatistics variationTimeRangeStatistics;
 

@@ -12,7 +12,7 @@ import java.util.Map;
 
 import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.r.GraphicPlot;
-import br.ufrn.ase.service.performance.UserScenariosService;
+import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -33,13 +33,13 @@ public final static int QTD = 10;
 		long start = System.currentTimeMillis();
 		
 		
-		UserScenariosService userScenariosService = new UserScenariosService();
+		UserScenariosPerformanceService userScenariosService = new UserScenariosPerformanceService();
 		
 		// We want to sort the 2 criteria entirely distinct
 		// How I do it?
 		
 		// Fist calculate the most variation and the most access
-		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario("SIGAA-3.21.0", false);
+		Map<String, List<Double>> retorno_3_21 = userScenariosService.findTimesExecutionOfUserScenarios("SIGAA-3.21.0", false);
 		Map<String, Double> mapRange_3_21MostVariation = new UserScenariosStatistics().calculateCoefficientOfVariation(retorno_3_21, true);
 		Map<String, Double> mapRange_3_21MostAccess = new UserScenariosStatistics().calculateExecutionAmountScenario(retorno_3_21);
 		

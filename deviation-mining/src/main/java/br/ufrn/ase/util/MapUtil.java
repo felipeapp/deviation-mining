@@ -86,8 +86,8 @@ public class MapUtil {
 	        ObjectOutputStream oos = new ObjectOutputStream(baos);
 	        oos.writeObject(map);
 	        oos.close();
-	        System.out.println("Map Qtd of elements: " + map.size());
-	        System.out.println("Map Size in Bytes: " + baos.size());
+	        System.out.println(">>>>> Map Qtd of elements: " + map.size());
+	        System.out.println(">>>>> Map Size in Bytes: " + baos.size());
 	    }catch(IOException e){
 	        e.printStackTrace();
 	    }

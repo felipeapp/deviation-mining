@@ -12,7 +12,7 @@ import java.util.Map;
 
 import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.r.GraphicPlot;
-import br.ufrn.ase.service.performance.UserScenariosService;
+import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -45,13 +45,13 @@ public class ConsoleHighestAverageMostSignificant {
 	
 	public Map<String, Double> getHighestAverageMostSignificantScenario(String systemVersion, int qtd){
 			
-		UserScenariosService userScenariosService = new UserScenariosService();
+		UserScenariosPerformanceService userScenariosService = new UserScenariosPerformanceService();
 		
 		// We want to sort the 2 criteria entirely distinct
 		// How I do it?
 		
 		// Fist calculate the most variation and the most access
-		Map<String, List<Double>> retorno_3_21 = userScenariosService.findUserScenario(systemVersion, false);
+		Map<String, List<Double>> retorno_3_21 = userScenariosService.findTimesExecutionOfUserScenarios(systemVersion, false);
 		Map<String, Double> mapRange_3_21Mean = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno_3_21);
 		Map<String, Double> mapRange_3_21MostAccess = new UserScenariosStatistics().calculateExecutionAmountScenario(retorno_3_21);
 		

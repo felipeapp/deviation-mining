@@ -9,7 +9,7 @@ import java.util.Map;
 
 import br.ufrn.ase.analysis.VariationTimeRangeStatistics;
 import br.ufrn.ase.r.GraphicPlot;
-import br.ufrn.ase.service.performance.UserScenariosService;
+import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
 import br.ufrn.ase.service.performance.VariationTimeRangeService;
 
 /**
@@ -25,7 +25,7 @@ public class ConsoleVariationRange {
 		
 		long start = System.currentTimeMillis();
 		
-		UserScenariosService userScenariosService = new UserScenariosService();
+		UserScenariosPerformanceService userScenariosService = new UserScenariosPerformanceService();
 		VariationTimeRangeStatistics variationTimeRangeStatistics = new VariationTimeRangeStatistics();
 
 		VariationTimeRangeService service = new VariationTimeRangeService(null, userScenariosService, variationTimeRangeStatistics, false);
