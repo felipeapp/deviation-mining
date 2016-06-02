@@ -23,29 +23,58 @@ import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
  */
 public class HighestAverageService {
 	
-	public Map<String, Double> findTopAvaregeScenarios(String systemVersion, boolean isUserEnabled){
+	public Map<String, Double> findAvaregeScenarios(String systemVersion, boolean executeMining, boolean isUserEnabled){
 		
-		Map<String, List<Double>> retorno = new UserScenariosPerformanceService().findTimesExecutionOfUserScenarios(systemVersion, false);
+		if( executeMining ){
+			Map<String, List<Double>> retorno = new UserScenariosPerformanceService().findTimesExecutionOfUserScenarios(systemVersion, false);
 	
-		Map<String, Double> mapRange = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno);
+			Map<String, Double> mapRange = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno);
 		
-		saveResults(systemVersion, mapRange);
+			saveResults(systemVersion, mapRange);
+			
+			return mapRange;
+			
+		}else{
+			return readResults(systemVersion);
+		}
 		
-		return mapRange;
 	}
-	
-	
+
+
 	/**
 	 * @param mapRange_3_21
 	 */
 	private void saveResults(String systemVersion, Map<String, Double> mapRange) {
 		
-		ResultDataAnalysisDAO dao = DAOFactory.getRelationalDAO(ResultDataAnalysisDAO.class);
+		System.out.println("saveResults");
+		
+		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		
 		try{
 			dao.insertAverageTime(mapRange, systemVersion);
 		}catch(SQLException sqlEx){
 			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Save Results", JOptionPane.ERROR_MESSAGE);
+			sqlEx.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * @param systemVersion
+	 * @return
+	 */
+	private Map<String, Double> readResults(String systemVersion) {
+		
+		System.out.println("readResults");
+		
+		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
+		
+		try{
+			return dao.readAverageTime(systemVersion);
+		}catch(SQLException sqlEx){
+			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Read Results", JOptionPane.ERROR_MESSAGE);
+			sqlEx.printStackTrace();
+			return null;
 		}
 	}
 

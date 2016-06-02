@@ -42,7 +42,7 @@ public class ConsoleCommonTimeExecutionDegradation {
 	private static void getCommonTimeExecutionDegradation(String systemVersion) {
 		
 		//Map<String, Double> topScenarios = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(systemVersion, 10);
-		Map<String, Double> topScenarios = new ConsoleHighestAverage().getScenariosHighestAverage(systemVersion);
+		Map<String, Double> topScenarios = new ConsoleHighestAverage().getScenariosHighestAverage(systemVersion, true);
 		
 		List<String> scenarioDegradation = new CommonTimeExecutionDegradationService().calculateCommonTimeExecutionDegradation(systemVersion, topScenarios);
 		

@@ -7,6 +7,7 @@ package br.ufrn.ase.gui.performance.basic;
 
 import java.util.Map;
 
+import javax.swing.JOptionPane;
 import br.ufrn.ase.r.GraphicPlot;
 import br.ufrn.ase.service.performance.basic.HighestAverageService;
 import br.ufrn.ase.util.MapUtil;
@@ -17,7 +18,8 @@ import br.ufrn.ase.util.MapUtil;
  */
 public class ConsoleHighestAverage {
 
-	public final static int QTD = 50;
+	/** QTD to plot in the graphic */
+	public final static int QTD = 10;
 	
 	/**
 	 * @param args
@@ -28,7 +30,9 @@ public class ConsoleHighestAverage {
 		
 		long start = System.currentTimeMillis();
 		
-		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage("SIGAA-3.22.0");
+		boolean executeMining =Boolean.parseBoolean(JOptionPane.showInputDialog(null, "Execute Minin? true or false ? "));
+		
+		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage("SIGAA-3.23.0", executeMining);
 		
 		
 		GraphicPlot plot = new GraphicPlot();
@@ -41,11 +45,11 @@ public class ConsoleHighestAverage {
 
 	}
 	
-	public Map<String, Double> getScenariosHighestAverage(String systemVersion){
+	public Map<String, Double> getScenariosHighestAverage(String systemVersion, boolean executeMining){
 		 
 		HighestAverageService service = new HighestAverageService();
 		
-		Map<String, Double> mapRange_3_21 = service.findTopAvaregeScenarios(systemVersion, false);
+		Map<String, Double> mapRange_3_21 = service.findAvaregeScenarios(systemVersion, executeMining, false);
 
 		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, QTD);
 		
