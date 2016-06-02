@@ -1,4 +1,4 @@
-package br.ufrn.ase.gui.performance.basic;
+package br.ufrn.ase.gui.performance.others;
 
 import java.util.Map;
 

@@ -3,13 +3,13 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.gui.performance;
+package br.ufrn.ase.gui.performance.complex;
 
 import java.util.List;
 import java.util.Map;
 
 import br.ufrn.ase.gui.performance.basic.ConsoleHighestAverage;
-import br.ufrn.ase.service.performance.CommonTimeExecutionDegradationService;
+import br.ufrn.ase.service.performance.complex.CommonTimeExecutionDegradationService;
 
 /**
  * 

@@ -30,7 +30,7 @@ public class ConsoleHighestAverage {
 		
 		long start = System.currentTimeMillis();
 		
-		boolean executeMining =Boolean.parseBoolean(JOptionPane.showInputDialog(null, "Execute Minin? true or false ? "));
+		boolean executeMining = Boolean.parseBoolean(JOptionPane.showInputDialog(null, "Execute Mining? true or false ? "));
 		
 		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage("SIGAA-3.23.0", executeMining);
 		

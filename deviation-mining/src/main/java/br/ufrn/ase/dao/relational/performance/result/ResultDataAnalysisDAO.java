@@ -30,6 +30,10 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 		super(connection);
 	}
 	
+	
+	
+	//////////////////////////////////////////////////////////////
+	
 	/**
 	 * @param map
 	 * @throws SQLException
@@ -57,7 +61,7 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Map<String, Double> findVariationTimeRanges(String system_version) throws SQLException {
+	public Map<String, Double> readVariationTimeRanges(String system_version) throws SQLException {
 
 		String sql = " SELECT scenario, variation FROM result.variation_time_range WHERE system_version = ? ORDER BY variation DESC";
 
@@ -80,28 +84,11 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 	}
 
 	
-	/**
-	 * @param system_version
-	 * @return
-	 * @throws SQLException
-	 */
-	public int countVariationTimeRanges(String system_version) throws SQLException {
+	/////////////////////////////////////////////////////////////////////
 
-		String sql = " SELECT count(*) FROM result.variation_time_range WHERE system_version = ? ";
-
-		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
-
-			prepated.setString(1, system_version);
-
-			ResultSet rs = prepated.executeQuery();
-
-			if (rs.next()) {
-				return rs.getInt(1);
-			} else {
-				return 0;
-			}
-		}
-	}
+	
+	
+	/////////////////////////////////////////////////////////////////////
 	
 	
 	/**
@@ -151,6 +138,63 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 
 		return MapUtil.sortByValue(map);
 	}
+	
+	
+	/////////////////////////////////////////////////////////////////////
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////
+
+	/**
+	 * @param map
+	 * @throws SQLException
+	 */
+	public void insertMostAccess(Map<String, Double> mapRange, String system_version) throws SQLException {
+
+		String sql = " INSERT INTO result.most_access_scenarios ( scenario, system_version, qtd_access) VALUES (?, ?, ?) ";
+
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			for (String scenario : mapRange.keySet()) {
+				prepated.setString(1, scenario);
+				prepated.setString(2, system_version);
+				prepated.setDouble(3, mapRange.get(scenario));
+				prepated.addBatch();
+			}
+
+			prepated.executeBatch();
+		}
+	}
+
+	/**
+	 * @param system_version
+	 * @return
+	 * @throws SQLException
+	 */
+	public Map<String, Double> readMostAccesss(String system_version) throws SQLException {
+
+		String sql = " SELECT scenario, qtd_access FROM result.most_access_scenarios WHERE system_version = ? ORDER BY variation DESC";
+
+		Map<String, Double> map = new HashMap<>();
+
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			prepated.setString(1, system_version);
+
+			ResultSet rs = prepated.executeQuery();
+
+			while (rs.next()) {
+				String key = rs.getString(1);
+				Double value = rs.getDouble(2);
+				map.put(key, value);
+			}
+		}
+
+		return MapUtil.sortByValue(map);
+	}
+
+	///////////////////////////////////////////////////////////////////////////
 	
 
 }

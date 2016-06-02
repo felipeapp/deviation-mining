@@ -10,23 +10,19 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import br.ufrn.ase.r.GraphicPlot;
-import br.ufrn.ase.service.performance.basic.HighestVariationService;
+import br.ufrn.ase.service.performance.basic.MostAcessedScenariosService;
 import br.ufrn.ase.util.MapUtil;
 
 /**
- * This class calculate the highest scenarios variations of a specific system version 
- * using Coefficient of variation
- * 
- * https://en.wikipedia.org/wiki/Coefficient_of_variation
+ * Verify the most access scenarios
  * 
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class ConsoleHighestVariation {
-
-	/** QTD to plot in the graphic */
-	public final static int QTD = 10;
+public class ConsoleMostAcessedScenarios {
 	
+	public final static int QTD = 10;
+
 	/**
 	 * @param args
 	 */
@@ -38,22 +34,23 @@ public class ConsoleHighestVariation {
 		
 		boolean executeMining = Boolean.parseBoolean(JOptionPane.showInputDialog(null, "Execute Mining? true or false ? "));
 		
-		Map<String, Double> mapRange_3_21 = new ConsoleHighestVariation().getScenariosHighestVariation("SIGAA-3.23.0", executeMining);
-
+		Map<String, Double> mapRange_3_21 = new ConsoleMostAcessedScenarios().getScenariosMostAccessed("SIGAA-3.23.0", executeMining);
+		
 		GraphicPlot plot = new GraphicPlot();
 		
-		plot.drawColumnChart(mapRange_3_21, "Variation", "Scenario", "Times");
-		plot.drawBoxPlotChart(mapRange_3_21);
-
+		//plot.drawColumnChart(mapRange_3_20);
+		
+		plot.drawColumnChart(mapRange_3_21, "Amount of Access", "Scenario", "Times");
+		
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 
 	}
 	
-	public Map<String, Double> getScenariosHighestVariation(String systemVersion, boolean executeMining){
+	public Map<String, Double> getScenariosMostAccessed(String systemVersion, boolean executeMining){
 		 
-		HighestVariationService service = new HighestVariationService();
+		MostAcessedScenariosService service = new MostAcessedScenariosService();
 		
-		Map<String, Double> mapRange_3_21 = service.findVariationScenarios(systemVersion, executeMining, false);
+		Map<String, Double> mapRange_3_21 = service.findMostAccessedScenarios(systemVersion, executeMining, false);
 
 		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, QTD);
 		

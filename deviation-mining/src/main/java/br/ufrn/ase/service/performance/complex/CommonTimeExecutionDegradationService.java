@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.service.performance;
+package br.ufrn.ase.service.performance.complex;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
