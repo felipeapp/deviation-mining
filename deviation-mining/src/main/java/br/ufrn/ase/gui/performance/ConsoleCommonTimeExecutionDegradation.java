@@ -8,7 +8,7 @@ package br.ufrn.ase.gui.performance;
 import java.util.List;
 import java.util.Map;
 
-import br.ufrn.ase.gui.basic.ConsoleHighestAverage;
+import br.ufrn.ase.gui.performance.basic.ConsoleHighestAverage;
 import br.ufrn.ase.service.performance.CommonTimeExecutionDegradationService;
 
 /**

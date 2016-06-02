@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.gui.basic;
+package br.ufrn.ase.gui.performance.basic;
 
 import java.util.Map;
 

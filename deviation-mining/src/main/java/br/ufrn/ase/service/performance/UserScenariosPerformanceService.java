@@ -31,6 +31,7 @@ public class UserScenariosPerformanceService {
 	/** Interval of time to get log from the data base. As bigger as this interval, more log are recovery and can give out of memory*/
 	private final int SEARCH_INTERVAL = 60; // 60 minutes
 	
+
 	/**
 	 * Return tho
 	 * @param systemVersion

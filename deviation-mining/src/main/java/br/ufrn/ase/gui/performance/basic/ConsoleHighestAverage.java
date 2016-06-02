@@ -3,14 +3,12 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.gui.basic;
+package br.ufrn.ase.gui.performance.basic;
 
-import java.util.List;
 import java.util.Map;
 
-import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.r.GraphicPlot;
-import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
+import br.ufrn.ase.service.performance.basic.HighestAverageService;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -19,7 +17,7 @@ import br.ufrn.ase.util.MapUtil;
  */
 public class ConsoleHighestAverage {
 
-	public final static int QTD = 10;
+	public final static int QTD = 50;
 	
 	/**
 	 * @param args
@@ -45,11 +43,9 @@ public class ConsoleHighestAverage {
 	
 	public Map<String, Double> getScenariosHighestAverage(String systemVersion){
 		 
-		UserScenariosPerformanceService userScenariosService = new UserScenariosPerformanceService();
+		HighestAverageService service = new HighestAverageService();
 		
-		Map<String, List<Double>> retorno_3_21 = userScenariosService.findTimesExecutionOfUserScenarios(systemVersion, false);
-		
-		Map<String, Double> mapRange_3_21 = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno_3_21);
+		Map<String, Double> mapRange_3_21 = service.findTopAvaregeScenarios(systemVersion, false);
 
 		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, QTD);
 		

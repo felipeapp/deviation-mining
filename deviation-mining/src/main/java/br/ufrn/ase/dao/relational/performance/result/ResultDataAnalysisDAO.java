@@ -3,14 +3,16 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.dao.relational.migration;
+package br.ufrn.ase.dao.relational.performance.result;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.ufrn.ase.dao.relational.AbstractBasicRelationalDAO;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -22,8 +24,12 @@ import br.ufrn.ase.util.MapUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class ResultDataAnalysisDAO extends AbstractCacheRelationalDAO {
+public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 
+	public ResultDataAnalysisDAO(Connection connection){
+		super(connection);
+	}
+	
 	/**
 	 * @param map
 	 * @throws SQLException
@@ -37,6 +43,28 @@ public class ResultDataAnalysisDAO extends AbstractCacheRelationalDAO {
 			for (String scenario : mapRange.keySet()) {
 				prepated.setString(1, scenario);
 				prepated.setString(2, system_version);
+				prepated.setDouble(3, mapRange.get(scenario));
+				prepated.addBatch();
+			}
+
+			prepated.executeBatch();
+		}
+	}
+	
+	
+	/**
+	 * @param map
+	 * @throws SQLException
+	 */
+	public void insertAverageTime(Map<String, Double> mapRange, String systemVersion) throws SQLException {
+
+		String sql = " INSERT INTO result.average_time_execution ( system_version, scenario, average) VALUES (?, ?, ?) ";
+
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			for (String scenario : mapRange.keySet()) {
+				prepated.setString(1, systemVersion);
+				prepated.setString(2, scenario);
 				prepated.setDouble(3, mapRange.get(scenario));
 				prepated.addBatch();
 			}

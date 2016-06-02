@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.ufrn.ase.analysis.VariationTimeRangeStatistics;
-import br.ufrn.ase.dao.relational.migration.ResultDataAnalysisDAO;
+import br.ufrn.ase.dao.relational.performance.result.ResultDataAnalysisDAO;
 
 /**
  * This service calculate scenarios of larger and smaller variation at runtime

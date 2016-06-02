@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import br.ufrn.ase.analysis.VariationTimeRangeStatistics;
-import br.ufrn.ase.dao.relational.migration.ResultDataAnalysisDAO;
+import br.ufrn.ase.dao.relational.performance.result.ResultDataAnalysisDAO;
 import br.ufrn.ase.util.MapUtil;
 
 /**
