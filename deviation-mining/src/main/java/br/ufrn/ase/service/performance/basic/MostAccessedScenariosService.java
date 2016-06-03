@@ -21,7 +21,7 @@ import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class MostAcessedScenariosService {
+public class MostAccessedScenariosService {
 
 
 	public Map<String, Double> findMostAccessedScenarios(String systemVersion, boolean executeMining, boolean isUserEnabled){
@@ -64,7 +64,7 @@ public class MostAcessedScenariosService {
 	 * @param systemVersion
 	 * @return
 	 */
-	private Map<String, Double> readResults(String systemVersion) {
+	public Map<String, Double> readResults(String systemVersion) {
 		
 		System.out.println("readResults");
 		

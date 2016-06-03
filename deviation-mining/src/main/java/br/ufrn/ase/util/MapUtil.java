@@ -92,5 +92,33 @@ public class MapUtil {
 	        e.printStackTrace();
 	    }
 	}
+	
+	
+	/**
+	 * This method get the first results common in the two maps.
+	 * 
+	 * @param highestAverage
+	 * @param mostAccesss
+	 * @return
+	 */
+	public static Map<String, Double> crossMaps(Map<String, Double> firstMap, Map<String, Double> secondMap, final int QTD) {
+
+		Map<String, Double> _return = new HashMap<>();
+		
+		// First we take the 10 times first results of the second map
+		Map<String, Double> secondMapTop10Times = MapUtil.cutOff(secondMap, QTD*10);
+		
+		List<String> firstMapKeys = new ArrayList<String>(firstMap.keySet());
+		
+		for (int i = 0; i < firstMapKeys.size() ; i++) {
+			String key = firstMapKeys.get(i);
+			
+			if(secondMapTop10Times.containsKey(key)){ // this key is in the both maps, in the fisrt and in the 10 times first elements of the second
+				_return.put(key, firstMap.get(key));
+			}
+		}
+		
+		return MapUtil.cutOff(_return, QTD);
+	}
 
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import br.ufrn.ase.r.GraphicPlot;
-import br.ufrn.ase.service.performance.basic.MostAcessedScenariosService;
+import br.ufrn.ase.service.performance.basic.MostAccessedScenariosService;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -49,7 +49,7 @@ public class ConsoleMostAcessedScenarios {
 	
 	public Map<String, Double> getScenariosMostAccessed(String systemVersion, boolean executeMining){
 		 
-		MostAcessedScenariosService service = new MostAcessedScenariosService();
+		MostAccessedScenariosService service = new MostAccessedScenariosService();
 		
 		Map<String, Double> mapRange_3_21 = service.findMostAccessedScenarios(systemVersion, executeMining, false);
 
