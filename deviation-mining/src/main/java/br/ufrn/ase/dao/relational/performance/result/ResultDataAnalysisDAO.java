@@ -196,5 +196,59 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 
 	///////////////////////////////////////////////////////////////////////////
 	
+	
+	
+	/////////////////////////////////////////////////////////////////////
+
+	/**
+	 * @param map
+	 * @throws SQLException
+	 */
+	public void insertMedianTime(Map<String, Double> mapRange, String systemVersion) throws SQLException {
+
+		String sql = " INSERT INTO result.median_time_execution ( system_version, scenario, median) VALUES (?, ?, ?) ";
+
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			for (String scenario : mapRange.keySet()) {
+				prepated.setString(1, systemVersion);
+				prepated.setString(2, scenario);
+				prepated.setDouble(3, mapRange.get(scenario));
+				prepated.addBatch();
+			}
+
+			prepated.executeBatch();
+		}
+	}
+
+	/**
+	 * @param system_version
+	 * @return
+	 * @throws SQLException
+	 */
+	public Map<String, Double> readMedianTime(String system_version) throws SQLException {
+
+		String sql = " SELECT scenario, median FROM result.median_time_execution WHERE system_version = ? ORDER BY median DESC";
+
+		Map<String, Double> map = new HashMap<>();
+
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			prepated.setString(1, system_version);
+
+			ResultSet rs = prepated.executeQuery();
+
+			while (rs.next()) {
+				String key = rs.getString(1);
+				Double value = rs.getDouble(2);
+				map.put(key, value);
+			}
+		}
+
+		return MapUtil.sortByValue(map);
+	}
+
+	/////////////////////////////////////////////////////////////////////
+	
 
 }

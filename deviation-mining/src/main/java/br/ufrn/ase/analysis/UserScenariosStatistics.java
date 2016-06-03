@@ -39,6 +39,26 @@ public class UserScenariosStatistics {
 
 		return MapUtil.sortByValue(mapExecutionMeanScenario);
 	}
+	
+	
+	/***
+	 * Calculate the median of the times of a user
+	 * 
+	 * @param mapScenarioExecutionTime
+	 * @return
+	 */
+	public Map<String, Double> calculateExecutionMedianScenario(Map<String, List<Double>> mapScenarioExecutionTime) {
+		Map<String, Double> mapExecutionMeanScenario = new HashMap<String, Double>();
+
+		for (String key : mapScenarioExecutionTime.keySet()) {
+			// converts the List<Double> to double[] and calculate the mean
+			mapExecutionMeanScenario.put(key, StatisticsUtil.median(Doubles.toArray(mapScenarioExecutionTime.get(key))));
+		}
+
+		return MapUtil.sortByValue(mapExecutionMeanScenario);
+	}
+	
+	
 
 	public Map<String, Double> calculateCoefficientOfVariation(Map<String, List<Double>> mapScenarioExecutionTime,
 			boolean ordered) {
