@@ -31,12 +31,13 @@ public class ConsoleHighestVariation {
 	 */
 	public static void main(String[] args) {
 		
-		System.out.println("Starting ... ");
+		System.out.println("Starting  "+Thread.currentThread().getStackTrace()[1].getClassName()+" ... ");
 		
-		long start = System.currentTimeMillis();
 		
 		String systemVersion = SwingUtil.readSystemVersion();
 		boolean executeMining = SwingUtil.readTypeExecution();
+		
+		long start = System.currentTimeMillis();
 		
 		Map<String, Double> mapRange_3_21 = new ConsoleHighestVariation().getScenariosHighestVariation(systemVersion, executeMining);
 

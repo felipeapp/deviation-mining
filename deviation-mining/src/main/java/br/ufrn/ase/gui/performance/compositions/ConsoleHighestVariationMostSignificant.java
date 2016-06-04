@@ -26,12 +26,11 @@ public class ConsoleHighestVariationMostSignificant {
 	 */
 	public static void main(String[] args) {
 		
-
-		long start = System.currentTimeMillis();
-		
-		System.out.println("Starting ... ");
+		System.out.println("Starting  "+Thread.currentThread().getStackTrace()[1].getClassName()+" ... ");
 		
 		String systemVersion = SwingUtil.readSystemVersion();
+		
+		long start = System.currentTimeMillis();
 	
 		Map<String, Double> mapTemp = new ConsoleHighestVariationMostSignificant().getHighestVariationMostSignificantScenario(systemVersion);
 		

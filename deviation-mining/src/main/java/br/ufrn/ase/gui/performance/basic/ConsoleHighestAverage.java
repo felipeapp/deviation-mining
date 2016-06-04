@@ -26,12 +26,12 @@ public class ConsoleHighestAverage {
 	 */
 	public static void main(String[] args) {
 
-		System.out.println("Starting ... ");
-		
-		long start = System.currentTimeMillis();
+		System.out.println("Starting "+Thread.currentThread().getStackTrace()[1].getClassName()+" ... ");
 		
 		String systemVersion = SwingUtil.readSystemVersion();
 		boolean executeMining = SwingUtil.readTypeExecution();
+		
+		long start = System.currentTimeMillis();
 		
 		Map<String, Double> mapRange_3_21 = new ConsoleHighestAverage().getScenariosHighestAverage(systemVersion, executeMining);
 		
