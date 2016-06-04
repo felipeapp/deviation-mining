@@ -7,11 +7,10 @@ package br.ufrn.ase.gui.performance.compositions;
 
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import br.ufrn.ase.r.GraphicPlot;
 import br.ufrn.ase.service.performance.compositions.HighestAverageMostSignificantService;
 import br.ufrn.ase.util.MapUtil;
+import br.ufrn.ase.util.SwingUtil;
 
 /**
  * @author jadson - jadsonjs@gmail.com
@@ -31,7 +30,7 @@ public class ConsoleHighestAverageMostSignificant {
 		
 		System.out.println("Starting ... ");
 	
-		String systemVersion = JOptionPane.showInputDialog(null, "Enter System Version ");
+		String systemVersion = SwingUtil.readSystemVersion();
 		
 		Map<String, Double> mapTemp = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(systemVersion);
 		

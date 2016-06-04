@@ -7,11 +7,10 @@ package br.ufrn.ase.gui.performance.basic;
 
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import br.ufrn.ase.r.GraphicPlot;
 import br.ufrn.ase.service.performance.basic.HighestVariationService;
 import br.ufrn.ase.util.MapUtil;
+import br.ufrn.ase.util.SwingUtil;
 
 /**
  * This class calculate the highest scenarios variations of a specific system version 
@@ -36,8 +35,8 @@ public class ConsoleHighestVariation {
 		
 		long start = System.currentTimeMillis();
 		
-		String systemVersion = JOptionPane.showInputDialog(null, "Enter System Version ");
-		boolean executeMining = Boolean.parseBoolean(JOptionPane.showInputDialog(null, "Execute Mining? true or false ? "));
+		String systemVersion = SwingUtil.readSystemVersion();
+		boolean executeMining = SwingUtil.readTypeExecution();
 		
 		Map<String, Double> mapRange_3_21 = new ConsoleHighestVariation().getScenariosHighestVariation(systemVersion, executeMining);
 

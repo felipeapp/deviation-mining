@@ -18,6 +18,7 @@ import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.DateUtil;
 import br.ufrn.ase.util.MapUtil;
+import br.ufrn.ase.util.StringUtil;
 import br.ufrn.ase.util.VersionMapUtil;
 
 /**
@@ -43,7 +44,7 @@ public class UserScenariosPerformanceService {
 		
 		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(systemVersion);
 		Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(systemVersion);
-		String systemName  = systemVersion.substring(0, systemVersion.indexOf('-')).trim().toUpperCase();
+		String systemName  = StringUtil.getSystemName(systemVersion);
 		int systemId       = Sistema.valueOf(systemName).getValue();
 
 		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);

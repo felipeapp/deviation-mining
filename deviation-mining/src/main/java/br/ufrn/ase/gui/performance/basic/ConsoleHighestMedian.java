@@ -7,11 +7,10 @@ package br.ufrn.ase.gui.performance.basic;
 
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import br.ufrn.ase.r.GraphicPlot;
 import br.ufrn.ase.service.performance.basic.HighestMedianService;
 import br.ufrn.ase.util.MapUtil;
+import br.ufrn.ase.util.SwingUtil;
 
 /**
  * @author jadson - jadsonjs@gmail.com
@@ -31,8 +30,8 @@ public class ConsoleHighestMedian {
 		
 		long start = System.currentTimeMillis();
 		
-		String systemVersion = JOptionPane.showInputDialog(null, "Enter System Version ");
-		boolean executeMining = Boolean.parseBoolean(JOptionPane.showInputDialog(null, "Execute Mining? true or false ? "));
+		String systemVersion = SwingUtil.readSystemVersion();
+		boolean executeMining = SwingUtil.readTypeExecution();
 		
 		Map<String, Double> mapRange_3_21 = new ConsoleHighestMedian().getScenariosHighestMedian(systemVersion, executeMining);
 		
