@@ -64,7 +64,7 @@ public class HighestVariationService {
 	 * @param systemVersion
 	 * @return
 	 */
-	private Map<String, Double> readResults(String systemVersion) {
+	public Map<String, Double> readResults(String systemVersion) {
 		
 		System.out.println("readResults");
 		

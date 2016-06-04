@@ -97,6 +97,9 @@ public class MapUtil {
 	/**
 	 * This method get the first results common in the two maps.
 	 * 
+	 * ie this method make the intersection between the two maps returning the first elements of the MAP1 
+	 * which are connected between the first elements of MAP2 up to the limit of the amount of desired elements.
+	 * 
 	 * @param highestAverage
 	 * @param mostAccesss
 	 * @return

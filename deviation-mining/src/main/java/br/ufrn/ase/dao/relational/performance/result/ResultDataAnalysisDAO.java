@@ -174,7 +174,7 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 	 */
 	public Map<String, Double> readMostAccesss(String system_version) throws SQLException {
 
-		String sql = " SELECT scenario, qtd_access FROM result.most_access_scenarios WHERE system_version = ? ORDER BY variation DESC";
+		String sql = " SELECT scenario, qtd_access FROM result.most_access_scenarios WHERE system_version = ? ORDER BY qtd_access DESC";
 
 		Map<String, Double> map = new HashMap<>();
 

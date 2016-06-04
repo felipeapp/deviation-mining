@@ -5,14 +5,12 @@
  */
 package br.ufrn.ase.gui.performance.compositions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import br.ufrn.ase.analysis.UserScenariosStatistics;
+import javax.swing.JOptionPane;
+
 import br.ufrn.ase.r.GraphicPlot;
-import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
+import br.ufrn.ase.service.performance.compositions.HighestVariationMostSignificantService;
 import br.ufrn.ase.util.MapUtil;
 
 /**
@@ -21,49 +19,41 @@ import br.ufrn.ase.util.MapUtil;
  */
 public class ConsoleHighestVariationMostSignificant {
 
-public final static int QTD = 10;
+	/** QTD to plot in the graphic */
+	public final static int QTD = 10;
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		
-		System.out.println("Starting ... ");
-		
+
 		long start = System.currentTimeMillis();
 		
+		System.out.println("Starting ... ");
 		
-		UserScenariosPerformanceService userScenariosService = new UserScenariosPerformanceService();
-		
-		// We want to sort the 2 criteria entirely distinct
-		// How I do it?
-		
-		// Fist calculate the most variation and the most access
-		Map<String, List<Double>> retorno_3_21 = userScenariosService.findTimesExecutionOfUserScenarios("SIGAA-3.21.0", false);
-		Map<String, Double> mapRange_3_21MostVariation = new UserScenariosStatistics().calculateCoefficientOfVariation(retorno_3_21, true);
-		Map<String, Double> mapRange_3_21MostAccess = new UserScenariosStatistics().calculateExecutionAmountScenario(retorno_3_21);
-		
-		// That we first select 2 times the quantity of result, and take the variation just for this sub sample
-		List<String> mostAccessKeys = new ArrayList<String>(mapRange_3_21MostAccess.keySet());
-		
-		Map<String, Double> mapTemp = new HashMap<>();
-		
-		for (int i = 0; i < ( QTD * 2 < mostAccessKeys.size() ? QTD * 2: mostAccessKeys.size() ); i++) {
-			String scenarioMostAccess = mostAccessKeys.get(i);
-			
-			mapTemp.put(scenarioMostAccess, mapRange_3_21MostVariation.get(scenarioMostAccess));
-		}
-		
-		mapTemp = MapUtil.cutOff(mapTemp, QTD);
-		
+		String systemVersion = JOptionPane.showInputDialog(null, "Enter System Version ");
+	
+		Map<String, Double> mapTemp = new ConsoleHighestVariationMostSignificant().getHighestVariationMostSignificantScenario(systemVersion);
 		
 		GraphicPlot plot = new GraphicPlot();
 		
-		
 		plot.drawColumnChart(mapTemp, "Variation Most Significant", "Scenario", "Times");
 		plot.drawBoxPlotChart(mapTemp);
-
+		
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 
+	}
+	
+	
+	public Map<String, Double> getHighestVariationMostSignificantScenario(String systemVersion){
+		
+		HighestVariationMostSignificantService service = new HighestVariationMostSignificantService();
+		
+		Map<String, Double> map =  service.findVariationMostSignificantScenarios(systemVersion, QTD);
+		
+		map = MapUtil.cutOff(map, QTD);
+		
+		return map;
 	}
 }

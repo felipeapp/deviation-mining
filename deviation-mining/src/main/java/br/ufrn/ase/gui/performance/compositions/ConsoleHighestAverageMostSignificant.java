@@ -35,6 +35,8 @@ public class ConsoleHighestAverageMostSignificant {
 		
 		Map<String, Double> mapTemp = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(systemVersion);
 		
+		printResult(mapTemp);
+		
 		GraphicPlot plot = new GraphicPlot();
 		
 		plot.drawColumnChart(mapTemp, "Average Most Significant", "Scenario", "Times");
@@ -45,6 +47,18 @@ public class ConsoleHighestAverageMostSignificant {
 	}
 	
 	
+	/**
+	 * @param mapTemp
+	 */
+	private static void printResult(Map<String, Double> mapTemp) {
+		int index = 1;
+		for (String scenario : mapTemp.keySet()) {
+			System.out.println("["+index++ +"] Scenario: "+scenario+"                                   Average "+mapTemp.get(scenario));
+		}
+		
+	}
+
+
 	public Map<String, Double> getHighestAverageMostSignificantScenario(String systemVersion){
 			
 		HighestAverageMostSignificantService service = new HighestAverageMostSignificantService();
