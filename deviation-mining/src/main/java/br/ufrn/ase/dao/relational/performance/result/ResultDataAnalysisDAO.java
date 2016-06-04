@@ -42,6 +42,10 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 
 		String sql = " INSERT INTO result.variation_time_range ( scenario, system_version, variation) VALUES (?, ?, ?) ";
 
+		final int batchSize = 1000;
+		int count = 0;
+		int mapSize = mapRange.size();
+		
 		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
 
 			for (String scenario : mapRange.keySet()) {
@@ -49,6 +53,11 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 				prepated.setString(2, system_version);
 				prepated.setDouble(3, mapRange.get(scenario));
 				prepated.addBatch();
+				
+				if(++count % batchSize == 0) {
+					System.out.println("Inserting "+count+" of "+mapSize);
+					prepated.executeBatch();
+			    }
 			}
 
 			prepated.executeBatch();
@@ -99,6 +108,10 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 
 		String sql = " INSERT INTO result.average_time_execution ( system_version, scenario, average) VALUES (?, ?, ?) ";
 
+		final int batchSize = 1000;
+		int count = 0;
+		int mapSize = mapRange.size();
+		
 		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
 
 			for (String scenario : mapRange.keySet()) {
@@ -106,6 +119,11 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 				prepated.setString(2, scenario);
 				prepated.setDouble(3, mapRange.get(scenario));
 				prepated.addBatch();
+				
+				if(++count % batchSize == 0) {
+					System.out.println("Inserting "+count+" of "+mapSize);
+					prepated.executeBatch();
+			    }
 			}
 
 			prepated.executeBatch();
@@ -154,6 +172,10 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 
 		String sql = " INSERT INTO result.most_access_scenarios ( scenario, system_version, qtd_access) VALUES (?, ?, ?) ";
 
+		final int batchSize = 1000;
+		int count = 0;
+		int mapSize = mapRange.size();
+		
 		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
 
 			for (String scenario : mapRange.keySet()) {
@@ -161,6 +183,11 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 				prepated.setString(2, system_version);
 				prepated.setDouble(3, mapRange.get(scenario));
 				prepated.addBatch();
+				
+				if(++count % batchSize == 0) {
+					System.out.println("Inserting "+count+" of "+mapSize);
+					prepated.executeBatch();
+			    }
 			}
 
 			prepated.executeBatch();
@@ -208,6 +235,10 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 
 		String sql = " INSERT INTO result.median_time_execution ( system_version, scenario, median) VALUES (?, ?, ?) ";
 
+		final int batchSize = 1000;
+		int count = 0;
+		int mapSize = mapRange.size();
+		
 		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
 
 			for (String scenario : mapRange.keySet()) {
@@ -215,6 +246,11 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 				prepated.setString(2, scenario);
 				prepated.setDouble(3, mapRange.get(scenario));
 				prepated.addBatch();
+				
+				if(++count % batchSize == 0) {
+					System.out.println("Inserting "+count+" of "+mapSize);
+					prepated.executeBatch();
+			    }
 			}
 
 			prepated.executeBatch();
