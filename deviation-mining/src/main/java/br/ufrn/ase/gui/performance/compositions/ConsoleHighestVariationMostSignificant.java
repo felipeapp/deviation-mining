@@ -34,6 +34,8 @@ public class ConsoleHighestVariationMostSignificant {
 	
 		Map<String, Double> mapTemp = new ConsoleHighestVariationMostSignificant().getHighestVariationMostSignificantScenario(systemVersion);
 		
+		printResult(mapTemp);
+		
 		GraphicPlot plot = new GraphicPlot();
 		
 		plot.drawColumnChart(mapTemp, "Variation Most Significant", "Scenario", "Times");
@@ -41,6 +43,17 @@ public class ConsoleHighestVariationMostSignificant {
 		
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 
+	}
+	
+	/**
+	 * @param mapTemp
+	 */
+	private static void printResult(Map<String, Double> mapTemp) {
+		int index = 1;
+		for (String scenario : mapTemp.keySet()) {
+			System.out.println("["+index++ +"] Scenario: "+scenario+"                                   Average "+mapTemp.get(scenario));
+		}
+		
 	}
 	
 	
