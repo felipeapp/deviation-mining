@@ -50,12 +50,12 @@ public class HighestMedianService {
 	 */
 	private void saveResults(String systemVersion, Map<String, Double> mapRange) {
 		
-		System.out.println("savingResults at"+new SimpleDateFormat("DD/MM/yyyy HH:mm:ss").format(new Date() ) );
+		System.out.println("savingResults os median at: "+new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date() ) );
 		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		
 		try{
-			dao.insertAverageTime(mapRange, systemVersion);
+			dao.insertMedianTime(mapRange, systemVersion);
 		}catch(SQLException sqlEx){
 			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Save Results", JOptionPane.ERROR_MESSAGE);
 			sqlEx.printStackTrace();
@@ -74,7 +74,7 @@ public class HighestMedianService {
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		
 		try{
-			return dao.readAverageTime(systemVersion);
+			return dao.readMedianTime(systemVersion);
 		}catch(SQLException sqlEx){
 			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Read Results", JOptionPane.ERROR_MESSAGE);
 			sqlEx.printStackTrace();
