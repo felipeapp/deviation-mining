@@ -52,7 +52,7 @@ public class ConsoleHighestMedianMostSignificant {
 	private static void printResult(Map<String, Double> mapTemp) {
 		int index = 1;
 		for (String scenario : mapTemp.keySet()) {
-			System.out.println("["+index++ +"] Scenario: "+scenario+"                                   Average "+mapTemp.get(scenario));
+			System.out.println("["+index++ +"] Scenario: "+scenario+"                                   Median "+mapTemp.get(scenario));
 		}
 	}
 		
