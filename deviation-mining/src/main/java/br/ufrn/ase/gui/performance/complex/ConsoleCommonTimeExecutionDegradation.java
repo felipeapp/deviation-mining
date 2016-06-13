@@ -3,13 +3,13 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.gui.performance;
+package br.ufrn.ase.gui.performance.complex;
 
 import java.util.List;
 import java.util.Map;
 
-import br.ufrn.ase.gui.basic.ConsoleHighestAverageMostSignificant;
-import br.ufrn.ase.service.performance.CommonTimeExecutionDegradationService;
+import br.ufrn.ase.gui.performance.basic.ConsoleHighestAverage;
+import br.ufrn.ase.service.performance.complex.CommonTimeExecutionDegradationService;
 
 /**
  * 
@@ -27,11 +27,11 @@ public class ConsoleCommonTimeExecutionDegradation {
 	 */
 	public static void main(String[] args) {
 		
-		String systemVersion ="SIGAA-3.21.0";
+		String systemVersion ="SIGAA-3.22.0"; 
 		
 		long start = System.currentTimeMillis();
 		
-		System.out.println("Starting ... ");
+		System.out.println("Starting for version "+systemVersion+"... ");
 		
 		getCommonTimeExecutionDegradation(systemVersion);
 		
@@ -41,7 +41,8 @@ public class ConsoleCommonTimeExecutionDegradation {
 
 	private static void getCommonTimeExecutionDegradation(String systemVersion) {
 		
-		Map<String, Double> topScenarios = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(systemVersion, 10);
+		//Map<String, Double> topScenarios = new ConsoleHighestAverageMostSignificant().getHighestAverageMostSignificantScenario(systemVersion, 10);
+		Map<String, Double> topScenarios = new ConsoleHighestAverage().getScenariosHighestAverage(systemVersion, true);
 		
 		List<String> scenarioDegradation = new CommonTimeExecutionDegradationService().calculateCommonTimeExecutionDegradation(systemVersion, topScenarios);
 		

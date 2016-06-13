@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import br.ufrn.ase.dao.mongo.AbstractBasicMongoDAO;
 import br.ufrn.ase.domain.RegistroEntrada;
-import br.ufrn.ase.service.performance.UserScenariosService;
+import br.ufrn.ase.service.performance.UserScenariosPerformanceService;
 
 /**
  * Make query the RegistroEntrada on MongoDB for the SINFO log database structure.
@@ -73,13 +73,13 @@ public class RegistroEntradaMongoDAO extends AbstractBasicMongoDAO  {
 	
 	
 	public static void main(String[] args) {
-		UserScenariosService s = new UserScenariosService();
+		UserScenariosPerformanceService s = new UserScenariosPerformanceService();
 
 		System.out.println("######################################");
 
 		long start = System.currentTimeMillis();
 
-		Map<String, List<Double>> map = s.findUserScenario("SIGAA-3.21.0", true);
+		Map<String, List<Double>> map = s.findTimesExecutionOfUserScenarios("SIGAA-3.21.0", true);
 
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 		System.out.println("Size: " + map.size());

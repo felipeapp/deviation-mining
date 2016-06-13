@@ -1,6 +1,7 @@
 package br.ufrn.ase.util;
 
 import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
 import org.apache.commons.math3.stat.inference.TestUtils;
@@ -61,6 +62,18 @@ public class StatisticsUtil {
 	 */
 	public static double mean(double[] values) {
 		return StatUtils.mean(values);
+	}
+	
+	/**
+	 * This uses apache libs to calculate the arithmetic median of the entries in
+	 * the input array.
+	 * 
+	 * @param values Entries
+	 * @return The arithmetic median of the entries
+	 */
+	public static double median(double[] values) {	
+		DescriptiveStatistics d = new DescriptiveStatistics(values);
+		return d.getPercentile(50);
 	}
 
 	/**

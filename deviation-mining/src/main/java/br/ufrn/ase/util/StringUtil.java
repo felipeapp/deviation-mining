@@ -23,4 +23,12 @@ public abstract class StringUtil {
 		return scenarioName.contains("/") ? scenarioName.substring(scenarioName.lastIndexOf("/")+1, scenarioName.length()) : scenarioName ;
 	}
 
+	/**
+	 * @param systemVersion
+	 * @return
+	 */
+	public static String getSystemName(String systemVersion) {
+		return  systemVersion!= null ? systemVersion.substring(0, systemVersion.indexOf('-')).trim().toUpperCase() : "";
+	}
+
 }

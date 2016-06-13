@@ -1,5 +1,8 @@
 package br.ufrn.ase.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -71,6 +74,54 @@ public class MapUtil {
 	    }
 		
 		return MapUtil.sortByValue(mapTemp);
+	}
+	
+	/**
+	 * This method print the qtd of bytes of a map
+	 * @param map
+	 */
+	public static void printMapSize(@SuppressWarnings("rawtypes") Map map) {
+	    try{
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        ObjectOutputStream oos = new ObjectOutputStream(baos);
+	        oos.writeObject(map);
+	        oos.close();
+	        System.out.println(">>>>> Map Qtd of elements: " + map.size());
+	        System.out.println(">>>>> Map Size in Bytes: " + baos.size());
+	    }catch(IOException e){
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	/**
+	 * This method get the first results common in the two maps.
+	 * 
+	 * ie this method make the intersection between the two maps returning the first elements of the MAP1 
+	 * which are connected between the first elements of MAP2 up to the limit of the amount of desired elements.
+	 * 
+	 * @param highestAverage
+	 * @param mostAccesss
+	 * @return
+	 */
+	public static Map<String, Double> crossMaps(Map<String, Double> firstMap, Map<String, Double> secondMap, final int QTD) {
+
+		Map<String, Double> _return = new HashMap<>();
+		
+		// First we take the 10 times first results of the second map
+		Map<String, Double> secondMapTop10Times = MapUtil.cutOff(secondMap, QTD*10);
+		
+		List<String> firstMapKeys = new ArrayList<String>(firstMap.keySet());
+		
+		for (int i = 0; i < firstMapKeys.size() ; i++) {
+			String key = firstMapKeys.get(i);
+			
+			if(secondMapTop10Times.containsKey(key)){ // this key is in the both maps, in the fisrt and in the 10 times first elements of the second
+				_return.put(key, firstMap.get(key));
+			}
+		}
+		
+		return MapUtil.cutOff(_return, QTD);
 	}
 
 }

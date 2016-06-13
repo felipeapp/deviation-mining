@@ -1,15 +1,15 @@
-package br.ufrn.ase.gui.basic;
+package br.ufrn.ase.gui.performance.others;
 
 import java.util.Map;
 
-import br.ufrn.ase.service.performance.UserScenariosService;
+import br.ufrn.ase.analysis.UserScenariosStatistics;
 
 public class ConsoleMean {
 
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
 
-		Map<String, Double> map = new UserScenariosService().calculateExecutionMeanScenario("SIGAA-3.21.0");
+		Map<String, Double> map = new UserScenariosStatistics().calculateExecutionMeanScenario("SIGAA-3.21.0");
 
 		System.out.println("Tempo: " + (System.currentTimeMillis() - start) / 1000.0 + " segundos");
 
