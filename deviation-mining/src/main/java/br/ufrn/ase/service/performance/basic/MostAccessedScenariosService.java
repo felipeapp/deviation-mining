@@ -57,7 +57,7 @@ public class MostAccessedScenariosService {
 	 */
 	public void saveResults(String systemVersion, Map<String, Double> mapRange) {
 		
-		System.out.println("savingResults at"+new SimpleDateFormat("DD/MM/yyyy HH:mm:ss").format(new Date() ) );
+		System.out.println("savingResults of most accessed at: "+new SimpleDateFormat("DD/MM/yyyy HH:mm:ss").format(new Date() ) );
 		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		

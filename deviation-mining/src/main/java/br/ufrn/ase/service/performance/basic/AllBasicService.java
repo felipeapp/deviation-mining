@@ -56,8 +56,13 @@ public class AllBasicService {
 		
 		UserScenariosStatistics userScenariosStatistics = new UserScenariosStatistics();
 		
+		int count =1;
+		int qtdScenarios = scenarios.size();
+		
 		/// calculate just for each specific scenario, because it is a big data  ///
 		for (String scenario : scenarios) {
+			
+			System.out.println("------------ Executing  "+ count++ +" of "+qtdScenarios+" scenarios ---------------");
 			
 			retorno = logDao.findAllLogOperacaoOfScenarioInsideIntervalBySystemVersion(scenario, systemId, initialDate, finalDate);
 			
@@ -81,8 +86,6 @@ public class AllBasicService {
 		
 		dao.close();
 		logDao.close();
-			
-		
 		
 	}
 	

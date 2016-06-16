@@ -42,10 +42,10 @@ public class ScenarioDao extends AbstractBasicRelationalDAO {
 
 		List<String> retorno = new ArrayList<String>();
 		
-		String sql = " SELECT DISTICT log.action "
+		String sql = " SELECT DISTINCT log.action "
 				+" FROM log_operacao log "
 				+" WHERE log.hora BETWEEN ? AND ? AND log.id_sistema = ? "
-				+" AND action NOT LIKE '%/a4j/%'";
+				+" AND action NOT LIKE '%/a4j/%' ";
 		
 		try ( PreparedStatement stmt = connection.prepareStatement(sql) ) {
 
