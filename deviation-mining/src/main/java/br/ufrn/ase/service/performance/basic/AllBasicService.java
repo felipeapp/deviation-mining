@@ -27,56 +27,62 @@ import br.ufrn.ase.util.VersionMapUtil;
 public class AllBasicService {
 	
 	
-	public void findAllBasicScenarios(String systemVersion, boolean executeMining, boolean isUserEnabled){
+	public void calculateAllBasicScenarios(String systemVersion){
+			
+		ScenarioDao dao = DAOFactory.getRelationalDAO(ScenarioDao.class);
+		LogOperacaoDao logDao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 		
-		if( executeMining ){
-			
-			ScenarioDao dao = DAOFactory.getRelationalDAO(ScenarioDao.class);
-			LogOperacaoDao logDao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
-			
-			Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(systemVersion);
-			Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(systemVersion);
-			String systemName  = StringUtil.getSystemName(systemVersion);
-			int systemId       = Sistema.valueOf(systemName).getValue();
-			
-			List<String> scenarios = dao.findAllScenariosByDateAndSystem(systemId, initialDate, finalDate);
-			
-			Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
-			
-			Map<String, Double> mapRangeMedian = new HashMap<String, Double>();
-			
-			Map<String, Double> mapRangeVariation = new HashMap<String, Double>();
-			
-			Map<String, Double> mapRangeAverage = new HashMap<String, Double>();
-			
-			Map<String, Double> mapRangeAccessed = new HashMap<String, Double>();
-			
-			for (String scenario : scenarios) {
-				
-				retorno = logDao.findAllLogOperacaoOfScenarioInsideIntervalBySystemVersion(scenario, systemId, initialDate, finalDate);
-				
-				mapRangeMedian = new UserScenariosStatistics().calculateExecutionMedianScenario(retorno);
+		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(systemVersion);
+		Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(systemVersion);
+		String systemName  = StringUtil.getSystemName(systemVersion);
+		int systemId       = Sistema.valueOf(systemName).getValue();
 		
-				mapRangeVariation = new UserScenariosStatistics().calculateCoefficientOfVariation(retorno, true);
-				
-				mapRangeAverage = new UserScenariosStatistics().calculateExecutionMeanScenario(retorno);
-				
-				mapRangeAccessed = new UserScenariosStatistics().calculateExecutionAmountScenario(retorno);
+		List<String> scenarios = dao.findAllScenariosByDateAndSystem(systemId, initialDate, finalDate);
 		
-				new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
-				
-				new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
-				
-				new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
-				
-				new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
-				
-			}
+		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
+		
+		Map<String, Double> mapRangeMedian = new HashMap<String, Double>();
+		
+		Map<String, Double> mapRangeVariation = new HashMap<String, Double>();
+		
+		Map<String, Double> mapRangeAverage = new HashMap<String, Double>();
+		
+		Map<String, Double> mapRangeAccessed = new HashMap<String, Double>();
+		
+		HighestMedianService highestMedianService = new HighestMedianService();
+		HighestVariationService highestVariationService = new HighestVariationService();
+		HighestAverageService highestAverageService = new HighestAverageService();
+		MostAccessedScenariosService mostAccessedScenariosService = new MostAccessedScenariosService();
+		
+		UserScenariosStatistics userScenariosStatistics = new UserScenariosStatistics();
+		
+		/// calculate just for each specific scenario, because it is a big data  ///
+		for (String scenario : scenarios) {
 			
-			dao.close();
-			logDao.close();
+			retorno = logDao.findAllLogOperacaoOfScenarioInsideIntervalBySystemVersion(scenario, systemId, initialDate, finalDate);
+			
+			mapRangeMedian = userScenariosStatistics.calculateExecutionMedianScenario(retorno);
+	
+			mapRangeVariation = userScenariosStatistics.calculateCoefficientOfVariation(retorno, true);
+			
+			mapRangeAverage = userScenariosStatistics.calculateExecutionMeanScenario(retorno);
+			
+			mapRangeAccessed = userScenariosStatistics.calculateExecutionAmountScenario(retorno);
+	
+			highestMedianService.saveResults(systemVersion, mapRangeMedian);
+			
+			highestVariationService.saveResults(systemVersion, mapRangeVariation);
+			
+			highestAverageService.saveResults(systemVersion, mapRangeAverage);
+			
+			mostAccessedScenariosService.saveResults(systemVersion, mapRangeAccessed);
 			
 		}
+		
+		dao.close();
+		logDao.close();
+			
+		
 		
 	}
 	

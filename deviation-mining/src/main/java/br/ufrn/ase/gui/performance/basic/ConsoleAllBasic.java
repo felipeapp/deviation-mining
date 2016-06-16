@@ -5,10 +5,7 @@
  */
 package br.ufrn.ase.gui.performance.basic;
 
-import java.util.Map;
-
-import br.ufrn.ase.service.performance.basic.HighestAverageService;
-import br.ufrn.ase.util.MapUtil;
+import br.ufrn.ase.service.performance.basic.AllBasicService;
 import br.ufrn.ase.util.SwingUtil;
 
 /**
@@ -30,40 +27,23 @@ public class ConsoleAllBasic {
 		System.out.println("Starting "+Thread.currentThread().getStackTrace()[1].getClassName()+" ... ");
 		
 		String systemVersion = SwingUtil.readSystemVersion();
-		boolean executeMining = SwingUtil.readTypeExecution();
 		
 		long start = System.currentTimeMillis();
+	
+		new ConsoleAllBasic().calculateBasicScenarios(systemVersion);
 		
-		Map<String, Double> mapRange = new ConsoleAllBasic().getBasicScenarios(systemVersion, executeMining);
-		
-		printResults(mapRange);
-
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 
 
 	}
 
 
-	public Map<String, Double> getBasicScenarios(String systemVersion, boolean executeMining){
+	public void calculateBasicScenarios(String systemVersion){
 		 
-		HighestAverageService service = new HighestAverageService();
+		AllBasicService service = new AllBasicService();
 		
-		Map<String, Double> mapRange_3_21 = service.findAvaregeScenarios(systemVersion, executeMining, false);
+		service.calculateAllBasicScenarios(systemVersion);
 
-		mapRange_3_21 = MapUtil.cutOff(mapRange_3_21, QTD);
-		
-		return mapRange_3_21;
-	}
-	
-	
-	/**
-	 * @param mapRange
-	 */
-	private static void printResults(Map<String, Double> mapRange) {
-		for (String scenario : mapRange.keySet()) {
-			System.out.println("scenario: "+scenario+" -> "+mapRange.get(scenario));
-		}
-		
 	}
 	
 }
