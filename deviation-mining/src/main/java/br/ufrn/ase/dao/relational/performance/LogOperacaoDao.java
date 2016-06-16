@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +84,58 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 		return list;
 	}
 	
+	
+	
+	/**
+	 * 
+	 * This method returns the time spend for a specific action in an interval of data for a system
+	 * 
+	 * @param systemName
+	 * @param initialDate
+	 * @param finalDate
+	 * @return
+	 */
+	public Map<String, List<Double>> findAllLogOperacaoOfScenarioInsideIntervalBySystemVersion(String scenario, int systemId, Date initialDate, Date finalDate) {
+		
+		/**General query for performance */
+		String sql = 
+				" SELECT log.action, log.tempo "+
+				" FROM log_operacao log " +
+				" WHERE log.hora BETWEEN ? AND  ? AND log.id_sistema = ? AND log.action = ? ";
+		
+		Map<String, List<Double>> map = new HashMap<>();
+
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			stmt.setTimestamp(1, DateUtil.getDBTimestampFromDate(initialDate));
+			stmt.setTimestamp(2, DateUtil.getDBTimestampFromDate(finalDate)  );
+			stmt.setInt(3, systemId);
+			stmt.setString(4, scenario);
+
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				String action = rs.getString(1);
+				Double time = new Double(rs.getInt( 2) );
+				
+				if(map.containsKey(action)){
+					map.get(action).add( time );
+				}else{
+					List<Double> array = new ArrayList<>();
+					array.add( time );
+					map.put(action, array);
+				}
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return map;
+	}
 	
 	
 	/**
