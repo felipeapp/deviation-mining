@@ -1,28 +1,46 @@
-project.ext {
-    aspectjVersion = '1.8.9'
-}
-
-apply plugin: 'aspectj'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-//mainClassName = 'ase.ajc.example.MainAppTest'
+configurations {
+	ajc
+	aspects
+	ajInpath
+}
 
-buildscript {
-    repositories {
-        maven {
-            url "https://maven.eveoh.nl/content/repositories/releases"
-        }
-    }
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
-    dependencies {
-        classpath "nl.eveoh:gradle-aspectj:1.6"
-    }
+compileJava << {
+	ant.taskdef(
+		resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
+		classpath: configurations.ajc.asPath
+	)
+	ant.iajc(
+		source: sourceCompatibility,
+		target: targetCompatibility,
+		destDir: sourceSets.main.output.classesDir.absolutePath,
+		fork: 'true',
+		X: 'noInline',
+		aspectPath: configurations.aspects.asPath,
+		inpath: configurations.ajInpath.asPath,
+		sourceRootCopyFilter: '**/*.java,**/*.aj',
+		classpath: configurations.compile.asPath) {
+
+		sourceroots {
+			sourceSets.main.java.srcDirs.each { dir ->
+				pathelement(location: dir.absolutePath)
+			}
+		}
+	}
 }
 
 repositories {
-	jcenter()
-    mavenCentral()
+	mavenCentral()
+}
+
+dependencies {
+	ajc 'org.aspectj:aspectjtools:1.8.9'
+	compile 'org.aspectj:aspectjrt:1.8.9'
 }
 
 task runAjApp(type: JavaExec) {
@@ -30,16 +48,4 @@ task runAjApp(type: JavaExec) {
 	main = 'ase.ajc.example.MainAppTest'
 	//args 'postgres', 'no'
 	jvmArgs "-Xmx2048m"
-}
-
-eclipse {
-    project {
-  		natures 'org.springsource.ide.eclipse.gradle.core.nature', 'org.eclipse.buildship.core.gradleprojectnature'
-	}
-
-  	classpath {
-  		containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-	  	containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
-  	  	defaultOutputDir = file('bin')
-  	}
 }

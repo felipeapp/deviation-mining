@@ -1,1 +1,1 @@
-java -cp aspectjr_1.8.9.jar;aspectj-test.jar ase.ajc.example.MainAppTest 
+java -cp aspectjr_1.8.9.jar;aspectj-test.jar ase.ajc.example.MainAppTest

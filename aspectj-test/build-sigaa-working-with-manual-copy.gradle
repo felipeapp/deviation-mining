@@ -1,0 +1,1022 @@
+/** 
+ * Script gradle para gerenciar toda a parte de Integração Contínua do SIGAA
+ *
+ * Jadson Santos 	= jadson@info.ufrn.br
+ * Rafael Gomes 	= rafaelgoems@info.ufrn.br
+ *
+ */
+ 
+ 
+ /**************************************************************************
+  *                         Importações dos plugins 
+  **************************************************************************/
+ 
+ 
+/* Importa plugin que contém os scritps para compilar um projeto java e gerar um JAR */ 
+apply plugin: 'java'
+
+/* Plugin para gerenciar a build dos projetos  no eclipse */
+apply plugin: 'eclipse'
+
+/* Plugin para fazer cópia para os servidores via SSH */
+apply plugin: "org.hidetake.ssh"
+
+/* Plugin para aplicar e versionar os scritps sql */
+apply plugin: 'org.flywaydb.flyway'
+
+
+
+
+
+
+
+
+
+
+
+/**************************************************************************
+ *                Informações sobre o Código Fonte
+ **************************************************************************/
+
+
+/** Por padrão roda a task  build */
+defaultTasks 'buildCompartilhado'
+
+/** Parametros para a build (serão definidos pelo jenkins )  */
+
+def application_name       =  'sigaa';
+def application_version    =  '3.22.20a';     
+
+
+/** Informação sobre código fonte o nome dos artefatos */
+/* Ainda rodamos os sistema no Java 1.6 */
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+/* O nosso código usa a codificação ISO-8859-1  */
+compileJava.options.encoding = 'ISO-8859-1'
+compileTestJava.options.encoding = 'ISO-8859-1'
+compileJava.options.debugOptions.debugLevel = "source,lines,vars"
+compileTestJava.options.debugOptions.debugLevel = "source,lines,vars"
+
+
+
+
+/* O nome do JAR gerado*/
+archivesBaseName = application_name
+
+
+/* Grupo do jar gerado, para organizar no artefactory */
+group  'br.ufrn'
+
+
+/* Versão da arquitetura */
+version =  application_version
+
+
+
+
+
+
+
+ /**************************************************************************
+  *                        Estrutura do Projeto
+  **************************************************************************/
+
+
+
+/* Como o projeto está organizado em termo de código fonte, recursos e testes */
+sourceSets {
+	/* A estrutura do código principal do projeto */
+    main {
+        java {
+            srcDir 'agenda'
+            srcDir 'apedagogica'
+            srcDir 'arq'
+            srcDir 'arq_dao'
+            srcDir 'assistencia'
+            srcDir 'ava'
+            srcDir 'avaliacao'
+            srcDir 'biblioteca'
+            srcDir 'complexo_hospitalar'
+            srcDir 'diplomas'
+            srcDir 'ead'
+            srcDir 'ensino'
+            srcDir 'ensino_rede'
+            srcDir 'espaco_fisico'
+            srcDir 'estagio'
+            srcDir 'extensao'
+            srcDir 'geral'
+            srcDir 'graduacao'
+            srcDir 'infantil'
+            srcDir 'lato_sensu'
+            srcDir 'medio'
+            srcDir 'metropole_digital'
+            srcDir 'mobile'
+            srcDir 'monitoria'
+            srcDir 'nee'
+            srcDir 'ouvidoria'
+            srcDir 'pesquisa'
+            srcDir 'pid'
+            srcDir 'portais'
+            srcDir 'processamento'
+            srcDir 'prodocente'
+            srcDir 'projetos'
+            srcDir 'relacoes_internacionais'
+            srcDir 'relatorios_gestao'
+            srcDir 'rid'
+            srcDir 'sites'
+            srcDir 'stricto_sensu'
+            srcDir 'tecnico'
+            srcDir 'vestibular'
+        }
+        resources {
+            srcDir 'agenda'
+            srcDir 'apedagogica'
+            srcDir 'arq'
+            srcDir 'arq_dao'
+            srcDir 'assistencia'
+            srcDir 'ava'
+            srcDir 'avaliacao'
+            srcDir 'biblioteca'
+            srcDir 'complexo_hospitalar'
+            srcDir 'diplomas'
+            srcDir 'ead'
+            srcDir 'ensino'
+            srcDir 'ensino_rede'
+            srcDir 'espaco_fisico'
+            srcDir 'estagio'
+            srcDir 'extensao'
+            srcDir 'geral'
+            srcDir 'graduacao'
+            srcDir 'infantil'
+            srcDir 'lato_sensu'
+            srcDir 'medio'
+            srcDir 'metropole_digital'
+            srcDir 'mobile'
+            srcDir 'monitoria'
+            srcDir 'nee'
+            srcDir 'ouvidoria'
+            srcDir 'pesquisa'
+            srcDir 'pid'
+            srcDir 'portais'
+            srcDir 'processamento'
+            srcDir 'prodocente'
+            srcDir 'projetos'
+            srcDir 'relacoes_internacionais'
+            srcDir 'relatorios_gestao'
+            srcDir 'rid'
+            srcDir 'sites'
+            srcDir 'stricto_sensu'
+            srcDir 'tecnico'
+            srcDir 'vestibular'
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+ /**************************************************************************
+  *                         Dependencias 
+  **************************************************************************/
+
+
+
+
+
+/* declara o maven central repository  */
+repositories {
+ 	mavenCentral()
+}
+
+/* declara os repositório locais da ufrn  */
+repositories {
+
+/* Declare a Maven repository of the UFRN */
+maven {
+    url "http://jenkins.info.ufrn.br/artifactory/dependencias-arquitetura"
+      credentials {
+        username '${artifactory_user}'
+        password '${artifactory_password}'
+    }
+}
+
+	/* Necessário para usar as dependências da arquitetura na geração do EAR*/
+maven {
+    url "http://jenkins.info.ufrn.br/artifactory/dependencias-sigaa"
+      credentials {
+        username '${artifactory_user}'
+        password '${artifactory_password}'
+    }
+}
+
+/* Declare a Maven repository of the UFRN */
+maven {
+    url "http://jenkins.info.ufrn.br/artifactory/jenkins-build"
+      credentials {
+        username '${artifactory_user}'
+        password '${artifactory_password}'
+    }
+}
+
+/* Declare a Maven repository of the UFRN */
+    maven {
+        url "http://jenkins.info.ufrn.br/artifactory/jenkins-release"
+          credentials {
+            username '${artifactory_user}'
+            password '${artifactory_password}'
+        }
+    }
+}
+
+/* dependency configurations: Por enquanto não resolva dependencias trasitivas, porque dá conflito. */
+configurations {
+	ajc
+	aspects
+	ajInpath
+	
+    compile {
+        transitive = false
+    }
+    
+    runtime{
+     	transitive = false
+    }
+    
+    testCompile{
+    	transitive = false
+    }
+    
+    testRuntime{
+    	transitive = false
+    }
+
+    /* Dependências Internas da Própria UFRN que vão dentro do EAR gerado   */
+    ufrnInternalLib {
+        transitive = false
+    }
+    
+    /* Dependências Internas da Própria UFRN que fazer parte de outro projeto idependencte desse. Só colocado para para se colocar no arquivo version.properties que o usuári visualiza   */
+    ufrnExternalLib {
+        transitive = false
+    }
+    
+    /* Dependências não mantidas pelas UFRN que fazem parte do EAR do sistema  */
+    deployLib {
+        transitive = false
+    }
+    
+     /* Dependências não mantidas pelas UFRN que não podem ser feito deploy no JBOSS  */
+    noDeployLib {
+        transitive = false
+    }
+    
+    // Create new dependency configuration
+    deployLib.extendsFrom ufrnInternalLib
+	compile.extendsFrom deployLib, noDeployLib
+}
+
+// don't cache dynamic versions at all //
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+}
+// don't cache changing modules at all
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+dependencies {
+		ajc 'org.aspectj:aspectjtools:1.8.9'
+		compile 'org.aspectj:aspectjrt:1.8.9'
+		
+	   /**
+		 *   Dependencias Internas do Projeto Entidades Comuns
+		 *
+		 */
+		ufrnInternalLib(group: 'br.ufrn', name: 'arquitetura', version: '2.7.20')
+		ufrnInternalLib(group: 'br.ufrn', name: 'entidadesComuns', version: '1.4.16')
+		ufrnInternalLib(group: 'br.ufrn', name: 'servicosIntegrados', version: '1.4.13')
+		ufrnInternalLib(group: 'br.ufrn', name: 'servicosRemotoBiblioteca', version: '1.0.0-SNAPSHOT')
+		ufrnInternalLib(group: 'br.ufrn', name: 'sigaaMobileObjects', version: '1.0.0-SNAPSHOT')
+		ufrnInternalLib(group: 'br.ufrn.arq', name: 'sinfo-arq-files', version: '0.0.32')
+		ufrnInternalLib(group: 'br.ufrn.arq', name: 'sinfo-arq-filtros-sec', version: '0.0.2')
+		
+		/**
+         *   Dependencias do projeto mas que não vai dentro do EAR gerado, é um projeto que é feito deploy separado 
+         *
+         *   Apenas declara a versão de shared para colocar no arquivo de versão. Não é compilado nem colocado dentro do EAR
+         */ 
+        ufrnExternalLib(group: 'br.ufrn', name: 'sharedResources', version: '1.6.7')
+
+		/**
+		 *   Dependencias Externas do Projeto
+		 *
+		 */
+	   deployLib(group: 'PDFBox', name: 'PDFBox', version: '0.7.2')
+	   deployLib(group: 'activation', name: 'activation', version: '1.1')
+	   deployLib(group: 'antlr', name: 'antlr', version: '2.7.6')
+	   deployLib(group: 'aopalliance', name: 'aopalliance', version: '1.0')
+	   deployLib(group: 'asm', name: 'asm', version: '1.0')
+	   deployLib(group: 'asm-attrs', name: 'asm-attrs', version: '1.0')
+	   deployLib(group: 'aspectjrt', name: 'aspectjrt', version: '1.2.1')
+	   deployLib(group: 'aspectjweaver', name: 'aspectjweaver', version: '1.0')
+	   deployLib(group: 'axis', name: 'axis', version: '1.4')
+	   deployLib(group: 'backport-util-concurrent', name: 'backport-util-concurrent', version: '3.1')
+	   deployLib(group: 'barbecue', name: 'barbecue', version: '1.1')
+	   deployLib(group: 'batik-awt-util', name: 'batik-awt-util', version: '1.6')
+	   deployLib(group: 'batik-dom', name: 'batik-dom', version: '1.6')
+	   deployLib(group: 'batik-svggen', name: 'batik-svggen', version: '1.6')
+	   deployLib(group: 'batik-util', name: 'batik-util', version: '1.6')  
+	   deployLib(group: 'batik-xml', name: 'batik-xml', version: '1.6')
+	   deployLib(group: 'bcprov-jdk14', name: 'bcprov-jdk14', version: '138')
+	   deployLib(group: 'cactus', name: 'cactus', version: '1.7.2')
+	   deployLib(group: 'cewolf', name: 'cewolf', version: '1.0')
+	   deployLib(group: 'cglib', name: 'cglib', version: '2.1.3')
+	   deployLib(group: 'cglib-nodep', name: 'cglib-nodep', version: '2.2.2')
+	   deployLib(group: 'com.artofsolving', name: 'jodconverter', version: '2.2.2')
+	   deployLib(group: 'com.healthmarketscience.jackcess', name: 'jackcess', version: '1.2.4')
+	   deployLib(group: 'com.itextpdf', name: 'itextpdf', version: '5.4.1')
+	   deployLib(group: 'com.itextpdf.tool', name: 'xmlworker', version: '5.4.1')
+	   deployLib(group: 'com.sun.jersey', name: 'jersey-bundle', version: '1.17.1')
+	   deployLib(group: 'com.sun.jersey', name: 'jersey-core', version: '1.9.1')
+	   deployLib(group: 'com.sun.jersey', name: 'jersey-json', version: '1.9.1')
+	   deployLib(group: 'com.sun.jersey', name: 'jersey-server', version: '1.9.1')
+	   deployLib(group: 'com.thoughtworks.paranamer', name: 'paranamer', version: '2.5')
+	   deployLib(group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.4')
+	   deployLib(group: 'comm', name: 'comm', version: '1.0')
+	   deployLib(group: 'commons-beanutils', name: 'commons-beanutils', version: '1.7.0')
+	   deployLib(group: 'commons-codec', name: 'commons-codec', version: '1.4')
+	   deployLib(group: 'commons-collections', name: 'commons-collections', version: '3.2')
+	   deployLib(group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4')
+	   deployLib(group: 'commons-digester', name: 'commons-digester', version: '1.8')
+	   deployLib(group: 'commons-discovery', name: 'commons-discovery', version: '0.4')
+	   deployLib(group: 'commons-el', name: 'commons-el', version: '1.0')
+	   deployLib(group: 'commons-fileupload', name: 'commons-fileupload', version: '1.2.2')
+	   deployLib(group: 'commons-httpclient', name: 'commons-httpclient', version: '3.1')
+	   deployLib(group: 'commons-io', name: 'commons-io', version: '1.4')
+	   deployLib(group: 'commons-lang', name: 'commons-lang', version: '2.4')
+	   deployLib(group: 'commons-logging', name: 'commons-logging', version: '1.1.1')
+	   deployLib(group: 'commons-math', name: 'commons-math', version: '1.2')
+	   deployLib(group: 'commons-validator', name: 'commons-validator', version: '1.3.1')
+	   deployLib(group: 'compass', name: 'compass', version: '2.2.0')
+	   deployLib(group: 'dom4j', name: 'dom4j', version: '1.6')
+	   deployLib(group: 'ejb3-persistence', name: 'ejb3-persistence', version: '1.0')
+	   deployLib(group: 'eu.medsea.mimeutil', name: 'mime-util', version: '2.1.3')
+	   deployLib(group: 'flexdock', name: 'flexdock', version: '0.4.1')
+	   deployLib(group: 'grfingerjava', name: 'grfingerjava', version: '1.0')
+	   deployLib(group: 'gson', name: 'gson', version: '1.7.1')
+	   deployLib(group: 'hibernate-annotations', name: 'hibernate-annotations', version: '3.2')
+	   deployLib(group: 'hibernate-commons-annotations', name: 'hibernate-commons-annotations', version: '3.2')
+	   deployLib(group: 'hibernate3', name: 'hibernate3', version: '3.2')
+	   deployLib(group: 'httpunit', name: 'httpunit', version: '1.6')
+	   deployLib(group: 'iText', name: 'iText', version: '2.1.7')
+	   deployLib(group: 'icepdf-core', name: 'icepdf-core', version: '1.0')
+	   deployLib(group: 'icepdf-viewer', name: 'icepdf-viewer', version: '1.0')
+	   deployLib(group: 'ireport', name: 'ireport', version: '1.0')
+	   deployLib(group: 'info.freelibrary', name: 'freelib-marc4j', version: 'marc4j')           /* Biblioteca para trabalhar com formato MARC usando no Módulo de Biblioteca */
+	   deployLib(group: 'jackson-core-asl', name: 'jackson-core-asl', version: '1.9.9')
+	   deployLib(group: 'jackson-jaxrs', name: 'jackson-jaxrs', version: '1.9.10')
+	   deployLib(group: 'jackson-mapper-asl', name: 'jackson-mapper-asl', version: '1.9.10')
+	   deployLib(group: 'jackson-xc', name: 'jackson-xc', version: '1.9.10')
+	   deployLib(group: 'jakarta-oro', name: 'jakarta-oro', version: '1.0')
+	   deployLib(group: 'jasperreports', name: 'jasperreports', version: '3.5.3')
+	   deployLib(group: 'java-diff-utils', name: 'java-diff-utils', version: '1.2')
+	   deployLib(group: 'javaparser', name: 'javaparser', version: '1.0.8')
+	   deployLib(group: 'javax.inject-1', name: 'javax.inject-1', version: '1')
+	   deployLib(group: 'javax.ws.rs', name: 'jsr311-api', version: '1.1')
+	   deployLib(group: 'jaxb-api', name: 'jaxb-api', version: '2.2.1')
+	   deployLib(group: 'jaxb-impl', name: 'jaxb-impl', version: '2.2.1.1')
+	   deployLib(group: 'jaxws-api', name: 'jaxws-api', version: '2.1')
+	   deployLib(group: 'jcaptcha-all', name: 'jcaptcha-all', version: '1.0', classifier: 'RC3')
+	   deployLib(group: 'jce', name: 'jce', version: '1.0')
+	   deployLib(group: 'jdom', name: 'jdom', version: '1.0')
+	   deployLib(group: 'jeval', name: 'jeval', version: '1.0')
+	   deployLib(group: 'jfree', name: 'jcommon', version: '1.0.0')
+	   deployLib(group: 'jfreechart', name: 'jfreechart', version: '1.0.13')
+	   deployLib(group: 'jlatexmath', name: 'jlatexmath', version: '0.9.4')
+	   deployLib(group: 'joda-time', name: 'joda-time', version: '1.6.1')
+	   deployLib(group: 'jsch', name: 'jsch', version: '0.1.51')
+	   
+	   deployLib(group: 'com.sun.faces', name: 'jsf-api', version: '1.2')
+	   deployLib(group: 'javax.faces', name: 'jsf-impl', version: '1.2_15')  /* Sun's Implementation of the JSF 1.2 Specification. */
+	   
+	   deployLib(group: 'net.sf.jtidy', name: 'jtidy', version: 'r938')
+	   deployLib(group: 'juh', name: 'juh', version: '3.0.1')
+	   deployLib(group: 'junitee', name: 'junitee', version: '1.0')
+	   deployLib(group: 'jurt', name: 'jurt', version: '3.0.1')
+	   deployLib(group: 'jxl', name: 'jxl', version: '1.0')
+	   deployLib(group: 'kxml2-min', name: 'kxml2-min', version: '2.3.0')  
+	   deployLib(group: 'ldap', name: 'ldap', version: '1.0')
+	   deployLib(group: 'mail', name: 'mail', version: '1.0')
+	   deployLib(group: 'msbase', name: 'msbase', version: '1.0')
+	   deployLib(group: 'mssqlserver', name: 'mssqlserver', version: '1.0')
+	   deployLib(group: 'msutil', name: 'msutil', version: '1.0')
+	   deployLib(group: 'net.jawr', name: 'jawr', version: '2.6')
+	   deployLib(group: 'net.sf.ehcache', name: 'ehcache-core', version: '2.4.5')
+	   deployLib(group: 'net.vidageek', name: 'mirror', version: '1.6.1')
+	   deployLib(group: 'objenesis', name: 'objenesis', version: '2.1')
+	   deployLib(group: 'odmg', name: 'odmg', version: '3.0')
+	   deployLib(group: 'org.mnode.ical4j', name: 'ical4j', version: '1.0.2')
+	   deployLib(group: 'org.ajaxtags', name: 'ajaxtags', version: '1.2-beta2')
+	   deployLib(group: 'org.antlr', name: 'antlr-runtime', version: '3.4')
+	   deployLib(group: 'org.apache.commons', name: 'commons-compress', version: '1.1') 
+	   deployLib(group: 'org.apache.cxf', name: 'cxf-bundle', version: '2.3.0')
+	   deployLib(group: 'org.apache.myfaces.tomahawk', name: 'tomahawk', version: '1.1.6')
+	   deployLib(group: 'org.apache.neethi', name: 'neethi', version: '2.0.4')
+	   deployLib(group: 'org.apache.ws.commons.schema', name: 'XmlSchema', version: '1.4.7')
+	   deployLib(group: 'org.hibernate', name: 'hibernate-validator', version: '3.1.0.GA')
+	   deployLib(group: 'org.json', name: 'org.json', version: '1.0')
+	   deployLib(group: 'org.primefaces', name: 'primefaces', version: '1.1')
+	   deployLib(group: 'org.restlet', name: 'org.restlet', version: '1.0')
+	   deployLib(group: 'org.richfaces.framework', name: 'richfaces-api', version: '3.3.3')
+	   deployLib(group: 'org.richfaces.framework', name: 'richfaces-impl', version: '3.3.3')
+	   deployLib(group: 'org.richfaces.ui', name: 'contextMenu', version: '3.3.3')
+	   deployLib(group: 'org.seleniumhq.selenium.client-drivers', name: 'selenium-java-client-driver', version: '1.0-beta-2')
+	   deployLib(group: 'org.springframework.aop', name: 'org.springframework.aop', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.asm', name: 'org.springframework.asm', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.batch', name: 'spring-batch-core', version: '2.1.8.RELEASE')
+	   deployLib(group: 'org.springframework.batch', name: 'spring-batch-infrastructure', version: '2.1.8.RELEASE')
+	   deployLib(group: 'org.springframework.beans', name: 'org.springframework.beans', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.context', name: 'org.springframework.context', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.core', name: 'org.springframework.core', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.expression', name: 'org.springframework.expression', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.jdbc', name: 'org.springframework.jdbc', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.orm', name: 'org.springframework.orm', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.transaction', name: 'org.springframework.transaction', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.web', name: 'org.springframework.web', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.web.servlet', name: 'org.springframework.web.servlet', version: '3.1.2.RELEASE')
+	   deployLib(group: 'org.springframework.ws', name: 'spring-ws-core-tiger', version: '1.5.8')
+	   deployLib(group: 'org.twitter4j', name: 'twitter4j-core', version: '3.0.3')
+	   deployLib(group: 'oro', name: 'oro', version: '2.0.8')
+	   deployLib(group: 'poi', name: 'poi', version: '3.0.1', classifier: 'FINAL')
+	   deployLib(group: 'postgresql', name: 'postgresql', version: '9.0', classifier: '802.jdbc3')
+	   deployLib(group: 'pretty-faces', name: 'pretty-faces', version: '1.2.5')
+	   deployLib(group: 'qrcode-core', name: 'qrcode-core', version: '1.0')
+	   deployLib(group: 'qrcode-javase', name: 'qrcode-javase', version: '1.0')
+	   deployLib(group: 'rfc2445', name: 'rfc2445', version: '1.0')
+	   deployLib(group: 'ridl', name: 'ridl', version: '3.0.1')
+	   deployLib(group: 'saaj', name: 'saaj', version: '1.0')
+	   deployLib(group: 'saaj-api', name: 'saaj-api', version: '1.3')
+	   deployLib(group: 'saaj-impl', name: 'saaj-impl', version: '1.3.2')
+	   deployLib(group: 'sac', name: 'sac', version: '1.3')
+	   deployLib(group: 'saxpath', name: 'saxpath', version: '1.0')
+	   deployLib(group: 'simplecaptcha', name: 'simplecaptcha', version: '20050925')
+	   deployLib(group: 'smack-core', name: 'smack-core', version: '4.0.3')
+	   deployLib(group: 'smack-core-compression', name: 'smack-core-compression', version: '4.0.3')
+	   deployLib(group: 'smack-core-dns', name: 'smack-core-dns', version: '4.0.3')
+	   deployLib(group: 'smack-debug', name: 'smack-debug', version: '4.0.3')
+	   deployLib(group: 'smack-extensions', name: 'smack-extensions', version: '4.0.3')
+	   deployLib(group: 'smack-tcp', name: 'smack-tcp', version: '4.0.3')
+	  
+	   deployLib(group: 'spring', name: 'spring', version: '1.0')
+	   deployLib(group: 'spring-aop', name: 'spring-aop', version: '1.0')
+	   deployLib(group: 'spring-aspects', name: 'spring-aspects', version: '1.0')
+	   deployLib(group: 'spring-security-crypto', name: 'spring-security-crypto', version: '3.1.0.RELEASE')
+	   deployLib(group: 'spring-social-core', name: 'spring-social-core', version: '1.0.2.RELEASE')
+	   deployLib(group: 'spring-social-facebook', name: 'spring-social-facebook', version: '1.0.2.RELEASE')
+	   deployLib(group: 'spring-social-linkedin', name: 'spring-social-linkedin', version: '1.0.0.RC1')
+	   deployLib(group: 'spring-social-test', name: 'spring-social-test', version: '1.0.2.RELEASE')
+	   deployLib(group: 'spring-social-twitter', name: 'spring-social-twitter', version: '1.0.3.RELEASE')
+	   deployLib(group: 'spring-social-web', name: 'spring-social-web', version: '1.0.2.RELEASE')
+	   deployLib(group: 'spring-webmvc', name: 'spring-webmvc', version: '1.0')
+	   deployLib(group: 'sqljdbc4', name: 'sqljdbc4', version: '1.0')
+	   deployLib(group: 'struts', name: 'struts', version: '1.0')
+	   deployLib(group: 'sync-svn-core', name: 'sync-svn-core', version: '1.0')
+	   deployLib(group: 'tm-extractors', name: 'tm-extractors', version: '0.4')
+	   deployLib(group: 'ttf-fonts', name: 'ttf-fonts', version: '1.0')
+	   deployLib(group: 'unoil', name: 'unoil', version: '3.0.1')
+	   deployLib(group: 'velocity', name: 'velocity', version: '1.5')
+	   deployLib(group: 'velocity-tools', name: 'velocity-tools', version: '1.4')
+	   deployLib(group: 'wsdl4j', name: 'wsdl4j', version: '1.6.2')
+	   deployLib(group: 'wstx-asl', name: 'wstx-asl', version: '3.2.1')
+	   deployLib(group: 'xalan', name: 'xalan', version: '2.7.0')
+	   deployLib(group: 'xml-resolver', name: 'xml-resolver', version: '1.2')
+	   deployLib(group: 'xmlsec', name: 'xmlsec', version: '2.0')
+	   deployLib(group: 'xws-security', name: 'xws-security', version: '2.0', classifier: 'FCS')
+	   deployLib(group: 'org.apache.tomcat', name: 'juli', version: '6.0.26')
+	   
+	  
+	  
+	   
+ 	   
+	   
+	    /* ********************************************************************************
+	    * Usadas para compilar, mas não podem ser feito deploy no jboss se não dá conflito. 
+	    * ********************************************************************************/
+	   noDeployLib(group: 'javax.servlet', name: 'javax.servlet', version: '1.0')
+	   noDeployLib(group: 'el-api', name: 'el-api', version: '6.0.20')
+	   noDeployLib(group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.1')
+	   noDeployLib(group: 'jstl', name: 'jstl', version: '1.2')
+	   noDeployLib(group: 'jaxrpc', name: 'jaxrpc', version: '1.0')
+	   noDeployLib(group: 'postgresql.postgresql', name: 'postgresql', version: '9.3', classifier: '1103.jdbc3')
+	   noDeployLib(group: 'jboss', name: 'jbossall-client', version: '1.0')
+	   noDeployLib(group: 'log4j', name: 'log4j', version: '1.2.9')
+	   
+	  
+	   /* *********************************************************************************************
+		* Dependencia para compilar os testes unitário , não precisa fazer deploy 
+		* *********************************************************************************************/
+	   noDeployLib(group: 'br.com.six2six', name: 'fixture-factory', version: '2.1.0')
+       noDeployLib(group: 'junit', name:'junit', version:'4.8')
+       noDeployLib(group: 'mockito-all', name: 'mockito-all', version: '1.9.5')
+       noDeployLib(group: 'org.powermock', name: 'powermock-core', version: '1.6.1')
+	   noDeployLib(group: 'org.powermock', name: 'powermock-mockito', version: '1.6.1', classifier: 'full')  
+       noDeployLib(group: 'org.javassist', name: 'javassist', version: '3.19.0-GA')  /* Biblioteca para manipulação de byte code */
+       noDeployLib(group: 'com.thoughtworks.paranamer', name: 'paranamer', version: '2.5')   /* used by powermock */
+       noDeployLib(group: 'net.vidageek', name: 'mirror', version: '1.6.1')     /* Mirror is a simple DSL to make Java reflection easier. used by powermock*/
+       noDeployLib(group: 'com.thoughtworks.qdox', name: 'qdox', version: '1.12')   /* This includes the a foundation set of matcher implementations for common operations.  */  
+}
+
+
+
+
+
+
+
+
+/** *******************************************************************************************
+ * A parte de geração do EAR do projeto                                                       *
+ *                                                                                            *
+ * Em primeiro lugar é executado o war que zipa o conteúdo do diretorio "sistema.war"          *
+ * Depois são chamas mais 2 task que copiam o war gerado (renomeando para ficar igual ao      * 
+ * nome dentro do application.xml) e os diretório META-INF e libs do EAR para um diretório    *
+ * padrão                                                                                     *
+ * Por último, é chamado a task EAR que zipa o diretório de saida padrão com tudo que foi     * 
+ * gerado.                                                                                    *
+ *                                                                                            *                                                                            *
+ * ********************************************************************************************/
+def projectDirectory = "sigaa"
+def earOutPut = "$buildDir/tmp/earOutput"
+def facedeName = "facade_"+projectDirectory
+def facedeDir = "app/"+projectDirectory+".ear/"+facedeName+".jar"
+
+compileJava << {
+	ant.taskdef(
+		resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
+		classpath: configurations.ajc.asPath
+	)
+	
+	//sourceSets.main.output.classesDir = '.'
+	ant.iajc(
+		source: sourceCompatibility,
+		target: targetCompatibility,
+		destDir: sourceSets.main.output.classesDir.absolutePath,
+		//destDir: file('app/'+projectDirectory+'.ear/'+projectDirectory+'.jar'),
+		//maxmem: '2048m',
+		fork: 'true',
+		X: 'noInline',
+		aspectPath: configurations.aspects.asPath,
+		inpath: configurations.ajInpath.asPath,
+		sourceRootCopyFilter: '**/*.java,**/*.aj',
+		classpath: configurations.compile.asPath) {
+
+		sourceroots {
+			sourceSets.main.java.srcDirs = ['.']
+			sourceSets.main.java.srcDirs.each { dir ->
+				pathelement(location: dir.absolutePath)
+			}
+			
+			/*sourceSets.main.resources.srcDirs = ['.']
+			sourceSets.main.resources.srcDirs.each { dir ->
+				pathelement(location: dir.absolutePath)
+			}*/
+		}
+	}
+}
+
+task runAjApp(type: JavaExec) {
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'ase.ajc.example.MainAppTest'
+	//args 'postgres', 'no'
+	jvmArgs "-Xmx2048m"
+}
+
+
+/* copia as dependências usada para compilar o projeto para um diretório "lib" onde vai ser 
+ * o classpath do projeto para o projeto compilar no eclipse. Assim a gente não precisa versiona no 
+ * no projeto os jars 
+ */
+task copyToLibDirIsolado(description: "Copy the dependences to the 'lib' directory that is the class path of the eclipse project") << {
+	copy {
+		delete "$projectDir/app/"+projectDirectory+".ear/lib"
+		from configurations.deployLib
+		into "$projectDir/app/"+projectDirectory+".ear/lib"
+    }
+}
+
+/* 
+ * Copia apenas as libs da arquitetura pra dentro do EAR (É preciso fazer deploy do projeto libs)
+ */
+task copyToLibDir(description: "Copy the dependences to the 'lib' directory that is the class path of the eclipse project") << {
+	copy {
+		delete "$projectDir/app/"+projectDirectory+".ear/lib"
+		from configurations.ufrnInternalLib
+		into "$projectDir/app/"+projectDirectory+".ear/lib"
+    }
+}
+
+/*
+
+ * Escreve no arquivo utilizado para mostrar as informações da versão publicada ao usuário.
+ */
+task changeVersion (description : 'Change the information about the version of the system')<< {
+   def props = new Properties()
+   def writer = new FileWriter(file('arq/versao_sigaa.properties'))
+   try {
+   
+   	  configurations.ufrnInternalLib.dependencies.each { dep ->
+          props.setProperty(dep.name, dep.version);
+      }
+      
+      configurations.ufrnExternalLib.dependencies.each { dep ->
+          props.setProperty(dep.name, dep.version);
+      }
+      props.setProperty("sistema", version);
+      props.setProperty("dataPublicacao", new Date().format('dd/MM/yyyy HH:mm'));
+      props.store(writer, "System Version File");
+      writer.flush()
+   } finally {
+      writer.close()
+   }
+}
+
+/* Jar task para compilar as classes do projeto */
+jar{
+    manifest {
+        attributes 'Implementation-Title': "$project.name",
+                   'Implementation-Version': "$project.version"    
+    }
+}
+
+/* Cria o jar dos configurações do EJB */
+task facedeJar(description : 'Create the JAR with de system EJB', type: Jar) {
+	archiveName = facedeName+".jar";
+	from ("$facedeDir/")
+}
+
+
+task copyJARFile(description : 'Copy the JAR with the classes and resources of the system') << {
+	copy {
+		from "$buildDir/libs"
+		into "$earOutPut"
+		include "**/"+projectDirectory+"*.jar"
+		rename(/(.*)/, projectDirectory+'.jar')
+	}
+}
+
+task copyFacedeJARFile(description : 'Copy the JAR with the system EJB') << {
+	copy {
+		from "$buildDir/libs"
+		into "$earOutPut"
+		include "**/"+facedeName+".jar"
+	}
+}
+
+
+/*
+ * Criar o WAR principal do SIGAA
+ */
+task warWebApplication(description : 'Created the Sigaa Web aplication', type: War) {
+
+	// where the directory is located //
+	from 'app/'+projectDirectory+'.ear/'+projectDirectory+'.war'
+	
+	baseName = application_name
+}
+
+
+/*
+ * Copia os arquivos que vão configurar o compartilhamento do sistema, para continuar usando as libs de fora do EAR
+ */
+task copySharedFiles(description : 'Copy Shared Files of EAR and WAR ') << {
+	
+	copy {
+		from "arquivos_compartilhados/jboss-app-comp.xml"
+		into "$projectDir/app/"+projectDirectory+".ear/META-INF"
+		rename 'jboss-app-comp.xml', 'jboss-app.xml'	
+	}
+	
+	copy {
+		from "arquivos_compartilhados/application-comp.xml"
+		into "$projectDir/app/"+projectDirectory+".ear/META-INF"
+		rename 'application-comp.xml', 'application.xml'	
+	}
+	
+	delete {
+		"$projectDir/app/"+projectDirectory+".ear/META-INF/jboss-classloading.xml"
+	}
+	
+	delete {
+		"$projectDir/app/"+projectDirectory+".ear"+"/"+projectDirectory+".war"+"/"+"WEB-INF/jboss-classloading.xml"
+	}
+}
+
+
+/*
+ * Copia os arquivos que vão configurar o isolamento do shared resources.
+ * Para fazer o JBOSS carrega os Jars que esteja dentro do diretório libs
+ */
+task copyIsolatedFiles(description : 'Copy Isoleted Files of EAR and WAR ') << {
+	
+	copy {
+		from "arquivos_isolamento/jboss-app-iso.xml"
+		into "$projectDir/app/"+projectDirectory+".ear/META-INF"
+		rename 'jboss-app-iso.xml', 'jboss-app.xml'	
+	}
+	
+	copy {
+		from "arquivos_isolamento/application-iso.xml"
+		into "$projectDir/app/"+projectDirectory+".ear/META-INF"
+		rename 'application-iso.xml', 'application.xml'
+	}
+	
+	copy {
+		from "arquivos_isolamento/jboss-classloading-ear.xml"
+		into "$projectDir/app/"+projectDirectory+".ear/META-INF"
+		rename 'jboss-classloading-ear.xml', 'jboss-classloading.xml'
+	}
+	
+	copy {
+		from "arquivos_isolamento/jboss-classloading-war.xml"
+		into "$projectDir/app/"+projectDirectory+".ear"+"/"+projectDirectory+".war"+"/"+"WEB-INF"
+		rename 'jboss-classloading-war.xml', 'jboss-classloading.xml'
+	}
+}
+
+
+/*
+ * Copia o diretório META-INF e apeans os libs da Arquitetura pra rodar com libs comportilhados
+ */
+task copyEarResouces(description : 'Copy EAR resources like META-INF and lib directory ') << {
+	copy {
+		delete "$earOutPut"
+		from "app/"+projectDirectory+".ear/lib"
+		into "$earOutPut"
+  		rename 'arquitetura-(.*).jar', 'arquitetura.jar'
+  		rename 'entidadesComuns-(.*).jar', 'entidadesComuns.jar'
+  		rename 'servicosIntegrados-(.*).jar', 'servicosIntegrados.jar'
+  		rename 'servicosRemotoBiblioteca-(.*).jar', 'servicosRemotoBibliotecas.jar'
+  		rename 'sigaaMobileObjects-(.*).jar', 'sigaaMobileObjects.jar'
+	}
+	
+	copy {
+		from "META-INF"
+		into "$earOutPut/META-INF"
+	}
+}
+
+/*
+ * Copia o diretório META-INF e todos os LIBS para rodar isolados
+ */
+task copyEarResoucesIsolado(description : 'Copy EAR resources like META-INF and lib directory ') << {
+	copy {
+		delete "$earOutPut"
+		from "app/"+projectDirectory+".ear/lib"
+		into "$earOutPut/lib"
+	}
+	
+	copy {
+		from "app/"+projectDirectory+".ear/META-INF"
+		into "$earOutPut/META-INF"
+	}
+}
+
+
+
+/*
+ *  Gera o WAR principal para dentro do diretório do EAR
+ */
+task copyWarFile (description : 'Copy WAR of SIGAA to EAR directory')  << {
+	copy {
+		from "$buildDir/libs"
+		into "$earOutPut"
+		include "**/"+projectDirectory+"*.war"
+		rename(/(.*)/, projectDirectory+'.war')
+	}
+}
+
+
+/*
+ *  Gera o EAR do sistema, zipando tudo que tá dentdo do diretório de saia
+ */
+task earSystem(description : 'Create the EAR of system', type: Jar) {
+	archiveName = application_name+".ear";
+	from ("$earOutPut/")
+}
+
+
+/* 
+ * Sequencia. Gerar o jar, copie para um diretório temporário, gerar o war, 
+ * copie para o mesmo diretório, copie os diretórios lib e META-INF e zip tudo isso em um EAR
+ * Infezlimente o plugin EAR do gradle não faz essa sequencia de forma automática
+ */
+assemble.dependsOn earSystem
+earSystem.dependsOn copyWarFile, copyFacedeJARFile, copyJARFile
+copyWarFile.dependsOn warWebApplication
+copyFacedeJARFile.dependsOn facedeJar
+copyJARFile.dependsOn jar
+jar.dependsOn changeVersion
+
+earSystem.mustRunAfter copyEarResoucesIsolado
+earSystem.mustRunAfter copyToLibDirIsolado
+earSystem.mustRunAfter copyEarResouces
+earSystem.mustRunAfter copyToLibDir
+copyEarResouces.mustRunAfter copyToLibDir
+copyEarResoucesIsolado.mustRunAfter copyToLibDirIsolado
+
+copyToLibDir.mustRunAfter copySharedFiles
+copyToLibDirIsolado.mustRunAfter copyIsolatedFiles
+
+
+/* The new way to RUN UFRN system.  It needs change on JBOSS */
+task buildIsolado(description : 'Create the EAR of system isolated', dependsOn: ['assemble', 'copyEarResoucesIsolado', 'copyToLibDirIsolado', 'copyIsolatedFiles']  ) << {
+
+}
+
+/* Run the systems like today, shared jars on LIBS project */
+task buildCompartilhado(description : 'Create the EAR of system with shared libs', dependsOn: ['assemble', 'copyEarResouces', 'copyToLibDir', 'copySharedFiles']  ) << {
+	 
+}
+
+
+
+
+
+/**************************************************************************
+ *           A parte de testes do sistema está em outro projeto
+ **************************************************************************
+
+
+/* Does not run test in the build, run the test only when call the specific task */
+test {
+    exclude '**/*'
+}
+
+
+
+
+
+
+/**************************************************************************
+ *                  Configurações do Projeto para o Eclipse
+ **************************************************************************/
+
+
+
+/* Configura a saída padrão do projeto no eclipse */
+eclipse {
+
+
+	project {
+		natures 'org.springsource.ide.eclipse.gradle.core.nature', 'org.eclipse.buildship.core.gradleprojectnature'
+    }
+
+    classpath {
+     	containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+     	containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6'
+     	defaultOutputDir = file('app/'+projectDirectory+'.ear/'+projectDirectory+'.jar')
+    }  
+}
+
+/* Copia as libs para o deploy do jboss porque esse projeto é um EAR */
+eclipseClasspath << {
+	copyToLibDir.execute()
+}
+
+
+
+
+
+
+/**************************************************************************
+ *                   Dependencias do Gradle
+ **************************************************************************/
+
+
+
+buildscript {
+	 repositories {
+	    jcenter()
+	  }
+	  
+	  repositories {
+		    maven {
+		      url "https://plugins.gradle.org/m2/"
+		    }
+		  }
+	  
+	  dependencies {
+	    classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1"
+	    classpath "org.hidetake:gradle-ssh-plugin:1.1.3"
+	    classpath "org.flywaydb:flyway-gradle-plugin:3.2.1"   /* Dependencia do flyway  */
+	    classpath "postgresql:postgresql:9.1-901.jdbc4"       /* O driver do postgres para o flyway usar */
+	  }
+}
+
+
+
+
+/**************************************************************************
+ *                  para fazer deploy do sistema nos servidores
+ **************************************************************************/
+
+
+task deploySystem (description: 'Copy by SSH the EAR file to the deploy directory') << {
+
+	/*  Essas dependências precisam ser passadas pelo servidor de integraçaõ contínua para executar (Jenkins) */
+
+	def deploy_system_url        = System.getProperty("servidoresDeploy")  != null ? System.getProperty("servidoresDeploy")  : 'sitemasX.info.ufrn.br';      // endereço do servidor para deploy   ex.: sistemas8b.info.ufrn.br
+	def deploy_system_directory  = System.getProperty("diretorioDeploy")   != null ? System.getProperty("diretorioDeploy") : '/data/jboss-5.1.0.GA/..../';      // diretorio do servidor para deploy   ex.: /home/user/jboss5/server/default/deploy
+	def deploy_system_port       = System.getProperty("portaDeploy")       != null ? System.getProperty("portaDeploy")     : '2222';                                            // porta da conexeção ssh   ex.: 2222
+	def deploy_system_user       = System.getProperty("usuarioDeploy")     != null ? System.getProperty("usuarioDeploy")   : 'user';      // usuário do servidor para deploy (normalmente com permissão de escrita apenas do diretório)      ex: jboss
+	def deploy_system_password   = System.getProperty("passwordDeploy")    != null ? System.getProperty("passwordDeploy")  : '123456';     // senha do servidor para deploy                                                                   ex: 123456
+
+
+    def deploy_system_url_list = deploy_system_url.split(";"); // a lista de servidores para fazer deploy seperados por ;
+
+	/* Para cada servidor passado, copiar o *.ear para o diretório indicado via ssh  */
+	deploy_system_url_list.each { deploy_system_url_temp ->
+
+	    /* Define os servidores remotos para onde fazer deploy.  Podem ser declarados mais de 1 servidor */
+		ssh.remotes {
+		  servidor1 {
+		    host = deploy_system_url_temp
+		    port = new Integer(deploy_system_port)
+		    user = deploy_system_user
+		    password = deploy_system_password
+		    knownHosts = allowAnyHosts
+		  }
+		}
+	
+	    ssh.run {
+	      session(ssh.remotes.servidor1) {
+	        println " ..... fazendo deploy em: "+deploy_system_user+"@"+deploy_system_url+":"+deploy_system_directory+" -P "+deploy_system_port;
+	        put from: "$buildDir/libs/*.ear", into: deploy_system_directory
+	       //execute 'sudo service tomcat restart'                            // Opcional, executar o comando para limpar o cache e parar e iniciar o servidor
+	      }
+	    }
+    }
+}
+
+
+
+
+
+
+/**************************************************************************
+ *          Aplicação dos scritps de forma automática
+ **************************************************************************/
+
+
+/* apply the sqls and version the data base
+ *
+ * flywayMigrate 	Migrates the database
+ * flywayClean 	    Drops all objects in the configured schemas
+ * flywayInfo 	    Prints the details and status information about all the migrations
+ * flywayValidate 	Validates the applied migrations against the ones available on the classpath
+ * flywayBaseline 	Baselines an existing database, excluding all migrations up to and including baselineVersion
+ * flywayRepair 	Repairs the metadata table
+ */
+task applyScripts (description: 'Apply SQL scritps in the database', type: org.flywaydb.gradle.task.FlywayMigrateTask)   {
+ 
+    
+    // use the same properties of the integration test task
+    def database_url           = System.getProperty("database.url")          != null ? System.getProperty("database.url")          : 'erros.info.ufrn.br:5432/sigaa'; 
+	def database_user          = System.getProperty("database.user")         != null ? System.getProperty("database.user")         : 'sigaa'; 
+	def database_password      = System.getProperty("database.password")     != null ? System.getProperty("database.password")     : 'sigaa';
+    
+	extension = new org.flywaydb.gradle.FlywayExtension()
+
+	
+    extension.driver="org.postgresql.Driver"
+    extension.url = 'jdbc:postgresql://'+database_url+''
+	extension.user = database_user
+	extension.password = database_password
+	
+	// List are defined as comma-separated values
+    extension.schemas=['agenda','apedagogica','ava','avaliacao','biblioteca','complexo_hospitalar','comum','cv','diploma','ead','ensino','ensino_rede','espaco_fisico','estagio','extensao'
+    		,'graduacao','infantil','internacionalizacao','lato_sensu','medio','metropole_digital','migracoes','mobile','monitoria','nee','ouvidoria','pesquisa','pid','pingifes'
+    		,'prodocente','projetos','public','questionario','rede_social','rh','rid','sae','site','stricto_sensu','tecnico','util','vestibular']
+    
+    extension.locations = ["filesystem:/$rootDir/../SIGAADATABASE/db/migration"]
+    
+	extension.encoding = 'ISO-8859-1'
+	
+	extension.baselineOnMigrate = true
+}
+
+
+
+
+/** Permite gerar o scritp para rodar o gradle sem precisar instala-lo */
+task wrapper(type: Wrapper) {
+   gradleVersion = '2.10' 
+}
