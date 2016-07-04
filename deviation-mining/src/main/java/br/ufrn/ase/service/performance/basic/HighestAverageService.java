@@ -54,9 +54,9 @@ public class HighestAverageService {
 	/**
 	 * @param mapRange_3_21
 	 */
-	private void saveResults(String systemVersion, Map<String, Double> mapRange) {
+	public void saveResults(String systemVersion, Map<String, Double> mapRange) {
 		
-		System.out.println("savingResults at"+new SimpleDateFormat("DD/MM/yyyy HH:mm:ss").format(new Date() ) );
+		System.out.println("savingResults of average at: "+new SimpleDateFormat("DD/MM/yyyy HH:mm:ss").format(new Date() ) );
 		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		
