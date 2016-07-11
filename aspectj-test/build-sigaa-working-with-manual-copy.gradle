@@ -504,7 +504,8 @@ dependencies {
 	   deployLib(group: 'org.apache.tomcat', name: 'juli', version: '6.0.26')
 	   
 	   
-	   compile files('C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-common.jar', 'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-cdynamic.jar')
+	   compile files ('C:/Users/Felipe/git/deviation-mining/aspectj-test/libs/scenario-common.jar')
+	   ajInpath files ('C:/Users/Felipe/git/deviation-mining/aspectj-test/libs/scenario-cdynamic.jar')
 
 
 	    /* ********************************************************************************

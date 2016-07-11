@@ -7,8 +7,8 @@ configurations {
 	ajInpath
 }
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 compileJava << {
 	ant.taskdef(
@@ -42,7 +42,8 @@ dependencies {
 	ajc 'org.aspectj:aspectjtools:1.8.9'
 	compile 'org.aspectj:aspectjrt:1.8.9'
 	
-	compile files('C:/Users/Felipe/git/deviation-mining/aspectj-test/libs/scenario-common.jar', 'C:/Users/Felipe/git/deviation-mining/aspectj-test/libs/scenario-cdynamic.jar')
+	compile files ('C:/Users/Felipe/git/deviation-mining/aspectj-test/libs/scenario-common.jar')
+	ajInpath files ('C:/Users/Felipe/git/deviation-mining/aspectj-test/libs/scenario-cdynamic.jar')
 }
 
 task runAjApp(type: JavaExec) {
