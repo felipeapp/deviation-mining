@@ -326,8 +326,8 @@ dependencies {
 	   deployLib(group: 'aopalliance', name: 'aopalliance', version: '1.0')
 	   deployLib(group: 'asm', name: 'asm', version: '1.0')
 	   deployLib(group: 'asm-attrs', name: 'asm-attrs', version: '1.0')
-	   deployLib(group: 'aspectjrt', name: 'aspectjrt', version: '1.2.1')
-	   deployLib(group: 'aspectjweaver', name: 'aspectjweaver', version: '1.0')
+	   deployLib(group: 'org.aspectj', name: 'aspectjrt', version: '1.8.9')
+	   deployLib(group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.9')
 	   deployLib(group: 'axis', name: 'axis', version: '1.4')
 	   deployLib(group: 'backport-util-concurrent', name: 'backport-util-concurrent', version: '3.1')
 	   deployLib(group: 'barbecue', name: 'barbecue', version: '1.1')
@@ -503,11 +503,10 @@ dependencies {
 	   deployLib(group: 'xws-security', name: 'xws-security', version: '2.0', classifier: 'FCS')
 	   deployLib(group: 'org.apache.tomcat', name: 'juli', version: '6.0.26')
 	   
-	  
-	  
 	   
- 	   
-	   
+	   compile files('C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-common.jar', 'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-cdynamic.jar')
+
+
 	    /* ********************************************************************************
 	    * Usadas para compilar, mas não podem ser feito deploy no jboss se não dá conflito. 
 	    * ********************************************************************************/
