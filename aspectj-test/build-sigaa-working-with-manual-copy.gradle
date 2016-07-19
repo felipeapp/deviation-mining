@@ -503,11 +503,25 @@ dependencies {
 	   deployLib(group: 'xws-security', name: 'xws-security', version: '2.0', classifier: 'FCS')
 	   deployLib(group: 'org.apache.tomcat', name: 'juli', version: '6.0.26')
 	   
+	   //compile fileTree (dir: 'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar', include: '*.jar', exclude: 'scenario-cdynamic.jar')
+	   compile files ('C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-common.jar')
+	   runtime files (
+			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/slf4j-api-1.5.6.jar',
+			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/slf4j-jdk14-1.5.6.jar',
+			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/hibernate-commons-annotations.jar',
+			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/hibernate-annotations.jar',
+			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/hibernate3.jar',
+			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/commons-collections-3.2.jar',
+			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/cglib-2.1.3.jar',
+			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/ejb3-persistence.jar'
+	    )
+	   ajInpath files ('C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-cdynamic.jar')
 	   
-	   compile files ('C:/Users/Felipe/git/deviation-mining/aspectj-test/libs/scenario-common.jar')
-	   ajInpath files ('C:/Users/Felipe/git/deviation-mining/aspectj-test/libs/scenario-cdynamic.jar')
-
-
+	   /*compile files (
+	   		'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-common.jar',
+	   		'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/javax.faces-2.2.6.jar'
+	   )*/
+	   
 	    /* ********************************************************************************
 	    * Usadas para compilar, mas não podem ser feito deploy no jboss se não dá conflito. 
 	    * ********************************************************************************/
@@ -650,6 +664,8 @@ task changeVersion (description : 'Change the information about the version of t
 
 /* Jar task para compilar as classes do projeto */
 jar{
+	zip64 true
+	
     manifest {
         attributes 'Implementation-Title': "$project.name",
                    'Implementation-Version': "$project.version"    
