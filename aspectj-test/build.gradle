@@ -11,10 +11,13 @@ sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
 compileJava << {
+	sourceSets.main.output.classesDir = 'bin'
+	
 	ant.taskdef(
 		resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
 		classpath: configurations.ajc.asPath
 	)
+	
 	ant.iajc(
 		source: sourceCompatibility,
 		target: targetCompatibility,
@@ -43,7 +46,7 @@ dependencies {
 	compile 'org.aspectj:aspectjrt:1.8.9'
 	
 	compile files ('C:/Users/Felipe/git/scenario-analyzer/br.ufrn.ppgsc.scenario.analyzer.libs/libs_client/scenario-common.jar')
-	ajInpath files ('C:/Users/Felipe/git/scenario-analyzer/br.ufrn.ppgsc.scenario.analyzer.libs/libs_client/scenario-cdynamic.jar')
+	//ajInpath files ('C:/Users/Felipe/git/scenario-analyzer/br.ufrn.ppgsc.scenario.analyzer.libs/libs_client/scenario-cdynamic.jar')
 }
 
 task runAjApp(type: JavaExec) {
