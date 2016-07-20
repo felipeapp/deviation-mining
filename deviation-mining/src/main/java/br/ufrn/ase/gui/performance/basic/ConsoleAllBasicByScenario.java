@@ -5,7 +5,7 @@
  */
 package br.ufrn.ase.gui.performance.basic;
 
-import br.ufrn.ase.service.performance.basic.AllBasicService;
+import br.ufrn.ase.service.performance.basic.AllBasicByScenarioService;
 import br.ufrn.ase.util.SwingUtil;
 
 /**
@@ -14,7 +14,7 @@ import br.ufrn.ase.util.SwingUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class ConsoleAllBasic {
+public class ConsoleAllBasicByScenario {
 
 	/** QTD to plot in the graphic */
 	public final static int QTD = 10;
@@ -30,7 +30,7 @@ public class ConsoleAllBasic {
 		
 		long start = System.currentTimeMillis();
 	
-		new ConsoleAllBasic().calculateBasicScenarios(systemVersion);
+		new ConsoleAllBasicByScenario().calculateBasicScenarios(systemVersion);
 		
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 
@@ -40,7 +40,7 @@ public class ConsoleAllBasic {
 
 	public void calculateBasicScenarios(String systemVersion){
 		 
-		AllBasicService service = new AllBasicService();
+		AllBasicByScenarioService service = new AllBasicByScenarioService();
 		
 		service.calculateAllBasicScenarios(systemVersion);
 

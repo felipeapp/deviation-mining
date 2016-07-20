@@ -1,7 +1,10 @@
 package br.ufrn.ase.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +15,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
  * Map util class
@@ -124,4 +131,105 @@ public class MapUtil {
 		return MapUtil.cutOff(_return, QTD);
 	}
 
+
+	
+	/** write the values of the key in a propertie file */
+	public static void writePropertie(String key, List<Double> values, String filePath) {
+		try {
+			PropertiesConfiguration  props = new PropertiesConfiguration(new File(filePath));
+			props.setProperty(key, values.toString().replace("[", "").replace("]", "") );
+			props.save();
+		} catch (ConfigurationException e) {
+			e.printStackTrace();
+		}
+      
+	}
+	
+	
+	/** read the values of the key from a propertie file */
+	public static List<Double> readPropertie(String key, String filePath) {
+		
+		List<Double> list = new ArrayList<>();
+		File f = new File(filePath);
+		
+		try (  InputStream is = new FileInputStream( f ); ) {  // The try-with-resources Statement
+			
+			Properties props = new Properties();
+		
+			
+			if ( is != null ) {
+	            props.load( is );
+	            String values = props.getProperty(key);
+	            String[] valuesArray = values.split(",");
+	            
+	           
+	            for (String value : valuesArray) {
+					list.add(Double.valueOf(value));
+				}
+	        }
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+      
+	}
+	
+	
+	
+//	/** Convert a map the a spring */
+//	public void writeMapToFile(Map<String, List<Double>> map, String filePath) {
+//		
+//		File file = new File(filePath);
+//
+//		try {
+//		
+//			// if file doesnt exists, then create it
+//			if (!file.exists()) {
+//				file.createNewFile();
+//			}
+//	
+//			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+//			BufferedWriter bw = new BufferedWriter(fw);
+//			
+//			for (String key  : map.keySet()) {
+//				bw.write(key+"="+map.get(key));
+//			}
+//			
+//			bw.close();
+//		
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//	}
+//	
+//	/** Convert a string into a map */
+//	public Map<String, List<Double>> readFileToMapMap(String filePath) {
+//		Map<String, List<Double>> 
+//		BufferedReader br = null;
+//
+//		try {
+//
+//			String sCurrentLine;
+//
+//			br = new BufferedReader(new FileReader(filePath));
+//
+//			while ((sCurrentLine = br.readLine()) != null) {
+//				System.out.println(sCurrentLine);
+//			}
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				if (br != null)br.close();
+//			} catch (IOException ex) {
+//				ex.printStackTrace();
+//			}
+//		}
+//	}
+	
+	
 }

@@ -24,7 +24,7 @@ import br.ufrn.ase.util.VersionMapUtil;
  * @author jadson - jadsonjs@gmail.com
  *
  */
-public class AllBasicService {
+public class AllBasicByScenarioService {
 	
 	
 	public void calculateAllBasicScenarios(String systemVersion){

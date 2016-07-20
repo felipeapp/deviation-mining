@@ -188,5 +188,38 @@ public class MapUtilTest {
 		Assert.assertEquals((Double) 5d, temp.get(firstKey));
 		
 	}
+	
+	
+	
+	/**
+	 * Teste Append information on propertie file
+	 * 
+	 * Test method for {@link br.ufrn.ase.util.MapUtil#writePropertie(String , List<Double>, String )}.
+	 * Test method for {@link br.ufrn.ase.util.MapUtil#readPropertie(String , String)}.
+	 */
+	@Test
+	public void testAppendInformationOnPropertieFile() {
+		List<Double> list = new ArrayList<>();
+		list.add(1d);
+		list.add(10d);
+		list.add(5d);
+		list.add(20d);
+		
+		MapUtil.writePropertie("portal.jsp", list, "temp.properties");
+		
+		List<Double> list2 = MapUtil.readPropertie("portal.jsp", "temp.properties");
+		
+		Assert.assertTrue(list2.size() == 4 && ! list2.contains(3d));
+		
+		list2.add(3d);
+		
+		MapUtil.writePropertie("portal.jsp", list2, "temp.properties");
+		
+		
+		List<Double> list3 = MapUtil.readPropertie("portal.jsp", "temp.properties");
+		
+
+		Assert.assertTrue(list3.size() == 5 && list3.contains(3d));
+	}
 
 }
