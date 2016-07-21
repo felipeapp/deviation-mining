@@ -505,7 +505,7 @@ dependencies {
 	   
 	   //compile fileTree (dir: 'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar', include: '*.jar', exclude: 'scenario-cdynamic.jar')
 	   compile files ('C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-common.jar')
-	   runtime files (
+	   /*runtime files (
 			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/slf4j-api-1.5.6.jar',
 			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/slf4j-jdk14-1.5.6.jar',
 			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/hibernate-commons-annotations.jar',
@@ -514,7 +514,7 @@ dependencies {
 			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/commons-collections-3.2.jar',
 			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/cglib-2.1.3.jar',
 			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/ejb3-persistence.jar'
-	    )
+	    )*/
 	   ajInpath files ('C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-cdynamic.jar')
 	   
 	   /*compile files (
@@ -573,12 +573,13 @@ def facedeName = "facade_"+projectDirectory
 def facedeDir = "app/"+projectDirectory+".ear/"+facedeName+".jar"
 
 compileJava << {
+	//sourceSets.main.output.classesDir = 'app/'+projectDirectory+'.ear/'+projectDirectory+'.jar'
+	
 	ant.taskdef(
 		resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
 		classpath: configurations.ajc.asPath
 	)
 	
-	//sourceSets.main.output.classesDir = '.'
 	ant.iajc(
 		source: sourceCompatibility,
 		target: targetCompatibility,
