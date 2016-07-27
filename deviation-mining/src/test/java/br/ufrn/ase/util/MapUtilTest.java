@@ -207,7 +207,7 @@ public class MapUtilTest {
 		
 		MapUtil.writePropertie("portal.jsp", list, "temp.properties");
 		
-		List<Double> list2 = MapUtil.readPropertie("portal.jsp", "temp.properties");
+		List<Double> list2 = MapUtil.readPropertiesValues("portal.jsp");
 		
 		Assert.assertTrue(list2.size() == 4 && ! list2.contains(3d));
 		
@@ -216,7 +216,7 @@ public class MapUtilTest {
 		MapUtil.writePropertie("portal.jsp", list2, "temp.properties");
 		
 		
-		List<Double> list3 = MapUtil.readPropertie("portal.jsp", "temp.properties");
+		List<Double> list3 = MapUtil.readPropertiesValues("portal.jsp");
 		
 
 		Assert.assertTrue(list3.size() == 5 && list3.contains(3d));

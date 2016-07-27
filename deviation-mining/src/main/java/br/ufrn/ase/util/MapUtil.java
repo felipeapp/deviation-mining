@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -30,6 +31,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  *      http://www.mkyong.com/java/how-to-sort-a-map-in-java/
  */
 public class MapUtil {
+
+	private static final String tempFilePath = "temp.properties";;
+
 
 	/**
 	 * The overall idea is, converts the Map into a List, sorts the List by
@@ -131,7 +135,16 @@ public class MapUtil {
 		return MapUtil.cutOff(_return, QTD);
 	}
 
-
+	/**
+	 * Store the entire map in a properties file.
+	 * @param retorno
+	 */
+	public static void storeMapInFile(Map<String, List<Double>> retorno) {
+		for (String key : retorno.keySet()) {
+			writePropertie(key, retorno.get(key), tempFilePath);
+		}
+      
+	}
 	
 	/** write the values of the key in a propertie file */
 	public static void writePropertie(String key, List<Double> values, String filePath) {
@@ -145,12 +158,36 @@ public class MapUtil {
       
 	}
 	
+	/**
+	 * Read all key form a propertie file
+	 * @return
+	 */
+	public static List<String> readAllProperties() {
+		
+		List<String> keys = new ArrayList<>();
+		
+		try {
+				Properties p = new Properties();
+			    p.load(new FileInputStream(tempFilePath));
+			    Enumeration<?> e = p.propertyNames();
+			
+			    for (; e.hasMoreElements();) {
+			    	keys.add( (String) e.nextElement() );
+			
+			    }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return keys;
+	}
+	
 	
 	/** read the values of the key from a propertie file */
-	public static List<Double> readPropertie(String key, String filePath) {
+	public static List<Double> readPropertiesValues(String key) {
 		
 		List<Double> list = new ArrayList<>();
-		File f = new File(filePath);
+		File f = new File(tempFilePath);
 		
 		try (  InputStream is = new FileInputStream( f ); ) {  // The try-with-resources Statement
 			

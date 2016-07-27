@@ -5,6 +5,8 @@
  */
 package br.ufrn.ase.service.performance.basic;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +15,10 @@ import java.util.Map;
 import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.dao.DAOFactory;
 import br.ufrn.ase.dao.relational.performance.LogOperacaoDao;
-import br.ufrn.ase.dao.relational.performance.ScenarioDao;
+import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.Sistema;
+import br.ufrn.ase.util.DateUtil;
+import br.ufrn.ase.util.MapUtil;
 import br.ufrn.ase.util.StringUtil;
 import br.ufrn.ase.util.VersionMapUtil;
 
@@ -27,66 +31,120 @@ import br.ufrn.ase.util.VersionMapUtil;
  */
 public class AllBasicByPeriodService {
 
+	/** Interval of time to get log from the data base. As bigger as this interval, more log are recovery and can give out of memory*/
+	private final int SEARCH_INTERVAL = 60; // 60 minutes
 	
-	public void calculateAllBasicScenarios(String systemVersion){
+	public void calculateAllBasicScenarios(String systemVersion, boolean executeMining){
 		
-		ScenarioDao dao = DAOFactory.getRelationalDAO(ScenarioDao.class);
-		LogOperacaoDao logDao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
+		
+		if( executeMining ){
+			
+			Map<String, Double> mapRangeMedian = new HashMap<String, Double>();
+			Map<String, Double> mapRangeVariation = new HashMap<String, Double>();
+			Map<String, Double> mapRangeAverage = new HashMap<String, Double>();
+			Map<String, Double> mapRangeAccessed = new HashMap<String, Double>();
+			
+			findTimesExecutionOfUserScenarios(systemVersion, false);
+			
+			List<Double> values = new ArrayList<>();
+			
+			for (String scenario : MapUtil.readAllProperties()) { // for each senario
+				
+				scenario = "test.jsp";
+				
+				values = 	MapUtil.readPropertiesValues(scenario);
+		
+				UserScenariosStatistics userScenariosStatistics = new UserScenariosStatistics();
+				
+				
+				mapRangeMedian = userScenariosStatistics.calculateExecutionMedianScenario(scenario, values);
+				//mapRangeVariation = userScenariosStatistics.calculateCoefficientOfVariation(values, true);
+				//mapRangeAverage = userScenariosStatistics.calculateExecutionMeanScenario(values);
+				//mapRangeAccessed = userScenariosStatistics.calculateExecutionAmountScenario(values);
+				
+				
+				new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
+				new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
+				new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
+				new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
+			
+				values = new ArrayList<>();
+				
+			}
+		}
+		
+	}
+	
+	
+	/**
+	 * Return the execution time of user
+	 * @param systemVersion
+	 * @param isUserEnabled
+	 * @return
+	 */
+	public void findTimesExecutionOfUserScenarios(String systemVersion, boolean isUserEnabled) {
+		
 		
 		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(systemVersion);
 		Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(systemVersion);
 		String systemName  = StringUtil.getSystemName(systemVersion);
 		int systemId       = Sistema.valueOf(systemName).getValue();
+
+		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 		
-		List<String> scenarios = dao.findAllScenariosByDateAndSystem(systemId, initialDate, finalDate);
+		LocalDateTime initialTime =  DateUtil.toLocalDateTime(initialDate); 
+		LocalDateTime finalTime =    DateUtil.toLocalDateTime(finalDate); 
 		
+		
+		LocalDateTime currentTime = initialTime;
+		LocalDateTime nextTime = DateUtil.getNextInterval(SEARCH_INTERVAL, initialTime, finalTime);
+	
 		Map<String, List<Double>> retorno = new HashMap<String, List<Double>>();
+		List<Double> tempos = null;
+		List<LogOperacao> logs = null;
+		String key = "";
 		
-		Map<String, Double> mapRangeMedian = new HashMap<String, Double>();
-		
-		Map<String, Double> mapRangeVariation = new HashMap<String, Double>();
-		
-		Map<String, Double> mapRangeAverage = new HashMap<String, Double>();
-		
-		Map<String, Double> mapRangeAccessed = new HashMap<String, Double>();
-		
-		HighestMedianService highestMedianService = new HighestMedianService();
-		HighestVariationService highestVariationService = new HighestVariationService();
-		HighestAverageService highestAverageService = new HighestAverageService();
-		MostAccessedScenariosService mostAccessedScenariosService = new MostAccessedScenariosService();
-		
-		UserScenariosStatistics userScenariosStatistics = new UserScenariosStatistics();
-		
-		int count =1;
-		int qtdScenarios = scenarios.size();
-		
-		/// calculate just for each specific scenario, because it is a big data  ///
-		for (String scenario : scenarios) {
+		while(nextTime.isBefore(finalTime) ){
 			
-			System.out.println("------------ Executing  "+ count++ +" of "+qtdScenarios+" scenarios ---------------");
+			System.out.println(">>>>> interval: "+currentTime+" "+nextTime);
 			
-			retorno = logDao.findAllLogOperacaoOfScenarioInsideIntervalBySystemVersion(scenario, systemId, initialDate, finalDate);
+			logs = dao.findAllLogOperacaoInsideIntervalBySystemVersion(systemId, DateUtil.toDate(currentTime), DateUtil.toDate(nextTime));
 			
-			mapRangeMedian = userScenariosStatistics.calculateExecutionMedianScenario(retorno);
+			System.out.println(">>>>> return: "+logs.size()+" logs");
+			
+			for (LogOperacao log : logs) {
 	
-			mapRangeVariation = userScenariosStatistics.calculateCoefficientOfVariation(retorno, true);
-			
-			mapRangeAverage = userScenariosStatistics.calculateExecutionMeanScenario(retorno);
-			
-			mapRangeAccessed = userScenariosStatistics.calculateExecutionAmountScenario(retorno);
+				key = (isUserEnabled ? log.getRegistroEntrada().getIdUsuario()+"_" : "") + log.getAction();
 	
-			highestMedianService.saveResults(systemVersion, mapRangeMedian);
+				tempos = retorno.get(key);
+	
+				if (tempos == null) {
+					tempos = new ArrayList<Double>();
+					retorno.put(key, tempos);
+				}
+	
+				tempos.add((double) log.getTempo());
+			}
 			
-			highestVariationService.saveResults(systemVersion, mapRangeVariation);
+			// try to clear the JVM memory as much as possible, this list of log can be very big //
+			logs = null;
+			System.gc();
 			
-			highestAverageService.saveResults(systemVersion, mapRangeAverage);
+			MapUtil.printMapSize(retorno);
 			
-			mostAccessedScenariosService.saveResults(systemVersion, mapRangeAccessed);
+			// this is very important, we cannot keek this map in the memory, it can be very big
+			if(retorno.size() > 1000){
+				MapUtil.storeMapInFile(retorno);
+				retorno = new HashMap<String, List<Double>>(); // clear the memory
+			}
 			
+			
+			// Updates the interval, goes to the next interval
+			currentTime = nextTime;
+			nextTime = DateUtil.getNextInterval(SEARCH_INTERVAL, nextTime, finalTime);
 		}
-		
-		dao.close();
-		logDao.close();
+
+		MapUtil.storeMapInFile(retorno);
 		
 	}
 	

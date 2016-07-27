@@ -28,7 +28,7 @@ public class ConsoleAllBasicByPeriod {
 		
 		long start = System.currentTimeMillis();
 	
-		new ConsoleAllBasicByPeriod().calculateBasicScenarios(systemVersion);
+		new ConsoleAllBasicByPeriod().calculateBasicScenarios(systemVersion, true);
 		
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 
@@ -36,11 +36,11 @@ public class ConsoleAllBasicByPeriod {
 	}
 
 	
-	public void calculateBasicScenarios(String systemVersion){
+	public void calculateBasicScenarios(String systemVersion, boolean executeMining){
 		 
 		AllBasicByPeriodService service = new AllBasicByPeriodService();
 		
-		service.calculateAllBasicScenarios(systemVersion);
+		service.calculateAllBasicScenarios(systemVersion, executeMining);
 
 	}
 

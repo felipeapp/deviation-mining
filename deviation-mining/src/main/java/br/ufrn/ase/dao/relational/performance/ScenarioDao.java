@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import br.ufrn.ase.dao.relational.AbstractBasicRelationalDAO;
 import br.ufrn.ase.util.DateUtil;
@@ -66,18 +65,6 @@ public class ScenarioDao extends AbstractBasicRelationalDAO {
 		}
 		
 		return retorno;
-	}
-
-
-	/**
-	 * @param systemId
-	 * @param initialDate
-	 * @param finalDate
-	 * @return
-	 */
-	public Map<String, List<Double>> findExecutionOfScenarios(int systemId, Date initialDate, Date finalDate) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 }
