@@ -36,6 +36,10 @@ public abstract class DAOFactory {
 	
 	private static MongoOperations mongoOps = null;
 
+	private static Connection relationConnection = null;
+	
+	private static Connection resultConnection = null;
+	
 	/**
 	 * @param cls
 	 *            The class to create the DAO
@@ -86,14 +90,15 @@ public abstract class DAOFactory {
 	
 	/////////////////////////////////////////////////////////////
 	
+	
+	
 	/***
 	 * Create the JDBC connection
 	 * @return
 	 */
 	private static Connection getRelationConnection() {
-		Connection connection = null;
 		try {
-			if (connection == null) {
+			if (relationConnection == null) {
 				String db   = SettingsUtil.getProperty("sql_db");
 				String host = SettingsUtil.getProperty("sql_host");
 				String port = SettingsUtil.getProperty("sql_port");
@@ -102,14 +107,15 @@ public abstract class DAOFactory {
 
 				String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
 
-				connection = DriverManager.getConnection(url, user, pwd);
+				relationConnection = DriverManager.getConnection(url, user, pwd);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return connection;
+		return relationConnection;
 	}
+	
 	
 	
 	/***
@@ -117,9 +123,9 @@ public abstract class DAOFactory {
 	 * @return
 	 */
 	private static Connection getResultRelationConnection() {
-		Connection connection = null;
+		
 		try {
-			if (connection == null) {
+			if (resultConnection == null) {
 				String db   = SettingsUtil.getProperty("result_db");
 				String host = SettingsUtil.getProperty("result_host");
 				String port = SettingsUtil.getProperty("result_port");
@@ -128,13 +134,13 @@ public abstract class DAOFactory {
 
 				String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
 
-				connection = DriverManager.getConnection(url, user, pwd);
+				resultConnection = DriverManager.getConnection(url, user, pwd);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return connection;
+		return resultConnection;
 	}
 	
 

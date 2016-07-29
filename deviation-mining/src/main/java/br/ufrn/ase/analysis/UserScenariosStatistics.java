@@ -23,6 +23,82 @@ import br.ufrn.ase.util.StatisticsUtil;
  */
 public class UserScenariosStatistics {
 
+	
+	/**
+	 * Calculate the quantity of access the some scenario
+	 * 
+	 * @param mapScenarioExecutionTime
+	 * @return
+	 */
+	public Map<String, Double> calculateExecutionAmount(String key, List<Double> mapScenarioExecutionTime) {
+		
+		Map<String, Double> mapCVScenario = new HashMap<String, Double>();
+
+		// converts the List<Double> to double[] and calculate the CV
+		mapCVScenario.put(key, new Double( mapScenarioExecutionTime.size() ));		
+
+		return MapUtil.sortByValue(mapCVScenario);
+	}
+	
+	
+	/***
+	 * Calculate the median of the times of a user
+	 * 
+	 * @param mapScenarioExecutionTime
+	 * @return
+	 */
+	public Map<String, Double> calculateExecutionMedian(String key, List<Double> mapScenarioExecutionTime) {
+		Map<String, Double> mapExecutionMeanScenario = new HashMap<String, Double>();
+
+		// converts the List<Double> to double[] and calculate the mean
+		mapExecutionMeanScenario.put(key, StatisticsUtil.median( Doubles.toArray(mapScenarioExecutionTime)) );
+
+		return MapUtil.sortByValue(mapExecutionMeanScenario);
+	}
+	
+	
+	
+	/***
+	 * Calculate the average of the times of a user
+	 * 
+	 * @param mapScenarioExecutionTime
+	 * @return
+	 */
+	public Map<String, Double> calculateExecutionMean(String key, List<Double> mapScenarioExecutionTime) {
+		Map<String, Double> mapExecutionMeanScenario = new HashMap<String, Double>();
+
+		// converts the List<Double> to double[] and calculate the mean
+		mapExecutionMeanScenario.put(key, StatisticsUtil.mean( Doubles.toArray(mapScenarioExecutionTime)) );
+		
+		return MapUtil.sortByValue(mapExecutionMeanScenario);
+	}
+	
+	
+	/**
+	 * 
+	 * @param key
+	 * @param mapScenarioExecutionTime
+	 * @param ordered
+	 * @return
+	 */
+	public Map<String, Double> calculateCoefficientOfVariation(String key, List<Double> mapScenarioExecutionTime,boolean ordered) {
+		Map<String, Double> mapCVScenario = new HashMap<String, Double>();
+
+		// converts the List<Double> to double[] and calculate the CV
+		mapCVScenario.put(key, StatisticsUtil.coefficientOfVariation(Doubles.toArray(mapScenarioExecutionTime)));
+
+		return ordered ? MapUtil.sortByValue(mapCVScenario) : mapCVScenario;
+	}
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
+	
+	
+	
 	/***
 	 * Calculate the average of the times of a user
 	 * 
@@ -41,20 +117,10 @@ public class UserScenariosStatistics {
 	}
 	
 	
-	/***
-	 * Calculate the median of the times of a user
-	 * 
-	 * @param mapScenarioExecutionTime
-	 * @return
-	 */
-	public Map<String, Double> calculateExecutionMedianScenario(String key, List<Double> mapScenarioExecutionTime) {
-		Map<String, Double> mapExecutionMeanScenario = new HashMap<String, Double>();
 
-		// converts the List<Double> to double[] and calculate the mean
-		mapExecutionMeanScenario.put(key, StatisticsUtil.median( Doubles.toArray(mapScenarioExecutionTime)) );
+	
+	
 
-		return MapUtil.sortByValue(mapExecutionMeanScenario);
-	}
 	
 	
 	/***
@@ -87,6 +153,8 @@ public class UserScenariosStatistics {
 
 		return ordered ? MapUtil.sortByValue(mapCVScenario) : mapCVScenario;
 	}
+	
+
 
 	/**
 	 * Calculate the quantity of access the some scenario
@@ -106,6 +174,8 @@ public class UserScenariosStatistics {
 		return MapUtil.sortByValue(mapCVScenario);
 	}
 	
+	
+	
 	public Map<String, Double> calculateExecutionMeanScenario(String system_version) {
 		Map<String, List<Double>> map = new UserScenariosPerformanceService().findTimesExecutionOfUserScenarios(system_version, true);
 	
@@ -114,6 +184,8 @@ public class UserScenariosStatistics {
 	
 		return mapExecutionMeanScenario;
 	}
+	
+	
 	
 	public Map<String, Double> calculateCoefficientOfVariation(String system_version) {
 		Map<String, List<Double>> map = new UserScenariosPerformanceService().findTimesExecutionOfUserScenarios(system_version, true);

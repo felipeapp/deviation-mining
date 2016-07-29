@@ -48,27 +48,37 @@ public class AllBasicByPeriodService {
 			
 			List<Double> values = new ArrayList<>();
 			
+			int qtd = 0;
+			
 			for (String scenario : MapUtil.readAllProperties()) { // for each senario
 				
-				scenario = "test.jsp";
+				if(qtd % 100 == 0 ){
+					System.out.println("Calculating for scenario:  "+scenario);
+				}
 				
 				values = 	MapUtil.readPropertiesValues(scenario);
 		
 				UserScenariosStatistics userScenariosStatistics = new UserScenariosStatistics();
 				
 				
-				mapRangeMedian = userScenariosStatistics.calculateExecutionMedianScenario(scenario, values);
-				//mapRangeVariation = userScenariosStatistics.calculateCoefficientOfVariation(values, true);
-				//mapRangeAverage = userScenariosStatistics.calculateExecutionMeanScenario(values);
-				//mapRangeAccessed = userScenariosStatistics.calculateExecutionAmountScenario(values);
+				mapRangeMedian    = userScenariosStatistics.calculateExecutionMedian(scenario, values);
+				mapRangeVariation = userScenariosStatistics.calculateCoefficientOfVariation(scenario, values, true);
+				mapRangeAverage   = userScenariosStatistics.calculateExecutionMean(scenario, values);
+				mapRangeAccessed  = userScenariosStatistics.calculateExecutionAmount(scenario, values);
 				
+				if(qtd % 100 == 0 ){
+					
+					System.out.println("Saving on temp database ");
 				
-				new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
-				new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
-				new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
-				new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
-			
+					new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
+					new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
+					new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
+					new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
+				}
+				
 				values = new ArrayList<>();
+				
+				qtd++;
 				
 			}
 		}
@@ -104,13 +114,18 @@ public class AllBasicByPeriodService {
 		List<LogOperacao> logs = null;
 		String key = "";
 		
+		int qtd = 0;
+		
 		while(nextTime.isBefore(finalTime) ){
 			
-			System.out.println(">>>>> interval: "+currentTime+" "+nextTime);
 			
 			logs = dao.findAllLogOperacaoInsideIntervalBySystemVersion(systemId, DateUtil.toDate(currentTime), DateUtil.toDate(nextTime));
 			
-			System.out.println(">>>>> return: "+logs.size()+" logs");
+			if(qtd % 100 == 0 ){
+				System.out.println(">>>>> interval: "+currentTime+" "+nextTime);
+				System.out.println(">>>>> return: "+logs.size()+" logs");
+				MapUtil.printMapSize(retorno);
+			}
 			
 			for (LogOperacao log : logs) {
 	
@@ -128,9 +143,7 @@ public class AllBasicByPeriodService {
 			
 			// try to clear the JVM memory as much as possible, this list of log can be very big //
 			logs = null;
-			System.gc();
 			
-			MapUtil.printMapSize(retorno);
 			
 			// this is very important, we cannot keek this map in the memory, it can be very big
 			if(retorno.size() > 1000){
@@ -142,6 +155,9 @@ public class AllBasicByPeriodService {
 			// Updates the interval, goes to the next interval
 			currentTime = nextTime;
 			nextTime = DateUtil.getNextInterval(SEARCH_INTERVAL, nextTime, finalTime);
+			
+			qtd++;
+			
 		}
 
 		MapUtil.storeMapInFile(retorno);
