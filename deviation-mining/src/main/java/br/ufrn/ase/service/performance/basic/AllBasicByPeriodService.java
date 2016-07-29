@@ -67,14 +67,14 @@ public class AllBasicByPeriodService {
 				mapRangeAccessed  = userScenariosStatistics.calculateExecutionAmount(scenario, values);
 				
 				if(qtd % 100 == 0 ){
-					
-					System.out.println("Saving on temp database ");
-				
-					new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
-					new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
-					new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
-					new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
+					System.out.println("Saving on temp database ... ");
 				}
+				
+				new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
+				new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
+				new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
+				new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
+				
 				
 				values = new ArrayList<>();
 				
@@ -147,8 +147,9 @@ public class AllBasicByPeriodService {
 			
 			// this is very important, we cannot keek this map in the memory, it can be very big
 			if(retorno.size() > 1000){
+				System.out.println(" Store in temporary properties file "+retorno.size());
 				MapUtil.storeMapInFile(retorno);
-				retorno = new HashMap<String, List<Double>>(); // clear the memory
+				retorno = new HashMap<String, List<Double>>();   // try to clear the JVM memory as much as possible, this list of log can be very big 
 			}
 			
 			
@@ -161,6 +162,7 @@ public class AllBasicByPeriodService {
 		}
 
 		MapUtil.storeMapInFile(retorno);
+		System.out.println(" Store in temporary properties file "+retorno.size());
 		
 	}
 	
