@@ -6,7 +6,6 @@
 package br.ufrn.ase.service.performance.basic;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -56,7 +55,6 @@ public class HighestAverageService {
 	 */
 	public void saveResults(String systemVersion, Map<String, Double> mapRange) {
 		
-		System.out.println("savingResults of average at: "+new SimpleDateFormat("DD/MM/yyyy HH:mm:ss").format(new Date() ) );
 		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		
@@ -75,7 +73,6 @@ public class HighestAverageService {
 	 */
 	public Map<String, Double> readResults(String systemVersion) {
 		
-		System.out.println("readResults");
 		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		

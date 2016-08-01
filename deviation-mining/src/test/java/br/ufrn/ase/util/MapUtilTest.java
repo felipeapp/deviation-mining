@@ -5,12 +5,15 @@
  */
 package br.ufrn.ase.util;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -18,6 +21,12 @@ import org.junit.Test;
  *
  */
 public class MapUtilTest {
+	
+	@Before
+	public void setup(){
+		File file = new File(MapUtil.TEMP_FILE_PATH);
+		file.delete();
+	}
 
 	/**
 	 * Test method for {@link br.ufrn.ase.util.MapUtil#sortByValue(java.util.Map)}.
@@ -205,15 +214,13 @@ public class MapUtilTest {
 		list.add(5d);
 		list.add(20d);
 		
-		MapUtil.writePropertie("portal.jsp", list, "temp.properties");
+		MapUtil.appendPropertie("portal.jsp", list);
 		
 		List<Double> list2 = MapUtil.readPropertiesValues("portal.jsp");
 		
 		Assert.assertTrue(list2.size() == 4 && ! list2.contains(3d));
 		
-		list2.add(3d);
-		
-		MapUtil.writePropertie("portal.jsp", list2, "temp.properties");
+		MapUtil.appendPropertie("portal.jsp",  Arrays.asList( new Double[]{3d}));
 		
 		
 		List<Double> list3 = MapUtil.readPropertiesValues("portal.jsp");
@@ -221,5 +228,61 @@ public class MapUtilTest {
 
 		Assert.assertTrue(list3.size() == 5 && list3.contains(3d));
 	}
+	
+	
+	/**
+	 * 
+	 */
+	@Test
+	public void testStoreMapInFile() {
+		
+		List<Double> list1 = new ArrayList<>();
+		list1.add(1d);
+		list1.add(10d);
+		list1.add(5d);
+		list1.add(20d);
+		
+		Map<String, List<Double>> dataInMemory = new HashMap<>();
+		
+		dataInMemory.put("tela1.jsp", list1);
+		
+		MapUtil.storeMapInFile(dataInMemory);
+		
+		List<String> keys1 = MapUtil.readAllPropertiesKeys();
+		
+		Assert.assertTrue(keys1.size() == 1 && keys1.contains("tela1.jsp"));
+		
+		List<Double> values1 = MapUtil.readPropertiesValues(keys1.get(0));
+		
+		Assert.assertTrue(values1.size() == 4 && values1.contains(10d));
+		
+		// try to save more information without lose the first one //
+		
+		dataInMemory = new HashMap<>();
+		
+		List<Double> list2 = new ArrayList<>();
+		list2.add(1d);
+		list2.add(3d);
+		list2.add(7d);
+		list2.add(6d);
+		
+		dataInMemory.put("tela1.jsp", new ArrayList<>( Arrays.asList( new Double[]{50d} ) ) );
+		
+		dataInMemory.put("tela2.jsp", list2);
+		
+		MapUtil.storeMapInFile(dataInMemory);
+		
+		List<String> keys2 = MapUtil.readAllPropertiesKeys();
+		
+		Assert.assertTrue(keys2.size() == 2 && keys2.contains("tela1.jsp") && keys2.contains("tela2.jsp"));
+		
+		List<Double> values2 = MapUtil.readPropertiesValues("tela1.jsp");
+		
+		Assert.assertTrue(values2.size() == 5 && values2.contains(10d));
+		
+	}
+	
+	
+	
 
 }

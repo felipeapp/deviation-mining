@@ -34,6 +34,9 @@ public class AllBasicByPeriodService {
 	/** Interval of time to get log from the data base. As bigger as this interval, more log are recovery and can give out of memory*/
 	private final int SEARCH_INTERVAL = 60; // 60 minutes
 	
+	/** Qtd of result keep in memory at a time */
+	private final int RESULT_MAP_SIZE = 1000;
+	
 	public void calculateAllBasicScenarios(String systemVersion, boolean executeMining){
 		
 		
@@ -50,7 +53,7 @@ public class AllBasicByPeriodService {
 			
 			int qtd = 0;
 			
-			for (String scenario : MapUtil.readAllProperties()) { // for each senario
+			for (String scenario : MapUtil.readAllPropertiesKeys()) { // for each senario
 				
 				if(qtd % 100 == 0 ){
 					System.out.println("Calculating for scenario:  "+scenario);
@@ -146,7 +149,7 @@ public class AllBasicByPeriodService {
 			
 			
 			// this is very important, we cannot keek this map in the memory, it can be very big
-			if(retorno.size() > 1000){
+			if(retorno.size() > RESULT_MAP_SIZE){
 				System.out.println(" Store in temporary properties file "+retorno.size());
 				MapUtil.storeMapInFile(retorno);
 				retorno = new HashMap<String, List<Double>>();   // try to clear the JVM memory as much as possible, this list of log can be very big 

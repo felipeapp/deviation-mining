@@ -32,7 +32,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  */
 public class MapUtil {
 
-	private static final String tempFilePath = "temp.properties";;
+	public static final String TEMP_FILE_PATH = "temp.properties";;
 
 
 	/**
@@ -141,16 +141,21 @@ public class MapUtil {
 	 */
 	public static void storeMapInFile(Map<String, List<Double>> retorno) {
 		for (String key : retorno.keySet()) {
-			writePropertie(key, retorno.get(key), tempFilePath);
+			appendPropertie(key, retorno.get(key));
 		}
       
 	}
 	
 	/** write the values of the key in a propertie file */
-	public static void writePropertie(String key, List<Double> values, String filePath) {
+	public static void appendPropertie(String key, List<Double> values) {
+		
+		List<Double> newValues = new ArrayList<>();
+		newValues.addAll(readPropertiesValues(key));
+		newValues.addAll(values);
+		
 		try {
-			PropertiesConfiguration  props = new PropertiesConfiguration(new File(filePath));
-			props.setProperty(key, values.toString().replace("[", "").replace("]", "") );
+			PropertiesConfiguration  props = new PropertiesConfiguration(new File(TEMP_FILE_PATH));
+			props.setProperty(key, newValues.toString().replace("[", "").replace("]", "") );
 			props.save();
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
@@ -162,13 +167,13 @@ public class MapUtil {
 	 * Read all key form a propertie file
 	 * @return
 	 */
-	public static List<String> readAllProperties() {
+	public static List<String> readAllPropertiesKeys() {
 		
 		List<String> keys = new ArrayList<>();
 		
 		try {
 				Properties p = new Properties();
-			    p.load(new FileInputStream(tempFilePath));
+			    p.load(new FileInputStream(TEMP_FILE_PATH));
 			    Enumeration<?> e = p.propertyNames();
 			
 			    for (; e.hasMoreElements();) {
@@ -187,7 +192,7 @@ public class MapUtil {
 	public static List<Double> readPropertiesValues(String key) {
 		
 		List<Double> list = new ArrayList<>();
-		File f = new File(tempFilePath);
+		File f = new File(TEMP_FILE_PATH);
 		
 		try (  InputStream is = new FileInputStream( f ); ) {  // The try-with-resources Statement
 			
@@ -197,76 +202,24 @@ public class MapUtil {
 			if ( is != null ) {
 	            props.load( is );
 	            String values = props.getProperty(key);
-	            String[] valuesArray = values.split(",");
 	            
-	           
-	            for (String value : valuesArray) {
-					list.add(Double.valueOf(value));
-				}
+	            if(values != null && values.length() > 0 ){
+	            	
+		            String[] valuesArray = values.split(",");
+		           
+		            for (String value : valuesArray) {
+						list.add(Double.valueOf(value));
+					}
+	            }
 	        }
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		return list;
       
 	}
-	
-	
-	
-//	/** Convert a map the a spring */
-//	public void writeMapToFile(Map<String, List<Double>> map, String filePath) {
-//		
-//		File file = new File(filePath);
-//
-//		try {
-//		
-//			// if file doesnt exists, then create it
-//			if (!file.exists()) {
-//				file.createNewFile();
-//			}
-//	
-//			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-//			BufferedWriter bw = new BufferedWriter(fw);
-//			
-//			for (String key  : map.keySet()) {
-//				bw.write(key+"="+map.get(key));
-//			}
-//			
-//			bw.close();
-//		
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//	}
-//	
-//	/** Convert a string into a map */
-//	public Map<String, List<Double>> readFileToMapMap(String filePath) {
-//		Map<String, List<Double>> 
-//		BufferedReader br = null;
-//
-//		try {
-//
-//			String sCurrentLine;
-//
-//			br = new BufferedReader(new FileReader(filePath));
-//
-//			while ((sCurrentLine = br.readLine()) != null) {
-//				System.out.println(sCurrentLine);
-//			}
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				if (br != null)br.close();
-//			} catch (IOException ex) {
-//				ex.printStackTrace();
-//			}
-//		}
-//	}
 	
 	
 }

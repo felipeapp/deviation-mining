@@ -6,8 +6,6 @@
 package br.ufrn.ase.service.performance.basic;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +48,6 @@ public class HighestMedianService {
 	 */
 	public void saveResults(String systemVersion, Map<String, Double> mapRange) {
 		
-		System.out.println("savingResults of median at: "+new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date() ) );
 		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		
@@ -69,7 +66,6 @@ public class HighestMedianService {
 	 */
 	public Map<String, Double> readResults(String systemVersion) {
 		
-		System.out.println("readResults");
 		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		

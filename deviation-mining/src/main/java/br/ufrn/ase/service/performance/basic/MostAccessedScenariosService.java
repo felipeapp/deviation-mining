@@ -6,7 +6,6 @@
 package br.ufrn.ase.service.performance.basic;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -57,8 +56,6 @@ public class MostAccessedScenariosService {
 	 */
 	public void saveResults(String systemVersion, Map<String, Double> mapRange) {
 		
-		System.out.println("savingResults of most accessed at: "+new SimpleDateFormat("DD/MM/yyyy HH:mm:ss").format(new Date() ) );
-		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		
 		try{
@@ -75,8 +72,6 @@ public class MostAccessedScenariosService {
 	 * @return
 	 */
 	public Map<String, Double> readResults(String systemVersion) {
-		
-		System.out.println("readResults");
 		
 		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
 		
