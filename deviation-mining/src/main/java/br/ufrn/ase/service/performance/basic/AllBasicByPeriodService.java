@@ -35,7 +35,7 @@ public class AllBasicByPeriodService {
 	private final int SEARCH_INTERVAL = 60; // 60 minutes
 	
 	/** Qtd of result keep in memory at a time */
-	private final int RESULT_MAP_SIZE = 1000;
+	private final int RESULT_MAP_SIZE = 10000000; // 10MB
 	
 	public void calculateAllBasicScenarios(String systemVersion, boolean executeMining){
 		
@@ -103,7 +103,6 @@ public class AllBasicByPeriodService {
 		String systemName  = StringUtil.getSystemName(systemVersion);
 		int systemId       = Sistema.valueOf(systemName).getValue();
 
-		LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 		
 		LocalDateTime initialTime =  DateUtil.toLocalDateTime(initialDate); 
 		LocalDateTime finalTime =    DateUtil.toLocalDateTime(finalDate); 
@@ -119,12 +118,16 @@ public class AllBasicByPeriodService {
 		
 		int qtd = 0;
 		
+		
+		
 		while(nextTime.isBefore(finalTime) ){
 			
-			
+			LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 			logs = dao.findAllLogOperacaoInsideIntervalBySystemVersion(systemId, DateUtil.toDate(currentTime), DateUtil.toDate(nextTime));
+			DAOFactory.closeRelationConnection();
 			
 			if(qtd % 100 == 0 ){
+				System.out.println(">>>>> Analyzing Interval: "+qtd+" ");
 				System.out.println(">>>>> interval: "+currentTime+" "+nextTime);
 				System.out.println(">>>>> return: "+logs.size()+" logs");
 				MapUtil.printMapSize(retorno);
@@ -149,10 +152,12 @@ public class AllBasicByPeriodService {
 			
 			
 			// this is very important, we cannot keek this map in the memory, it can be very big
-			if(retorno.size() > RESULT_MAP_SIZE){
-				System.out.println(" Store in temporary properties file "+retorno.size());
+			if( MapUtil.getMapSize(retorno) > RESULT_MAP_SIZE){
+				long time = System.currentTimeMillis();
+				System.out.println(">>>>> Store in temporary properties file "+retorno.size()+" keys");
 				MapUtil.storeMapInFile(retorno);
-				retorno = new HashMap<String, List<Double>>();   // try to clear the JVM memory as much as possible, this list of log can be very big 
+				retorno = new HashMap<String, List<Double>>();   // try to clear the JVM memory as much as possible, this list of log can be very big
+				System.out.println(((System.currentTimeMillis()-time)/1000)+" seconds");
 			}
 			
 			
@@ -165,7 +170,7 @@ public class AllBasicByPeriodService {
 		}
 
 		MapUtil.storeMapInFile(retorno);
-		System.out.println(" Store in temporary properties file "+retorno.size());
+		System.out.println(">>>>> Store in temporary properties file "+retorno.size()+" keys");
 		
 	}
 	

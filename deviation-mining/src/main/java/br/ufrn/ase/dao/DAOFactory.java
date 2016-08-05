@@ -117,6 +117,17 @@ public abstract class DAOFactory {
 	}
 	
 	
+	/** Close JDBC connection */
+	public static void closeRelationConnection(){
+		if(relationConnection != null)
+			try {
+				relationConnection.close();
+				relationConnection = null;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+	
 	
 	/***
 	 * Create the JDBC connection

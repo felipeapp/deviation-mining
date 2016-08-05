@@ -28,6 +28,7 @@ public abstract class AbstractBasicRelationalDAO {
 		if(this.connection != null)
 			try {
 				this.connection.close();
+				this.connection = null;
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

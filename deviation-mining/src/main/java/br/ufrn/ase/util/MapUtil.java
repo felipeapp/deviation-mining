@@ -104,6 +104,23 @@ public class MapUtil {
 	    }
 	}
 	
+	/**
+	 * This method return the qtd of bytes of a map
+	 * @param map
+	 */
+	public static int getMapSize(@SuppressWarnings("rawtypes") Map map) {
+	    try{
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        ObjectOutputStream oos = new ObjectOutputStream(baos);
+	        oos.writeObject(map);
+	        oos.close();
+	        return baos.size();
+	    }catch(IOException e){
+	        e.printStackTrace();
+	        return 0;
+	    }
+	}
+	
 	
 	/**
 	 * This method get the first results common in the two maps.
