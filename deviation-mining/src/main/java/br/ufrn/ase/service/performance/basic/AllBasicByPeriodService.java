@@ -14,7 +14,8 @@ import java.util.Map;
 
 import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.dao.DAOFactory;
-import br.ufrn.ase.dao.relational.performance.LogOperacaoDao;
+import br.ufrn.ase.dao.relational.performance.mining.LogOperacaoDao;
+import br.ufrn.ase.dao.relational.performance.temporary.TemporaryDataAnalysisDAO;
 import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.DateUtil;
@@ -35,60 +36,61 @@ public class AllBasicByPeriodService {
 	private final int SEARCH_INTERVAL = 60; // 60 minutes
 	
 	/** Qtd of result keep in memory at a time */
-	private final int RESULT_MAP_SIZE = 10000000; // 10MB
+	private final int RESULT_MAP_SIZE = 30000000; // 30MB
 	
 	public void calculateAllBasicScenarios(String systemVersion, boolean executeMining){
 		
-		
+		// pre process the informations 
 		if( executeMining ){
-			
-			Map<String, Double> mapRangeMedian = new HashMap<String, Double>();
-			Map<String, Double> mapRangeVariation = new HashMap<String, Double>();
-			Map<String, Double> mapRangeAverage = new HashMap<String, Double>();
-			Map<String, Double> mapRangeAccessed = new HashMap<String, Double>();
-			
 			findTimesExecutionOfUserScenarios(systemVersion, false);
-			
-			List<Double> values = new ArrayList<>();
-			
-			int qtd = 0;
-			
-			for (String scenario : MapUtil.readAllPropertiesKeys()) { // for each senario
-				
-				if(qtd % 100 == 0 ){
-					System.out.println("Calculating for scenario:  "+scenario);
-				}
-				
-				values = 	MapUtil.readPropertiesValues(scenario);
-		
-				UserScenariosStatistics userScenariosStatistics = new UserScenariosStatistics();
-				
-				
-				mapRangeMedian    = userScenariosStatistics.calculateExecutionMedian(scenario, values);
-				mapRangeVariation = userScenariosStatistics.calculateCoefficientOfVariation(scenario, values, true);
-				mapRangeAverage   = userScenariosStatistics.calculateExecutionMean(scenario, values);
-				mapRangeAccessed  = userScenariosStatistics.calculateExecutionAmount(scenario, values);
-				
-				if(qtd % 100 == 0 ){
-					System.out.println("Saving on temp database ... ");
-				}
-				
-				new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
-				new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
-				new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
-				new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
-				
-				
-				values = new ArrayList<>();
-				
-				qtd++;
-				
-			}
 		}
+		
+		Map<String, Double> mapRangeMedian = new HashMap<String, Double>();
+		Map<String, Double> mapRangeVariation = new HashMap<String, Double>();
+		Map<String, Double> mapRangeAverage = new HashMap<String, Double>();
+		Map<String, Double> mapRangeAccessed = new HashMap<String, Double>();
+		
+		List<Double> values = new ArrayList<>();
+		
+		int qtd = 0;
+		
+		for (String scenario : readAllScenarios()) { // for each senario
+			
+			if(qtd % 100 == 0 ){
+				System.out.println("Calculating for scenario:  "+scenario);
+			}
+			
+			values = readScenariosValues(scenario);
+	
+			UserScenariosStatistics userScenariosStatistics = new UserScenariosStatistics();
+			
+			
+			mapRangeMedian    = userScenariosStatistics.calculateExecutionMedian(scenario, values);
+			mapRangeVariation = userScenariosStatistics.calculateCoefficientOfVariation(scenario, values, true);
+			mapRangeAverage   = userScenariosStatistics.calculateExecutionMean(scenario, values);
+			mapRangeAccessed  = userScenariosStatistics.calculateExecutionAmount(scenario, values);
+			
+			if(qtd % 100 == 0 ){
+				System.out.println("Saving on temp database ... ");
+			}
+			
+			new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
+			new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
+			new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
+			new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
+			
+			
+			values = new ArrayList<>();
+			
+			qtd++;
+			
+		}
+		
 		
 	}
 	
-	
+
+
 	/**
 	 * Return the execution time of user
 	 * @param systemVersion
@@ -155,7 +157,7 @@ public class AllBasicByPeriodService {
 			if( MapUtil.getMapSize(retorno) > RESULT_MAP_SIZE){
 				long time = System.currentTimeMillis();
 				System.out.println(">>>>> Store in temporary properties file "+retorno.size()+" keys");
-				MapUtil.storeMapInFile(retorno);
+				storeMapInDataBase(retorno);
 				retorno = new HashMap<String, List<Double>>();   // try to clear the JVM memory as much as possible, this list of log can be very big
 				System.out.println(((System.currentTimeMillis()-time)/1000)+" seconds");
 			}
@@ -169,9 +171,54 @@ public class AllBasicByPeriodService {
 			
 		}
 
-		MapUtil.storeMapInFile(retorno);
+		storeMapInDataBase(retorno);
 		System.out.println(">>>>> Store in temporary properties file "+retorno.size()+" keys");
 		
 	}
+	
+	/**
+	 * @return
+	 */
+	private List<String> readAllScenarios() {
+		TemporaryDataAnalysisDAO dao = DAOFactory.getRelationalTemporaryDAO(TemporaryDataAnalysisDAO.class);
+		List<String> list =  dao.readAllScenarios();
+		DAOFactory.closeRelationConnection();
+		return list;
+	}
+	
+	/**
+	 * @param scenario
+	 * @return
+	 */
+	private List<Double> readScenariosValues(String scenario) {
+		TemporaryDataAnalysisDAO dao = DAOFactory.getRelationalTemporaryDAO(TemporaryDataAnalysisDAO.class);
+		List<Double> list =  dao.readScenariosValues(scenario);
+		DAOFactory.closeRelationConnection();
+		return list;
+	}
+
+
+	/**
+	 * Store the entire map in a data
+	 * @param retorno
+	 */
+	private static void storeMapInDataBase(Map<String, List<Double>> map) {
+		
+		TemporaryDataAnalysisDAO dao = DAOFactory.getRelationalTemporaryDAO(TemporaryDataAnalysisDAO.class);
+		
+		for (String scenario : map.keySet()) {
+			if(dao.contaisScenarios(scenario)){
+				List<Double> list =  dao.readScenariosValues(scenario);
+				list.addAll(map.get(scenario));
+				
+				dao.updateScenarioValues(scenario, list);
+				
+			}else{
+				dao.insertNewScenario(scenario, map.get(scenario));
+			}
+		}
+      
+	}
+	
 	
 }

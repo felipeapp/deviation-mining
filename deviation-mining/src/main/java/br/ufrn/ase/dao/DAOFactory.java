@@ -88,6 +88,16 @@ public abstract class DAOFactory {
 		} 
 	}
 	
+	/** Return the Dao used to save results */
+	public static <T> T getRelationalTemporaryDAO(Class<T> cls) {
+		try {
+			return cls.getConstructor(Connection.class).newInstance(getTemporaryRelationConnection());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} 
+	}
+	
 	/////////////////////////////////////////////////////////////
 	
 	
@@ -134,6 +144,32 @@ public abstract class DAOFactory {
 	 * @return
 	 */
 	private static Connection getResultRelationConnection() {
+		
+		try {
+			if (resultConnection == null) {
+				String db   = SettingsUtil.getProperty("result_db");
+				String host = SettingsUtil.getProperty("result_host");
+				String port = SettingsUtil.getProperty("result_port");
+				String user = SettingsUtil.getProperty("result_user");
+				String pwd  = SettingsUtil.getProperty("result_password");
+
+				String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
+
+				resultConnection = DriverManager.getConnection(url, user, pwd);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resultConnection;
+	}
+	
+	
+	/***
+	 * Create the JDBC connection
+	 * @return
+	 */
+	private static Connection getTemporaryRelationConnection() {
 		
 		try {
 			if (resultConnection == null) {

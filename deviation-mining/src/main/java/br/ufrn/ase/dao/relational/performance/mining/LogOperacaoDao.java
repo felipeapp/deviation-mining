@@ -3,7 +3,7 @@
  *
  * This software is distributed WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND
  */
-package br.ufrn.ase.dao.relational.performance;
+package br.ufrn.ase.dao.relational.performance.mining;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -18,7 +18,7 @@ import java.util.Set;
 import com.google.common.primitives.Doubles;
 
 import br.ufrn.ase.dao.DAOFactory;
-import br.ufrn.ase.dao.relational.performance.LogOperacaoDao;
+import br.ufrn.ase.dao.relational.performance.mining.LogOperacaoDao;
 import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.degradation.Interval;
 import br.ufrn.ase.util.DateUtil;

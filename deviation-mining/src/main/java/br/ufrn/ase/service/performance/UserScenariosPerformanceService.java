@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.ufrn.ase.dao.DAOFactory;
-import br.ufrn.ase.dao.relational.performance.LogOperacaoDao;
+import br.ufrn.ase.dao.relational.performance.mining.LogOperacaoDao;
 import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.DateUtil;

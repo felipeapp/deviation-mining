@@ -12,8 +12,8 @@ import java.util.Map;
 
 import br.ufrn.ase.analysis.UserScenariosStatistics;
 import br.ufrn.ase.dao.DAOFactory;
-import br.ufrn.ase.dao.relational.performance.LogOperacaoDao;
 import br.ufrn.ase.dao.relational.performance.ScenarioDao;
+import br.ufrn.ase.dao.relational.performance.mining.LogOperacaoDao;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.util.StringUtil;
 import br.ufrn.ase.util.VersionMapUtil;
