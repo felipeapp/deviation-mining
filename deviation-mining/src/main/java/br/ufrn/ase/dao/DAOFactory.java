@@ -173,11 +173,11 @@ public abstract class DAOFactory {
 		
 		try {
 			if (resultConnection == null) {
-				String db   = SettingsUtil.getProperty("result_db");
-				String host = SettingsUtil.getProperty("result_host");
-				String port = SettingsUtil.getProperty("result_port");
-				String user = SettingsUtil.getProperty("result_user");
-				String pwd  = SettingsUtil.getProperty("result_password");
+				String db   = SettingsUtil.getProperty("temporary_db");
+				String host = SettingsUtil.getProperty("temporary_host");
+				String port = SettingsUtil.getProperty("temporary_port");
+				String user = SettingsUtil.getProperty("temporary_user");
+				String pwd  = SettingsUtil.getProperty("temporary_password");
 
 				String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
 

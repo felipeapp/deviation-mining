@@ -217,6 +217,7 @@ public class AllBasicByPeriodService {
 				dao.insertNewScenario(scenario, map.get(scenario));
 			}
 		}
+		DAOFactory.closeRelationConnection();
       
 	}
 	
