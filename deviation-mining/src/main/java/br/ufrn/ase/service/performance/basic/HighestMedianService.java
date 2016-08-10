@@ -56,6 +56,8 @@ public class HighestMedianService {
 		}catch(SQLException sqlEx){
 			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Save Results", JOptionPane.ERROR_MESSAGE);
 			sqlEx.printStackTrace();
+		}finally{
+			DAOFactory.closeResultConnection();
 		}
 	}
 	
@@ -75,6 +77,8 @@ public class HighestMedianService {
 			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Read Results", JOptionPane.ERROR_MESSAGE);
 			sqlEx.printStackTrace();
 			return null;
+		}finally{
+			DAOFactory.closeResultConnection();
 		}
 	}
 

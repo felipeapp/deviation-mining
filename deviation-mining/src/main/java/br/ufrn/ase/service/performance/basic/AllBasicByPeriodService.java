@@ -38,11 +38,17 @@ public class AllBasicByPeriodService {
 	/** Qtd of result keep in memory at a time */
 	private final int RESULT_MAP_SIZE = 30000000; // 30MB
 	
+	/***
+	 * Calculate the basic information about the log
+	 * 
+	 * @param systemVersion
+	 * @param executeMining
+	 */
 	public void calculateAllBasicScenarios(String systemVersion, boolean executeMining){
 		
 		// pre process the informations 
 		if( executeMining ){
-			findTimesExecutionOfUserScenarios(systemVersion, false);
+			executeMiningOfBasicInformations(systemVersion, false);
 		}
 		
 		Map<String, Double> mapRangeMedian = new HashMap<String, Double>();
@@ -54,16 +60,15 @@ public class AllBasicByPeriodService {
 		
 		int qtd = 0;
 		
-		for (String scenario : readAllScenarios()) { // for each senario
+		for (String scenario : readAllScenarios() ) { // for each scenario that was mined
 			
 			if(qtd % 100 == 0 ){
-				System.out.println("Calculating for scenario:  "+scenario);
+				System.out.println("Calculating information for scenario:  "+scenario);
 			}
 			
-			values = readScenariosValues(scenario);
+			values = readScenariosValues(scenario); // just for one scenario to save memory
 	
 			UserScenariosStatistics userScenariosStatistics = new UserScenariosStatistics();
-			
 			
 			mapRangeMedian    = userScenariosStatistics.calculateExecutionMedian(scenario, values);
 			mapRangeVariation = userScenariosStatistics.calculateCoefficientOfVariation(scenario, values, true);
@@ -71,14 +76,13 @@ public class AllBasicByPeriodService {
 			mapRangeAccessed  = userScenariosStatistics.calculateExecutionAmount(scenario, values);
 			
 			if(qtd % 100 == 0 ){
-				System.out.println("Saving on temp database ... ");
+				System.out.println("Saving on result database ... ");
 			}
 			
 			new HighestMedianService().saveResults(systemVersion, mapRangeMedian);
 			new HighestVariationService().saveResults(systemVersion, mapRangeVariation);
 			new HighestAverageService().saveResults(systemVersion, mapRangeAverage);
 			new MostAccessedScenariosService().saveResults(systemVersion, mapRangeAccessed);
-			
 			
 			values = new ArrayList<>();
 			
@@ -92,12 +96,13 @@ public class AllBasicByPeriodService {
 
 
 	/**
-	 * Return the execution time of user
+	 * This is the method that execute the mining in the database of logs
+	 * 
 	 * @param systemVersion
 	 * @param isUserEnabled
 	 * @return
 	 */
-	public void findTimesExecutionOfUserScenarios(String systemVersion, boolean isUserEnabled) {
+	public void executeMiningOfBasicInformations(String systemVersion, boolean isUserEnabled) {
 		
 		
 		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(systemVersion);
@@ -105,6 +110,7 @@ public class AllBasicByPeriodService {
 		String systemName  = StringUtil.getSystemName(systemVersion);
 		int systemId       = Sistema.valueOf(systemName).getValue();
 
+		/// calculate several interval to recovery the information by small parts because this is really huge ///
 		
 		LocalDateTime initialTime =  DateUtil.toLocalDateTime(initialDate); 
 		LocalDateTime finalTime =    DateUtil.toLocalDateTime(finalDate); 
@@ -120,19 +126,16 @@ public class AllBasicByPeriodService {
 		
 		int qtd = 0;
 		
-		
-		
 		while(nextTime.isBefore(finalTime) ){
 			
 			LogOperacaoDao dao = DAOFactory.getRelationalDAO(LogOperacaoDao.class);
 			logs = dao.findAllLogOperacaoInsideIntervalBySystemVersion(systemId, DateUtil.toDate(currentTime), DateUtil.toDate(nextTime));
-			DAOFactory.closeRelationConnection();
+			DAOFactory.closeMiningConnection();
 			
 			if(qtd % 100 == 0 ){
 				System.out.println(">>>>> Analyzing Interval: "+qtd+" ");
 				System.out.println(">>>>> interval: "+currentTime+" "+nextTime);
 				System.out.println(">>>>> return: "+logs.size()+" logs");
-				MapUtil.printMapSize(retorno);
 			}
 			
 			for (LogOperacao log : logs) {
@@ -156,7 +159,7 @@ public class AllBasicByPeriodService {
 			// this is very important, we cannot keek this map in the memory, it can be very big
 			if( MapUtil.getMapSize(retorno) > RESULT_MAP_SIZE){
 				long time = System.currentTimeMillis();
-				System.out.println(">>>>> Store in temporary properties file "+retorno.size()+" keys");
+				System.out.println(">>>>> Store in temporary database "+retorno.size()+" keys");
 				storeMapInDataBase(retorno);
 				retorno = new HashMap<String, List<Double>>();   // try to clear the JVM memory as much as possible, this list of log can be very big
 				System.out.println(((System.currentTimeMillis()-time)/1000)+" seconds");
@@ -172,34 +175,40 @@ public class AllBasicByPeriodService {
 		}
 
 		storeMapInDataBase(retorno);
-		System.out.println(">>>>> Store in temporary properties file "+retorno.size()+" keys");
+		System.out.println(">>>>> Last store in temporary database "+retorno.size()+" keys");
 		
 	}
 	
+	
 	/**
+	 * Load all scenarios mined with values, just the scenarios
+	 * 
 	 * @return
 	 */
 	private List<String> readAllScenarios() {
 		TemporaryDataAnalysisDAO dao = DAOFactory.getRelationalTemporaryDAO(TemporaryDataAnalysisDAO.class);
 		List<String> list =  dao.readAllScenarios();
-		DAOFactory.closeRelationConnection();
+		DAOFactory.closeTemporaryConnection();
 		return list;
 	}
 	
 	/**
+	 * Load all values of one specific scenario
+	 * 
 	 * @param scenario
 	 * @return
 	 */
 	private List<Double> readScenariosValues(String scenario) {
 		TemporaryDataAnalysisDAO dao = DAOFactory.getRelationalTemporaryDAO(TemporaryDataAnalysisDAO.class);
 		List<Double> list =  dao.readScenariosValues(scenario);
-		DAOFactory.closeRelationConnection();
+		DAOFactory.closeTemporaryConnection();
 		return list;
 	}
 
 
 	/**
-	 * Store the entire map in a data
+	 * Store the entire map in a data, insert a new scenario or update the values of a existent one.
+	 * 
 	 * @param retorno
 	 */
 	private static void storeMapInDataBase(Map<String, List<Double>> map) {
@@ -217,7 +226,7 @@ public class AllBasicByPeriodService {
 				dao.insertNewScenario(scenario, map.get(scenario));
 			}
 		}
-		DAOFactory.closeRelationConnection();
+		DAOFactory.closeTemporaryConnection();
       
 	}
 	

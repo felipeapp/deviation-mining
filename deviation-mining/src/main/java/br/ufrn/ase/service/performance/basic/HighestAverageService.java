@@ -63,6 +63,8 @@ public class HighestAverageService {
 		}catch(SQLException sqlEx){
 			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Save Results", JOptionPane.ERROR_MESSAGE);
 			sqlEx.printStackTrace();
+		}finally{
+			DAOFactory.closeResultConnection();
 		}
 	}
 	
@@ -82,6 +84,8 @@ public class HighestAverageService {
 			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Read Results", JOptionPane.ERROR_MESSAGE);
 			sqlEx.printStackTrace();
 			return null;
+		}finally{
+			DAOFactory.closeResultConnection();
 		}
 	}
 

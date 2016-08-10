@@ -108,7 +108,7 @@ public class TemporaryDataAnalysisDAO extends AbstractBasicRelationalDAO{
 	 */
 	public boolean contaisScenarios(String scenario) {
 
-		String sql = " SELECT COUNT(*) FROM temporary.scenarios_executions scenarios WHERE scenario = :scenario ";
+		String sql = " SELECT COUNT(*) FROM temporary.scenarios_executions scenarios WHERE scenario = ? ";
 		
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);

@@ -36,9 +36,11 @@ public abstract class DAOFactory {
 	
 	private static MongoOperations mongoOps = null;
 
-	private static Connection relationConnection = null;
+	private static Connection miningConnection = null;
 	
 	private static Connection resultConnection = null;
+	
+	private static Connection temporaryConnection = null;
 	
 	/**
 	 * @param cls
@@ -71,7 +73,7 @@ public abstract class DAOFactory {
 	 */
 	public static <T> T getRelationalDAO(Class<T> cls) {
 		try {
-			return cls.getConstructor(Connection.class).newInstance(getRelationConnection());
+			return cls.getConstructor(Connection.class).newInstance(getMiningConnection());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -106,33 +108,33 @@ public abstract class DAOFactory {
 	 * Create the JDBC connection
 	 * @return
 	 */
-	private static Connection getRelationConnection() {
+	private static Connection getMiningConnection() {
 		try {
-			if (relationConnection == null) {
-				String db   = SettingsUtil.getProperty("sql_db");
-				String host = SettingsUtil.getProperty("sql_host");
-				String port = SettingsUtil.getProperty("sql_port");
-				String user = SettingsUtil.getProperty("sql_user");
-				String pwd  = SettingsUtil.getProperty("sql_password");
+			if (miningConnection == null) {
+				String db   = SettingsUtil.getProperty("mining_db");
+				String host = SettingsUtil.getProperty("mining_host");
+				String port = SettingsUtil.getProperty("mining_port");
+				String user = SettingsUtil.getProperty("mining_user");
+				String pwd  = SettingsUtil.getProperty("mining_password");
 
 				String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
 
-				relationConnection = DriverManager.getConnection(url, user, pwd);
+				miningConnection = DriverManager.getConnection(url, user, pwd);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return relationConnection;
+		return miningConnection;
 	}
 	
 	
 	/** Close JDBC connection */
-	public static void closeRelationConnection(){
-		if(relationConnection != null)
+	public static void closeMiningConnection(){
+		if(miningConnection != null)
 			try {
-				relationConnection.close();
-				relationConnection = null;
+				miningConnection.close();
+				miningConnection = null;
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -164,6 +166,18 @@ public abstract class DAOFactory {
 		return resultConnection;
 	}
 	
+
+	/** Close JDBC connection */
+	public static void closeResultConnection(){
+		if(resultConnection != null)
+			try {
+				resultConnection.close();
+				resultConnection = null;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+	
 	
 	/***
 	 * Create the JDBC connection
@@ -172,7 +186,7 @@ public abstract class DAOFactory {
 	private static Connection getTemporaryRelationConnection() {
 		
 		try {
-			if (resultConnection == null) {
+			if (temporaryConnection == null) {
 				String db   = SettingsUtil.getProperty("temporary_db");
 				String host = SettingsUtil.getProperty("temporary_host");
 				String port = SettingsUtil.getProperty("temporary_port");
@@ -181,16 +195,27 @@ public abstract class DAOFactory {
 
 				String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
 
-				resultConnection = DriverManager.getConnection(url, user, pwd);
+				temporaryConnection = DriverManager.getConnection(url, user, pwd);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return resultConnection;
+		return temporaryConnection;
 	}
 	
-
+	/** Close JDBC connection */
+	public static void closeTemporaryConnection(){
+		if(temporaryConnection != null)
+			try {
+				temporaryConnection.close();
+				temporaryConnection = null;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+	
+	
 	/**
 	 * create a mongodb connection
 	 * @return
