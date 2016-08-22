@@ -71,3 +71,43 @@ WITH (
 );
 ALTER TABLE result.variation_time_range OWNER TO postgres;
 
+
+
+---------- analise de confiablidade -----------------------
+
+
+CREATE TABLE result.total_of_error_by_scenario
+(
+  system_version text NOT NULL,
+  scenario text NOT NULL,
+  qtd_error integer,
+  CONSTRAINT pk_total_of_error_by_scenario PRIMARY KEY (system_version, scenario)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE result.total_of_error_by_scenario OWNER TO postgres;
+
+
+
+
+CREATE TABLE result.total_of_error_by_trace
+(
+  system_version text NOT NULL,
+  scenario text NOT NULL,
+  trace text NOT NULL,
+  qtd_error integer,
+  CONSTRAINT pk_total_of_error_by_trace PRIMARY KEY (system_version, scenario, trace)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE result.total_of_error_by_trace OWNER TO postgres;
+
+
+
+
+
+
+
+

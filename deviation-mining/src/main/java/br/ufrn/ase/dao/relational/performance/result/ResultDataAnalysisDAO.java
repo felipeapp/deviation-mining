@@ -286,5 +286,77 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 
 	/////////////////////////////////////////////////////////////////////
 	
+	
+	
+	
+/////////////////////////////////////////////////////////////////////
+
+	/**
+	 * @param map
+	 * @throws SQLException
+	 */
+	public void insertTotalOfError(String scenario, int qtdError, String systemVersion) throws SQLException {
+
+		String sql = " INSERT INTO result.total_of_error_by_scenario ( system_version, scenario, qtd_error) VALUES (?, ?, ?) ";
+
+		//final int batchSize = 1000;
+		//int count = 0;
+		//int mapSize = mapRange.size();
+
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+				prepated.setString(1, systemVersion);
+				prepated.setString(2, scenario);
+				prepated.setInt(3, qtdError);
+				//prepated.addBatch();
+
+//				if (++count % batchSize == 0) {
+//					System.out.println("Inserting " + count + " of " + mapSize);
+//					prepated.execute();
+//				}
+//			}
+
+			prepated.execute();
+		}
+	}
+
+
+
+	/**
+	 * @param systemVersion
+	 * @param scenario
+	 * @param result
+	 * @throws SQLException 
+	 */
+	public void insertTotalOfErrorByScenario(String systemVersion, String scenario, Map<String, Integer> result) throws SQLException {
+		
+		String sql = " INSERT INTO result.total_of_error_by_trace ( system_version, scenario, trace, qtd_error) VALUES (?, ?, ?, ?) ";
+
+		final int batchSize = 1000;
+		int count = 0;
+		int mapSize = result.size();
+		
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			for (String trace : result.keySet()) {
+				prepated.setString(1, systemVersion);
+				prepated.setString(2, scenario);
+				prepated.setString(3, trace);
+				prepated.setInt(4, result.get(trace));
+				prepated.addBatch();
+				
+				if(++count % batchSize == 0) {
+					System.out.println("Inserting "+count+" of "+mapSize);
+					prepated.executeBatch();
+			    }
+			}
+
+			prepated.executeBatch();
+		}
+		
+	}
+	
+	
+	
 
 }

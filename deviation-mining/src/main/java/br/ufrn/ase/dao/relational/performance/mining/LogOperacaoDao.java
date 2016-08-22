@@ -37,6 +37,10 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	/** Common projection used in the most of query with necessary information */
 	public static final String COMMON_PROJECTION = " log.action, log.hora, log.tempo, log.id_registro_entrada, registro.id_usuario ";
 	
+	
+	/** Common projection used in the analisis de erros*/
+	public static final String COMMON_PROJECTION_ERROR = " log.action, log.hora, log.tempo, log.trace, log.id_registro_entrada, registro.id_usuario ";
+	
 		
 	public LogOperacaoDao(Connection connection){
 		super(connection);
@@ -74,6 +78,51 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 			ResultSet rs = stmt.executeQuery();
 
 			list = mountCommonProjection(rs);
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	
+	
+	
+	/**
+	 * MAIN query used in the tools for performance operation
+	 * 
+	 * This method returns the action and the time spend for this action in an interval of data
+	 * 
+	 * @param systemName
+	 * @param initialDate
+	 * @param finalDate
+	 * @return
+	 */
+	public List<LogOperacao> findAllLogOperacaoInsideIntervalBySystemVersionForError(int systemId, Date initialDate, Date finalDate) {
+		
+		/**General query for performance */
+		String sql = 
+				" SELECT "+COMMON_PROJECTION_ERROR+
+				" FROM log_operacao log " +
+				" INNER JOIN registro_entrada registro ON registro.id_entrada = log.id_registro_entrada "+
+				" WHERE log.hora BETWEEN ? AND  ?  "+ 
+				" AND log.id_sistema = ? AND log.erro = ? ";
+		
+		List<LogOperacao> list = new ArrayList<LogOperacao>();
+
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			stmt.setTimestamp(1, DateUtil.getDBTimestampFromDate(initialDate));
+			stmt.setTimestamp(2, DateUtil.getDBTimestampFromDate(finalDate)  );
+			stmt.setInt(3, systemId);
+			stmt.setBoolean(4, true);
+
+			ResultSet rs = stmt.executeQuery();
+
+			list = mountCommonProjectionForErro(rs);
 
 			rs.close();
 			stmt.close();
@@ -342,11 +391,35 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 			log.setHorario(DateUtil.getDateFromDBTimestamp(rs.getTimestamp(2)));
 			log.setTempo(rs.getInt(3));
 			log.setRegistroEntrada( new RegistroEntrada()  );
-			log.getRegistroEntrada().setIdUsuario(  rs.getInt(4) );
+			log.getRegistroEntrada().setIdEntrada(  rs.getInt(4) );
+			log.getRegistroEntrada().setIdUsuario(  rs.getInt(5) );
 			list.add(log);
 		}
 		return list;
 	}
 
+	
+	/**
+	 * For all methods that use COMMON_PROJECTION
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	private List<LogOperacao> mountCommonProjectionForErro(ResultSet rs) throws SQLException {
+		List<LogOperacao> list = new ArrayList<LogOperacao>();
+		
+		while (rs.next()) {
+			LogOperacao log = new LogOperacao();
+			log.setAction(rs.getString(1));
+			log.setHorario(DateUtil.getDateFromDBTimestamp(rs.getTimestamp(2)));
+			log.setTempo(rs.getInt(3));
+			log.setTrace(  rs.getString(4) );
+			log.setRegistroEntrada( new RegistroEntrada()  );
+			log.getRegistroEntrada().setIdEntrada(  rs.getInt(5) );
+			log.getRegistroEntrada().setIdUsuario(  rs.getInt(6) );
+			list.add(log);
+		}
+		return list;
+	}
 
 }
