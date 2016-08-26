@@ -344,11 +344,11 @@ public class TemporaryDataAnalysisDAO extends AbstractBasicRelationalDAO{
 	 */
 	public void insertScenarioErrorValues(String scenario, String trace) {
 
-		String sql = " INSERT INTO temporary.scenarios_error_trace set trace, scenario VALUES (?, ?) ";
+		String sql = " INSERT INTO temporary.scenarios_error_trace (trace, scenario) VALUES (?, ?) ";
 		
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			
+				
 			stmt.setString(1, trace);
 			stmt.setString(2, scenario);
 			

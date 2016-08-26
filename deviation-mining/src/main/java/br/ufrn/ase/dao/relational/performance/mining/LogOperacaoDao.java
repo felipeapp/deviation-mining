@@ -108,7 +108,7 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 				" FROM log_operacao log " +
 				" INNER JOIN registro_entrada registro ON registro.id_entrada = log.id_registro_entrada "+
 				" WHERE log.hora BETWEEN ? AND  ?  "+ 
-				" AND log.id_sistema = ? AND log.erro = ? ";
+				" AND log.id_sistema = ? AND log.erro = ? AND trace is not null ";
 		
 		List<LogOperacao> list = new ArrayList<LogOperacao>();
 
