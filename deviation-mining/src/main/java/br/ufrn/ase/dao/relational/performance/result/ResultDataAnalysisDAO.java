@@ -355,6 +355,86 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 		}
 		
 	}
+
+
+
+	/**
+	 * @param systemVersion
+	 * @return
+	 * @throws SQLException 
+	 */
+	public Map<String, Integer> readScenariosWithError(String systemVersion) throws SQLException {
+		
+		String sql = " SELECT scenario, qtd_error FROM result.total_of_error_by_scenario ";
+		
+		Map<String, Integer> qtdError= new HashMap<>();
+		
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			ResultSet result = prepated.executeQuery();
+			
+			while(result.next()){
+				qtdError.put(result.getString(1), result.getInt(2));
+			}
+		}
+		
+		return qtdError;
+	}
+	
+	
+	/**
+	 * @param systemVersion
+	 * @return
+	 * @throws SQLException 
+	 */
+	public Map<String, Integer> readQtdAccessScenarios(String systemVersion) throws SQLException {
+		
+		String sql = " SELECT scenario, qtd_access FROM result.most_access_scenarios WHERE system_version = ?  ";
+		
+		Map<String, Integer> qtdAccess = new HashMap<>();
+		
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			prepated.setString(1, systemVersion);
+			
+			ResultSet result = prepated.executeQuery();
+			
+			while(result.next()){
+				qtdAccess.put(result.getString(1), result.getInt(2));
+			}
+		}
+		
+		return qtdAccess;
+	}
+
+
+
+	/**
+	 * @param systemVersion
+	 * @param scenario
+	 * @param qtdAccess
+	 * @param qtdError
+	 * @param i
+	 * @throws SQLException 
+	 */
+	public void insertPercentageOfError(String systemVersion, String scenario, int qtdAccess, int qtdError, float percentage) throws SQLException {
+		
+		
+		String sql = " INSERT INTO result.error_statistic ( system_version, scenario, qtd_access, qtd_error, percentage) VALUES (?, ?, ?, ?, ?) ";
+		
+		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
+
+			prepated.setString(1, systemVersion);
+			prepated.setString(2, scenario);
+			prepated.setInt(3, qtdAccess);
+			prepated.setInt(4, qtdError);
+			prepated.setFloat(5, percentage);
+			
+			prepated.executeUpdate();
+		}
+		
+		
+	}
 	
 	
 	

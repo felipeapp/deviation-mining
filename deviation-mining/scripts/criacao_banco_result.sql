@@ -108,6 +108,22 @@ ALTER TABLE result.total_of_error_by_trace OWNER TO postgres;
 
 
 
+------------------------------------------------
+--- guarda a porcentagem de erros do sistema ---
+------------------------------------------------
 
+CREATE TABLE result.error_statistic
+(
+  system_version character varying(100) NOT NULL,
+  scenario text NOT NULL,
+  qtd_access integer,
+  qtd_error integer,
+  percentage numeric(8,2),
+  CONSTRAINT pk_error_statistic PRIMARY KEY (system_version, scenario)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE result.error_statistic OWNER TO postgres;
 
 
