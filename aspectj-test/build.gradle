@@ -7,33 +7,38 @@ configurations {
 	ajInpath
 }
 
+def defaultOutputDir = 'bin'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-compileJava << {
-	sourceSets.main.output.classesDir = 'bin'
+if (project.hasProperty('aj')) {
+	compileJava.deleteAllActions()
 	
-	ant.taskdef(
-		resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
-		classpath: configurations.ajc.asPath
-	)
-	
-	ant.iajc(
-		source: sourceCompatibility,
-		target: targetCompatibility,
-		destDir: sourceSets.main.output.classesDir.absolutePath,
-		fork: 'true',
-		X: 'noInline',
-		aspectPath: configurations.aspects.asPath,
-		inpath: configurations.ajInpath.asPath,
-		sourceRootCopyFilter: '**/*.java,**/*.aj',
-		classpath: configurations.compile.asPath) {
-
-		sourceroots {
-			sourceSets.main.java.srcDirs.each { dir ->
-				pathelement(location: dir.absolutePath)
+	compileJava << {
+		sourceSets.main.output.classesDir = defaultOutputDir
+		
+		ant.taskdef(
+			resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
+			classpath: configurations.ajc.asPath
+		)
+		
+		ant.iajc(
+			source: sourceCompatibility,
+			target: targetCompatibility,
+			destDir: sourceSets.main.output.classesDir.absolutePath,
+			//fork: 'true',
+			//X: 'noInline',
+			aspectPath: configurations.aspects.asPath,
+			inpath: configurations.ajInpath.asPath,
+			sourceRootCopyFilter: '**/*.java,**/*.aj',
+			classpath: configurations.compile.asPath) {
+				sourceroots {
+					sourceSets.main.java.srcDirs.each { dir ->
+						pathelement(location: dir.absolutePath)
+					}
+				}
 			}
-		}
 	}
 }
 
@@ -42,9 +47,11 @@ repositories {
 }
 
 dependencies {
-	ajc 'org.aspectj:aspectjtools:1.8.9'
-	compile 'org.aspectj:aspectjrt:1.8.9'
+	if (project.hasProperty('aj')) {
+		ajc 'org.aspectj:aspectjtools:1.8.9'
+	}
 	
+	compile 'org.aspectj:aspectjrt:1.8.9'
 	compile files ('C:/Users/Felipe/git/scenario-analyzer/br.ufrn.ppgsc.scenario.analyzer.libs/libs_client/scenario-common.jar')
 	//ajInpath files ('C:/Users/Felipe/git/scenario-analyzer/br.ufrn.ppgsc.scenario.analyzer.libs/libs_client/scenario-cdynamic.jar')
 }
@@ -54,4 +61,20 @@ task runAjApp(type: JavaExec) {
 	main = 'ase.ajc.example.MainAppTest'
 	//args 'postgres', 'no'
 	jvmArgs "-Xmx2048m"
+}
+
+task copyToDeployDir(description: "Copia classes") {
+	delete "$projectDir/app/ase", "$projectDir/app/br"
+	
+	copy {
+		from "$projectDir/" + defaultOutputDir
+		into "$projectDir/app"
+		include "ase/**"
+		include "br/**"
+    }
+}
+
+if (project.hasProperty('aj')) {
+	//compileJava.dependsOn clean
+	runAjApp.dependsOn copyToDeployDir
 }
