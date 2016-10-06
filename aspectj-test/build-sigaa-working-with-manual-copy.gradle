@@ -2,7 +2,7 @@
  * Script gradle para gerenciar toda a parte de Integração Contínua do SIGAA
  *
  * Jadson Santos 	= jadson@info.ufrn.br
- * Rafael Gomes 	= rafaelgoems@info.ufrn.br
+ * Rafael Gomes 	= rafaelgomes@info.ufrn.br
  *
  */
  
@@ -45,7 +45,7 @@ defaultTasks 'buildCompartilhado'
 /** Parametros para a build (serão definidos pelo jenkins )  */
 
 def application_name       =  'sigaa';
-def application_version    =  '3.22.20a';     
+def application_version    =  System.getProperty("versaoDeploy") != null ? System.getProperty("versaoDeploy") : 'SNAPSHOT';     
 
 
 /** Informação sobre código fonte o nome dos artefatos */
@@ -53,13 +53,12 @@ def application_version    =  '3.22.20a';
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
+
 /* O nosso código usa a codificação ISO-8859-1  */
 compileJava.options.encoding = 'ISO-8859-1'
 compileTestJava.options.encoding = 'ISO-8859-1'
 compileJava.options.debugOptions.debugLevel = "source,lines,vars"
 compileTestJava.options.debugOptions.debugLevel = "source,lines,vars"
-
-
 
 
 /* O nome do JAR gerado*/
@@ -239,9 +238,11 @@ maven {
 
 /* dependency configurations: Por enquanto não resolva dependencias trasitivas, porque dá conflito. */
 configurations {
-	ajc
-	aspects
-	ajInpath
+	if (project.hasProperty('aj')) {
+		ajc
+		aspects
+		ajInpath
+	}
 	
     compile {
         transitive = false
@@ -294,20 +295,25 @@ configurations.all {
 }
 
 dependencies {
-		ajc 'org.aspectj:aspectjtools:1.8.9'
-		compile 'org.aspectj:aspectjrt:1.8.9'
+		if (project.hasProperty('aj')) {
+			ajc 'org.aspectj:aspectjtools:1.8.9'
+			//compile 'org.aspectj:aspectjrt:1.8.9'
+		}
 		
 	   /**
 		 *   Dependencias Internas do Projeto Entidades Comuns
 		 *
 		 */
-		ufrnInternalLib(group: 'br.ufrn', name: 'arquitetura', version: '2.7.20')
-		ufrnInternalLib(group: 'br.ufrn', name: 'entidadesComuns', version: '1.4.16')
-		ufrnInternalLib(group: 'br.ufrn', name: 'servicosIntegrados', version: '1.4.13')
+		ufrnInternalLib(group: 'br.ufrn', name: 'arquitetura', version: '2.7.24')
+		ufrnInternalLib(group: 'br.ufrn', name: 'entidadesComuns', version: '1.4.18')
+		ufrnInternalLib(group: 'br.ufrn', name: 'servicosIntegrados', version: '1.4.15')
 		ufrnInternalLib(group: 'br.ufrn', name: 'servicosRemotoBiblioteca', version: '1.0.0-SNAPSHOT')
 		ufrnInternalLib(group: 'br.ufrn', name: 'sigaaMobileObjects', version: '1.0.0-SNAPSHOT')
 		ufrnInternalLib(group: 'br.ufrn.arq', name: 'sinfo-arq-files', version: '0.0.32')
-		ufrnInternalLib(group: 'br.ufrn.arq', name: 'sinfo-arq-filtros-sec', version: '0.0.2')
+		ufrnInternalLib(group: 'br.ufrn.arq', name: 'sinfo-arq-filtros-sec', version: '0.0.3')
+		ufrnInternalLib(group: 'br.ufrn', name: 'intellectus-ws-dto', version: '0.8')
+		
+		
 		
 		/**
          *   Dependencias do projeto mas que não vai dentro do EAR gerado, é um projeto que é feito deploy separado 
@@ -503,25 +509,12 @@ dependencies {
 	   deployLib(group: 'xws-security', name: 'xws-security', version: '2.0', classifier: 'FCS')
 	   deployLib(group: 'org.apache.tomcat', name: 'juli', version: '6.0.26')
 	   
-	   //compile fileTree (dir: 'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar', include: '*.jar', exclude: 'scenario-cdynamic.jar')
-	   compile files ('C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-common.jar')
-	   /*runtime files (
-			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/slf4j-api-1.5.6.jar',
-			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/slf4j-jdk14-1.5.6.jar',
-			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/hibernate-commons-annotations.jar',
-			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/hibernate-annotations.jar',
-			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/hibernate3.jar',
-			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/commons-collections-3.2.jar',
-			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/cglib-2.1.3.jar',
-			'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/ejb3-persistence.jar'
-	    )*/
-	   ajInpath files ('C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-cdynamic.jar')
+	   compile files ('C:/development/workspace-sigaa-agosto/LIBS/app/libs.jar/scenario-common.jar')
 	   
-	   /*compile files (
-	   		'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/scenario-common.jar',
-	   		'C:/development/workspace-sigaa-teste/LIBS/app/libs.jar/javax.faces-2.2.6.jar'
-	   )*/
-	   
+	   if (project.hasProperty('aj')) {
+	   		ajInpath files ('C:/development/workspace-sigaa-agosto/LIBS/app/libs.jar/scenario-cdynamic.jar')
+	   }
+ 	   
 	    /* ********************************************************************************
 	    * Usadas para compilar, mas não podem ser feito deploy no jboss se não dá conflito. 
 	    * ********************************************************************************/
@@ -572,38 +565,31 @@ def earOutPut = "$buildDir/tmp/earOutput"
 def facedeName = "facade_"+projectDirectory
 def facedeDir = "app/"+projectDirectory+".ear/"+facedeName+".jar"
 
-compileJava << {
-	//sourceSets.main.output.classesDir = 'app/'+projectDirectory+'.ear/'+projectDirectory+'.jar'
+if (project.hasProperty('aj')) {
+	compileJava.deleteAllActions()
 	
-	ant.taskdef(
-		resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
-		classpath: configurations.ajc.asPath
-	)
-	
-	ant.iajc(
-		source: sourceCompatibility,
-		target: targetCompatibility,
-		destDir: sourceSets.main.output.classesDir.absolutePath,
-		//destDir: file('app/'+projectDirectory+'.ear/'+projectDirectory+'.jar'),
-		//maxmem: '2048m',
-		fork: 'true',
-		X: 'noInline',
-		aspectPath: configurations.aspects.asPath,
-		inpath: configurations.ajInpath.asPath,
-		sourceRootCopyFilter: '**/*.java,**/*.aj',
-		classpath: configurations.compile.asPath) {
-
-		sourceroots {
-			sourceSets.main.java.srcDirs = ['.']
-			sourceSets.main.java.srcDirs.each { dir ->
-				pathelement(location: dir.absolutePath)
+	compileJava << {
+		ant.taskdef(
+			resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
+			classpath: configurations.ajc.asPath
+		)
+		
+		ant.iajc(
+			source: sourceCompatibility,
+			target: targetCompatibility,
+			destDir: sourceSets.main.output.classesDir.absolutePath,
+			aspectPath: configurations.aspects.asPath,
+			inpath: configurations.ajInpath.asPath,
+			sourceRootCopyFilter: '**/*.java,**/*.aj',
+			classpath: configurations.compile.asPath) {
+				sourceroots {
+					sourceSets.main.java.srcDirs.each { dir ->
+						println '*' + dir.absolutePath + '*'
+						if (!dir.absolutePath.contains('src'))
+							pathelement(location: dir.absolutePath)
+					}
+				}
 			}
-			
-			/*sourceSets.main.resources.srcDirs = ['.']
-			sourceSets.main.resources.srcDirs.each { dir ->
-				pathelement(location: dir.absolutePath)
-			}*/
-		}
 	}
 }
 
@@ -614,6 +600,34 @@ task runAjApp(type: JavaExec) {
 	jvmArgs "-Xmx2048m"
 }
 
+/*
+task copyAjClasses(description: "Copy to sigaa.jar folder classes with aspect support") {
+	delete "$projectDir/app/sigaa.ear/sigaa.jar/ase", "$projectDir/app/sigaa.ear/sigaa.jar/br"
+	
+	copy {
+		from "$projectDir/build/classes/main"
+		into "$projectDir/app/sigaa.ear/sigaa.jar"
+		include "ase/**"
+		include "br/**"
+    }
+}
+*/
+
+task copyAjClasses << {
+	delete "$projectDir/app/sigaa.ear/sigaa.jar"
+	
+	copy {
+		from "$projectDir/build/resources/main"
+		into "$projectDir/app/sigaa.ear/sigaa.jar"
+    }
+    
+    copy {
+		from "$projectDir/build/classes/main"
+		into "$projectDir/app/sigaa.ear/sigaa.jar"
+		include "ase/**"
+		include "br/**"
+    }
+}
 
 /* copia as dependências usada para compilar o projeto para um diretório "lib" onde vai ser 
  * o classpath do projeto para o projeto compilar no eclipse. Assim a gente não precisa versiona no 
@@ -696,7 +710,6 @@ task copyFacedeJARFile(description : 'Copy the JAR with the system EJB') << {
 		include "**/"+facedeName+".jar"
 	}
 }
-
 
 /*
  * Criar o WAR principal do SIGAA
@@ -829,7 +842,6 @@ task earSystem(description : 'Create the EAR of system', type: Jar) {
 	from ("$earOutPut/")
 }
 
-
 /* 
  * Sequencia. Gerar o jar, copie para um diretório temporário, gerar o war, 
  * copie para o mesmo diretório, copie os diretórios lib e META-INF e zip tudo isso em um EAR
@@ -852,7 +864,6 @@ copyEarResoucesIsolado.mustRunAfter copyToLibDirIsolado
 copyToLibDir.mustRunAfter copySharedFiles
 copyToLibDirIsolado.mustRunAfter copyIsolatedFiles
 
-
 /* The new way to RUN UFRN system.  It needs change on JBOSS */
 task buildIsolado(description : 'Create the EAR of system isolated', dependsOn: ['assemble', 'copyEarResoucesIsolado', 'copyToLibDirIsolado', 'copyIsolatedFiles']  ) << {
 
@@ -863,7 +874,10 @@ task buildCompartilhado(description : 'Create the EAR of system with shared libs
 	 
 }
 
-
+if (project.hasProperty('aj')) {
+	copyAjClasses.mustRunAfter assemble
+	buildCompartilhado.dependsOn copyAjClasses
+}
 
 
 
@@ -892,8 +906,8 @@ test {
 eclipse {
 
 
-	project {
-		natures 'org.springsource.ide.eclipse.gradle.core.nature', 'org.eclipse.buildship.core.gradleprojectnature'
+project {
+     natures 'org.springsource.ide.eclipse.gradle.core.nature', 'org.eclipse.buildship.core.gradleprojectnature'
     }
 
     classpath {
