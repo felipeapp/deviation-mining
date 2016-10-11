@@ -365,13 +365,16 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 	 */
 	public Map<String, Integer> readScenariosWithError(String systemVersion) throws SQLException {
 		
-		String sql = " SELECT scenario, qtd_error FROM result.total_of_error_by_scenario ";
+		String sql = " SELECT scenario, qtd_error FROM result.total_of_error_by_scenario WHERE system_version = ?  ";
 		
 		Map<String, Integer> qtdError= new HashMap<>();
 		
 		try (PreparedStatement prepated = connection.prepareStatement(sql);) {
 
+			prepated.setString(1, systemVersion);
+			
 			ResultSet result = prepated.executeQuery();
+			
 			
 			while(result.next()){
 				qtdError.put(result.getString(1), result.getInt(2));
