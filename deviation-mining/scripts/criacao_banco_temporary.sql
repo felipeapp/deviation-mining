@@ -58,4 +58,28 @@ ALTER TABLE temporary.scenarios_error_values
   OWNER TO postgres;
   
   
+  
+  
+  
+  
+ -----  tabela que guarda as informações da tabela infra.error -------------
+ 
+  
+  
+CREATE TABLE temporary.infra_error_scenario_line_of_code
+(
+  scenario_line_of_code text NOT NULL,
+  qtd integer,
+  CONSTRAINT pk_infra_error_scenario_line_erro PRIMARY KEY (scenario_line_of_code)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE temporary.infra_error_scenario_line_of_code
+  OWNER TO postgres;
+COMMENT ON TABLE temporary.infra_error_scenario_line_of_code
+  IS 'Tabela que guarda de forma temporária o cenário a a linha de erro onde o erro ocorreu.';
+  
+  
+  
 

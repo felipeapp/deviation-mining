@@ -127,3 +127,44 @@ WITH (
 ALTER TABLE result.error_statistic OWNER TO postgres;
 
 
+
+-------------------------------------------------------------------------
+ -- Guarda o resultado dos erros por linha de código em que ocorreram 
+--------------------------------------------------------------------------
+
+
+CREATE TABLE result.infra_error_scenario
+(
+  scenario text NOT NULL,
+  qtd integer, -- quantidade total, soma das quantidades de todos os erros nas linhas de código
+  CONSTRAINT pk_infra_erro_scenario PRIMARY KEY (scenario)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE result.infra_error_scenario OWNER TO postgres;
+COMMENT ON COLUMN result.infra_error_scenario.qtd IS 'quantidade total, soma das quantidades de todos os erros nas linhas de código';
+
+
+
+  
+  
+ CREATE TABLE result.infra_error_scenario_line_of_code
+(
+  scenario text NOT NULL,
+  line_of_code text NOT NULL,
+  qtd integer,
+  CONSTRAINT pk_infra_error_scenario_line_of_code PRIMARY KEY (scenario, line_of_code),
+  CONSTRAINT fk_infra_error_scenario_line_of_code FOREIGN KEY (scenario)
+      REFERENCES result.infra_error_scenario (scenario) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE result.infra_error_scenario_line_of_code OWNER TO postgres;
+ 
+  
+
+
+

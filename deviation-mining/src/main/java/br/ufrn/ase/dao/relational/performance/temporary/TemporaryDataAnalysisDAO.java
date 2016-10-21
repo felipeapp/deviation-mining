@@ -361,6 +361,108 @@ public class TemporaryDataAnalysisDAO extends AbstractBasicRelationalDAO{
 		}
 		
 	}
+
+
+	/**
+	 * @param scenario
+	 * @return
+	 */
+	public boolean containsScenarioLineOfCode(String scenario) {
+		String sql = " SELECT COUNT(*) FROM temporary.infra_error_scenario_line_of_code WHERE scenario_line_of_code = ? ";
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, scenario );
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				if(count > 0) 
+					return true;
+			}
+			rs.close();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	
+		return false;
+	}
+
+
+	/**
+	 * @param scenario
+	 * @param qtdError
+	 */
+	public void updateQtdScenarioLineOfCode(String scenario, Integer qtdError) {
+		
+		int qtdCurrent = 0;
+		
+		String sqlSelect = " SELECT qtd FROM temporary.infra_error_scenario_line_of_code WHERE scenario_line_of_code = ? ";
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sqlSelect);
+			stmt.setString(1, scenario );
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				qtdCurrent = rs.getInt(1);
+				
+			}
+			rs.close();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		String sql = " UPDATE temporary.infra_error_scenario_line_of_code set qtd = ? WHERE scenario_line_of_code = ? ";
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			stmt.setInt(1, qtdCurrent + qtdError);
+			stmt.setString(2, scenario);
+			
+			stmt.executeUpdate();
+			
+			stmt.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	/**
+	 * @param scenario
+	 * @param qtdError
+	 */
+	public void insertNewQtdScenarioLineOfCode(String scenario, Integer qtdError) {
+		String sql = " INSERT INTO temporary.infra_error_scenario_line_of_code (qtd, scenario_line_of_code) VALUES (?, ?) ";
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+				
+			stmt.setInt(1, qtdError);
+			stmt.setString(2, scenario);
+			
+			stmt .executeUpdate();
+			
+			stmt.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 
 }
