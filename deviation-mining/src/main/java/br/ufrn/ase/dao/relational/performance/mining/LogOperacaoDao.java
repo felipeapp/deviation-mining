@@ -23,6 +23,7 @@ import br.ufrn.ase.domain.LogOperacao;
 import br.ufrn.ase.domain.RegistroEntrada;
 import br.ufrn.ase.domain.Sistema;
 import br.ufrn.ase.domain.degradation.Interval;
+import br.ufrn.ase.util.CalendarUtil;
 import br.ufrn.ase.util.DateUtil;
 
 /**
@@ -57,6 +58,10 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 * @return
 	 */
 	public List<LogOperacao> findAllLogOperacaoInsideIntervalBySystemVersion(int systemId, Date initialDate, Date finalDate) {
+		
+		if(initialDate == null || finalDate == null ) return new ArrayList<>();
+		
+		finalDate = CalendarUtil.configDataTime(finalDate, 23, 59, 59, 000);
 		
 		/**General query for performance */
 		String sql = 
@@ -102,6 +107,10 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 */
 	public List<LogOperacao> findAllLogOperacaoInsideIntervalBySystemVersionForError(int systemId, Date initialDate, Date finalDate) {
 		
+		if(initialDate == null || finalDate == null ) return new ArrayList<>();
+		
+		finalDate = CalendarUtil.configDataTime(finalDate, 23, 59, 59, 000);
+		
 		/**General query for performance */
 		String sql = 
 				" SELECT "+COMMON_PROJECTION_ERROR+
@@ -146,6 +155,10 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 * @return
 	 */
 	public Map<String, List<Double>> findAllLogOperacaoOfScenarioInsideIntervalBySystemVersion(String scenario, int systemId, Date initialDate, Date finalDate) {
+		
+		if(initialDate == null || finalDate == null ) return new HashMap<>();
+		
+		finalDate = CalendarUtil.configDataTime(finalDate, 23, 59, 59, 000);
 		
 		/**General query for performance */
 		String sql = 
@@ -197,6 +210,11 @@ public class LogOperacaoDao extends AbstractBasicRelationalDAO{
 	 * @return
 	 */
 	public List<LogOperacao> findAllOperationAboveAverage(Map<String, Double> topScenarios, Date initialDate, Date finalDate) {
+		
+		if(initialDate == null || finalDate == null ) return new ArrayList<>();
+		
+		finalDate = CalendarUtil.configDataTime(finalDate, 23, 59, 59, 000);
+		
 		
 		String sqlAboreAverage = 
 				" SELECT "+COMMON_PROJECTION+

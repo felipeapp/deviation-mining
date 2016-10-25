@@ -5,14 +5,19 @@
  */
 package br.ufrn.ase.service.confiability;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 import br.ufrn.ase.dao.DAOFactory;
 import br.ufrn.ase.dao.relational.confiability.InfraErroDao;
+import br.ufrn.ase.dao.relational.performance.result.ResultDataAnalysisDAO;
 import br.ufrn.ase.dao.relational.performance.temporary.TemporaryDataAnalysisDAO;
 import br.ufrn.ase.domain.InfraError;
 import br.ufrn.ase.domain.Sistema;
@@ -22,6 +27,43 @@ import br.ufrn.ase.util.StringUtil;
 import br.ufrn.ase.util.VersionMapUtil;
 
 /**
+ * Mining the table INFRA.ERRO of comum database to get the specific linha the generate the error. 
+ * 
+ * 
+ * Queries Example:
+ * 
+ * --- trace_gerador mais erros
+ * select trace_gerador, SUM(qtd)
+ * from result.infra_error_erro_gerador  e
+ * inner join result.infra_error_erro_gerador_ocorrencias eo  on e.system_version = eo.system_version AND e.scenario = eo.scenario
+ * GROUP BY trace_gerador
+ * ORDER BY 2 desc
+ * 
+ * --- exception mais lancadas
+ * select exception, SUM(qtd)
+ * from result.infra_error_erro_gerador  e
+ * inner join result.infra_error_erro_gerador_ocorrencias eo  on e.system_version = eo.system_version AND e.scenario = eo.scenario
+ * GROUP BY exception
+ * ORDER BY 2 desc
+ * 
+ * --- excecoes mais lancadas para o sigaa em setembro by scenario
+ * select e.scenario, exception, SUM(qtd)
+ * from result.infra_error_erro_gerador  e
+ * inner join result.infra_error_erro_gerador_ocorrencias eo  on e.system_version = eo.system_version AND e.scenario = eo.scenario
+ * WHERE e.system_version = 'SIGAA-SET'
+ * GROUP BY e.scenario, exception
+ * ORDER BY 3 desc
+ * 
+ * 
+ * --- linhas com mais errospara o sigaa em setembro by scenario
+ * select e.scenario, trace_gerador, SUM(qtd)
+ * from result.infra_error_erro_gerador  e
+ * inner join result.infra_error_erro_gerador_ocorrencias eo  on e.system_version = eo.system_version AND e.scenario = eo.scenario
+ * WHERE e.system_version = 'SIGAA-SET'
+ * GROUP BY e.scenario, trace_gerador
+ * ORDER BY 3 desc
+ * 
+ * 
  * @author jadson - jadsonjs@gmail.com
  *
  */
@@ -33,6 +75,9 @@ public class CalculateErrorGeradorService {
 	
 	/** Qtd of result keep in memory at a time */
 	private final int RESULT_MAP_SIZE = 30000000; // 30MB
+	
+	/** segregate the key inforamtion */
+	final String KEY_SEPARATOR = "_;_";
 	
 	
 	/***
@@ -48,113 +93,75 @@ public class CalculateErrorGeradorService {
 			executeMining(systemVersion, false);
 		}
 		
-		int qtd = 1;		
+		processResults(systemVersion);
 		
-		final int PAGE_SIZE = 100;
+	}
+	
+	
+	
+	
+	/**
+	 * @param systemVersion
+	 */
+	private void processResults(String systemVersion) {
+		Map<String, Integer> retorno = readAllErrorGerador();
 		
-		int qtdTotal = countTotalOfScenarios();
-		
-		int qtdPagina = ( qtdTotal / PAGE_SIZE);
-		
-		if(qtdTotal % PAGE_SIZE != 0)
-			qtdPagina+=1;
-		
-		int inicial = 1;
-		int ultimo = PAGE_SIZE*qtd;
-		
-		
-		for(int i = 0 ; i < qtdPagina; i++){
-		
-			Map<String, Integer> mapTemp = readAllScenariosError(inicial, ultimo);
-		
-			for (String scenarioLineOfCode :  mapTemp.keySet()) {
-				// salvar no banco result
+		for (String key : retorno.keySet()) {
+			
+			String[] info = key.split(KEY_SEPARATOR);
+			
+			if(info.length == 3){
+				String scenario     = info[0];
+				String exception    = info[1];
+				String traceGerador = info[2];
+				int qtdErro = retorno.get(key);
+				
+				saveResultsErroGerador(systemVersion, scenario, traceGerador, exception, qtdErro);
 			}
-			
-			qtd++;
-			
-			// next page
-			inicial = PAGE_SIZE*(qtd-1)+1;
-			ultimo = PAGE_SIZE*qtd;
-			
+		}
+	}
+
+
+
+
+	/**
+	 * Read the information of temporary database
+	 */
+	private Map<String, Integer> readAllErrorGerador() {
+		TemporaryDataAnalysisDAO dao = DAOFactory.getRelationalTemporaryDAO(TemporaryDataAnalysisDAO.class);
+		Map<String, Integer> retorno = dao.readAllErrorGerador();
+		DAOFactory.closeTemporaryConnection();
+		return retorno;
+	}
+
+
+	/**
+	 * copy informatio for the result database
+	 * @param systemVersion
+	 * @param scenario
+	 * @param size
+	 */
+	private void saveResultsErroGerador(String systemVersion, String scenario, String traceGerador, String exception, int qtd) {
+
+		ResultDataAnalysisDAO dao = DAOFactory.getRelationalResultDAO(ResultDataAnalysisDAO.class);
+		
+		try{
+			dao.insertErrorGerador(systemVersion, scenario, traceGerador, exception, qtd );
+		}catch(SQLException sqlEx){
+			JOptionPane.showMessageDialog(new JPanel(), sqlEx.getMessage(), "Error Save Results", JOptionPane.ERROR_MESSAGE);
+			sqlEx.printStackTrace();
+		}finally{
+			DAOFactory.closeResultConnection();
 		}
 		
-		// TODO
-		
-//		Map<String, Integer> mapTemp = readAllScenariosError(inicial, ultimo);
-//		
-//		for (String scenarioLineOfCode :  mapTemp.keySet()) {
-//			// salvar no banco result
-//		}
-//		
-//		forScenario:
-//		for (String scenarioLineOfCode :  mapTemp.keySet()) { // for each scenario that was mined
-//			
-			
-//			
-//			if(qtd % 100 == 0 ){
-//				System.out.println("Calculating information for scenario:  "+scenario);
-//			}
-//			
-//			// all the traces 
-//			values = readScenariosValuesError(scenario); // just for one scenario to save memory
-//	
-//			Map<String, Integer> result = calculateAmountOfTraces(values);
-//			
-//			if(qtd % 100 == 0 ){
-//				System.out.println("Saving on result database ... ");
-//			}
-//			
-//			
-//			saveResultsTotalOfError(systemVersion, scenario, values.size());
-//			saveResultsByScenario(systemVersion, scenario, result);
-//			
-//			
-//			
-//			values = new ArrayList<>();
-//			
-			
-			qtd++;
-			
-			// next page
-			inicial = PAGE_SIZE*(qtd-1)+1;
-			ultimo = PAGE_SIZE*qtd;
-			
-			//if(ultimo > qtdTotal)
-			//	break forScenario;
-		
-			//mapTemp = readAllScenariosError(inicial, ultimo);
-			
-		//}
-		
-		
 	}
 	
-	
-	
-	
-	/**
-	 * @return
-	 */
-	private int countTotalOfScenarios() {
-		return 0;
-	}
-
-
-
-
-	/**
-	 * @return
-	 */
-	private Map<String, Integer> readAllScenariosError(int inicial, int ultimo) {
-		return null;
-	}
-
-
 
 
 	/**
 	 * This is the method that execute the mining in the database, table infra.error.
+	 * 
+	 * This is the heart of the algorithm of mining process.
 	 * 
 	 * @param systemVersion
 	 * @param isUserEnabled
@@ -162,6 +169,7 @@ public class CalculateErrorGeradorService {
 	 */
 	public void executeMining(String systemVersion, boolean isUserEnabled) {
 		
+		clearTemporatyDataBase();
 		
 		Date initialDate   = new VersionMapUtil().getInitialDateOfVersion(systemVersion);
 		Date finalDate     = new VersionMapUtil().getFinalDateOfVersion(systemVersion);
@@ -203,7 +211,7 @@ public class CalculateErrorGeradorService {
 			
 			for (InfraError infraError : error) {
 				infraError.extractScenario();
-				key = infraError.scenario+";"+infraError.traceGerador;
+				key = infraError.scenario+KEY_SEPARATOR+infraError.excecao+KEY_SEPARATOR+infraError.traceGerador; // build the key of the map = scenario + excecao + traceGerador
 				if(! retorno.containsKey(key))
 					retorno.put(key, 1);   // primeiro erro encontrado
 				else{
@@ -238,6 +246,18 @@ public class CalculateErrorGeradorService {
 	
 	
 	
+	/**
+	 * 
+	 */
+	private void clearTemporatyDataBase() {
+		TemporaryDataAnalysisDAO dao = DAOFactory.getRelationalTemporaryDAO(TemporaryDataAnalysisDAO.class);
+		dao.clearErrorGeradorTable();
+		DAOFactory.closeTemporaryConnection();
+	}
+
+
+
+
 	/**
 	 * Store the entire map in a data, insert a new scenario or update the values of a existent one.
 	 * 

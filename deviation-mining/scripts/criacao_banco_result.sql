@@ -166,5 +166,45 @@ ALTER TABLE result.infra_error_scenario_line_of_code OWNER TO postgres;
  
   
 
+-------------------------- error gerador  ------------------------------
+
+
+
+CREATE TABLE result.infra_error_erro_gerador
+(
+  system_version character varying(100) NOT NULL,
+  scenario text NOT NULL,
+  CONSTRAINT pk_infra_error_erro_gerador PRIMARY KEY (system_version, scenario)
+)
+WITH (
+  OIDS=FALSE
+);
+
+ALTER TABLE result.infra_error_erro_gerador  OWNER TO postgres;
+
+  
+CREATE TABLE result.infra_error_erro_gerador_ocorrencias
+(
+  system_version character varying(100) NOT NULL,
+  scenario text NOT NULL,
+  trace_gerador text,
+  exception text,
+  qtd integer,
+  CONSTRAINT fk_infra_error_erro_gerador_ocorrencias FOREIGN KEY (system_version, scenario)
+      REFERENCES result.infra_error_erro_gerador (system_version, scenario) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+ALTER TABLE result.infra_error_erro_gerador_ocorrencias  OWNER TO postgres;
+
+
+
+
+
+
+
 
 

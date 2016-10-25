@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.ufrn.ase.dao.relational.AbstractBasicRelationalDAO;
 
@@ -363,6 +365,8 @@ public class TemporaryDataAnalysisDAO extends AbstractBasicRelationalDAO{
 	}
 
 
+	///  ErrorGerador queries ///
+	
 	/**
 	 * @param scenario
 	 * @return
@@ -463,6 +467,60 @@ public class TemporaryDataAnalysisDAO extends AbstractBasicRelationalDAO{
 		}
 		
 	}
+
+
+	/**
+	 * Clear always before execute a new mining.
+	 */
+	public void clearErrorGeradorTable() {
+		String sql = " DELETE FROM temporary.infra_error_scenario_line_of_code ";
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt .executeUpdate();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	/**
+	 * READ All scenarios after execute the mining
+	 * 
+	 * @param systemName
+	 * @param initialDate
+	 * @param finalDate
+	 * @return
+	 */
+	public Map<String, Integer> readAllErrorGerador() {
+		
+		String sql = " SELECT scenario_line_of_code, qtd FROM temporary.infra_error_scenario_line_of_code ";
+		
+		Map<String, Integer> retorno = new HashMap<String, Integer>();
+
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				retorno.put(rs.getString(1), rs.getInt(2));
+			}
+			rs.close();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return retorno;
+	}
+	
+	
+	
+	
 	
 
 }

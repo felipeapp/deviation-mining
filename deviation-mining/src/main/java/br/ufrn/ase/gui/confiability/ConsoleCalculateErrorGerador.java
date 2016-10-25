@@ -9,7 +9,7 @@ import br.ufrn.ase.service.confiability.CalculateErrorGeradorService;
 import br.ufrn.ase.util.SwingUtil;
 
 /**
- * 
+ * This class calculate the line of code the generate the error
  * 
  * @author jadson - jadsonjs@gmail.com
  *
@@ -26,9 +26,11 @@ public class ConsoleCalculateErrorGerador {
 		
 		String systemVersion = SwingUtil.readSystemVersion();
 		
+		boolean executeMining = SwingUtil.readTypeExecution();
+		
 		long start = System.currentTimeMillis();
 	
-		new ConsoleCalculateErrorGerador().calculateErroGerador(systemVersion, true);
+		new ConsoleCalculateErrorGerador().calculateErroGerador(systemVersion, executeMining);
 		
 		System.out.println("Time: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
 

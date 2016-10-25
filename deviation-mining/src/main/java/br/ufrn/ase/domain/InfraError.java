@@ -33,7 +33,10 @@ public class InfraError {
 		int index1 = traceCompleto.indexOf("URL:");
 		int index2 = traceCompleto.indexOf("Hora:");
 		
-		scenario = traceCompleto.substring(index1+4, index2).trim();
+		if(index1 > 0 && index2 > 0 )
+			scenario = traceCompleto.substring(index1+4, index2).trim();
+		else
+			scenario = "WITHOUT_SCENARIO";
 	}
 	
 	

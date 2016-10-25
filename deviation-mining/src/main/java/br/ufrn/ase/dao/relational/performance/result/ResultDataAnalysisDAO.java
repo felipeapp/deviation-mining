@@ -438,6 +438,68 @@ public class ResultDataAnalysisDAO extends AbstractBasicRelationalDAO {
 		
 		
 	}
+
+
+	///  Error Gerador ////
+
+	/**
+	 * @param systemVersion
+	 * @param scenario
+	 * @param traceGerador
+	 * @param exception
+	 * @param qtd
+	 */
+	public void insertErrorGerador(String systemVersion, String scenario, String traceGerador, String exception, int qtd) throws SQLException {
+	
+		boolean exist = false;
+		
+		String sqlCount = " SELECT COUNT(*) FROM result.infra_error_erro_gerador WHERE system_version = ? AND scenario = ? ";
+		
+		try ( PreparedStatement stmt = connection.prepareStatement(sqlCount) ) {
+			
+			stmt.setString(1, systemVersion );
+			stmt.setString(2, scenario );
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				int count = rs.getInt(1);
+				if(count > 0) 
+					exist =  true;
+			}
+			rs.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if( ! exist ) {
+			String sqlErro = " INSERT INTO result.infra_error_erro_gerador ( system_version, scenario) VALUES (?, ?) ";
+			
+			try (PreparedStatement prepated = connection.prepareStatement(sqlErro);) {
+	
+				prepated.setString(1, systemVersion);
+				prepated.setString(2, scenario);
+				prepated.executeUpdate();
+			}
+		}
+		
+		
+		// here we can have repeated lines //
+		String sqlOcorrencias = " INSERT INTO result.infra_error_erro_gerador_ocorrencias ( system_version, scenario, trace_gerador, exception, qtd) VALUES (?, ?, ?, ?, ?) ";
+		
+		try (PreparedStatement prepated = connection.prepareStatement(sqlOcorrencias);) {
+
+			prepated.setString(1, systemVersion);
+			prepated.setString(2, scenario);
+			prepated.setString(3, traceGerador);
+			prepated.setString(4, exception);
+			prepated.setInt(5, qtd);
+			prepated.executeUpdate();
+		}
+		
+		
+	}
 	
 	
 	
